@@ -1,9 +1,24 @@
 [tasks]
 # Stack management
-"stack:up" = "cd stacks/${1:-all} && docker compose up -d"
-"stack:down" = "cd stacks/${1:-all} && docker compose down"
-"stack:restart" = "cd stacks/${1:-all} && docker compose restart"
-"stack:logs" = "cd stacks/${1:-all} && docker compose logs -f"
+"stack:up" = """#!/bin/bash
+STACK=${1:-proxy}
+cd stacks/$STACK && docker compose up -d
+"""
+
+"stack:down" = """#!/bin/bash
+STACK=${1:-proxy}
+cd stacks/$STACK && docker compose down
+"""
+
+"stack:restart" = """#!/bin/bash
+STACK=${1:-proxy}
+cd stacks/$STACK && docker compose restart
+"""
+
+"stack:logs" = """#!/bin/bash
+STACK=${1:-proxy}
+cd stacks/$STACK && docker compose logs -f
+"""
 
 # Backup tasks
 "backup:all" = "bash scripts/backup.sh"
@@ -15,8 +30,16 @@
 "traefik:show" = "cd stacks/proxy && docker compose exec traefik traefik show"
 "traefik:status" = "bash scripts/traefik.sh status"
 "traefik:validate" = "bash scripts/traefik.sh validate"
-"traefik:add" = "bash scripts/traefik.sh add ${1}"
-"traefik:remove" = "bash scripts/traefik.sh remove ${1}"
+"traefik:add" = """#!/bin/bash
+DOMAIN=$1
+bash scripts/traefik.sh add $DOMAIN
+"""
+
+"traefik:remove" = """#!/bin/bash
+DOMAIN=$1
+bash scripts/traefik.sh remove $DOMAIN
+"""
+
 "traefik:apply" = "bash scripts/traefik.sh apply"
 "traefik:logs" = "bash scripts/traefik.sh logs"
 "traefik:certs" = "bash scripts/traefik.sh certs"
