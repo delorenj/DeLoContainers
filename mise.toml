@@ -1,11 +1,28 @@
 [tasks]
-backup = "bash scripts/backup.sh"
-"traefik show" = "cd stacks/proxy && docker-compose exec traefik traefik show"
-"traefik status" = "bash scripts/traefik.sh status"
-"stack up" = "cd stacks/${1:-all} && docker-compose up -d"
-"stack down" = "cd stacks/${1:-all} && docker-compose down"
-"stack restart" = "cd stacks/${1:-all} && docker-compose restart"
-"stack logs" = "cd stacks/${1:-all} && docker-compose logs -f"
+# Stack management
+"stack:up" = "cd stacks/${1:-all} && docker compose up -d"
+"stack:down" = "cd stacks/${1:-all} && docker compose down"
+"stack:restart" = "cd stacks/${1:-all} && docker compose restart"
+"stack:logs" = "cd stacks/${1:-all} && docker compose logs -f"
+
+# Backup tasks
+"backup:all" = "bash scripts/backup.sh"
+"backup:prowlarr" = "bash scripts/backup.sh prowlarr"
+"backup:qbittorrent" = "bash scripts/backup.sh qbittorrent"
+"backup:traefik" = "bash scripts/backup.sh traefik"
+
+# Traefik management
+"traefik:show" = "cd stacks/proxy && docker compose exec traefik traefik show"
+"traefik:status" = "bash scripts/traefik.sh status"
+"traefik:validate" = "bash scripts/traefik.sh validate"
+"traefik:add" = "bash scripts/traefik.sh add ${1}"
+"traefik:remove" = "bash scripts/traefik.sh remove ${1}"
+"traefik:apply" = "bash scripts/traefik.sh apply"
+"traefik:logs" = "bash scripts/traefik.sh logs"
+"traefik:certs" = "bash scripts/traefik.sh certs"
+
+# System maintenance
+"system:prune" = "bash scripts/prune.sh"
 
 [env]
 COMPOSE_FILE = "docker-compose.yml"
