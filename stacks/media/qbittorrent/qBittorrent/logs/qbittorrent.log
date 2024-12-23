@@ -60,3 +60,41 @@
 (W) 2024-12-23T05:33:14 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
 (W) 2024-12-23T05:33:14 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
 (W) 2024-12-23T09:06:40 - WebUI: Referer header & Target origin mismatch! Source IP: '::ffff:172.23.0.2'. Referer header: 'https://www.google.ie/'. Target origin: 'get.delo.sh'
+(N) 2024-12-23T11:34:36 - qBittorrent termination initiated
+(N) 2024-12-23T11:34:36 - Saving resume data completed.
+(N) 2024-12-23T11:34:39 - BitTorrent session successfully finished.
+(N) 2024-12-23T11:34:39 - qBittorrent is now ready to exit
+(W) 2024-12-23T14:28:33 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T14:28:33 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-23T14:28:33 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T14:28:33 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T14:28:33 - Trying to listen on the following list of IP addresses: "tun0:49152"
+(I) 2024-12-23T14:28:33 - Peer ID: "-qB5020-"
+(I) 2024-12-23T14:28:33 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T14:28:33 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T14:28:33 - Local Peer Discovery support: ON
+(I) 2024-12-23T14:28:33 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T14:28:33 - Anonymous mode: OFF
+(I) 2024-12-23T14:28:33 - Encryption support: ON
+(I) 2024-12-23T14:28:33 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T14:28:33 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-23T14:28:33 - Failed to restore torrent. Files were probably moved or storage isn't accessible. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv fast resume rejected. file_stat(/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB): mismatching file size"
+(I) 2024-12-23T14:28:33 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T14:28:33 - Using built-in WebUI.
+(N) 2024-12-23T14:28:33 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T14:28:33 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T14:28:36 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/49152"
+(I) 2024-12-23T14:28:36 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/49152"
+(I) 2024-12-23T14:28:36 - Successfully listening on IP. IP: "fe80::ef8f:c086:30cd:3d8b%tun0". Port: "TCP/49152"
+(I) 2024-12-23T14:28:36 - Successfully listening on IP. IP: "fe80::ef8f:c086:30cd:3d8b%tun0". Port: "UTP/49152"
+(W) 2024-12-23T14:28:38 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-23T14:28:39 - Detected external IP. IP: "109.201.135.166"
+(N) 2024-12-23T14:29:25 - WebAPI login success. IP: ::ffff:172.18.0.3
+(W) 2024-12-23T14:31:13 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(W) 2024-12-23T14:31:13 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(N) 2024-12-23T14:41:53 - Added new torrent. Torrent: "Red.One.2024.1080p.AMZN.WEBRip.AAC5.1.10bits.x265-Rapta"
+(I) 2024-12-23T14:44:00 - Successfully listening on IP. IP: "fe80::5ea6:97de:645d:f099%tun0". Port: "TCP/49152"
+(I) 2024-12-23T14:44:00 - Successfully listening on IP. IP: "fe80::5ea6:97de:645d:f099%tun0". Port: "UTP/49152"
+(N) 2024-12-23T14:56:53 - Torrent download finished. Torrent: "Red.One.2024.1080p.AMZN.WEBRip.AAC5.1.10bits.x265-Rapta"
+(I) 2024-12-23T14:59:07 - Successfully listening on IP. IP: "fe80::afa1:d48d:2581:c97e%tun0". Port: "TCP/49152"
+(I) 2024-12-23T14:59:07 - Successfully listening on IP. IP: "fe80::afa1:d48d:2581:c97e%tun0". Port: "UTP/49152"

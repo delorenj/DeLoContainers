@@ -23,3 +23,13 @@ cd ..
 cd media/
 ls
 exit
+;s
+ls
+cd /video/
+ls
+cd ..
+cd downloads/
+ls
+ls
+exot
+exit

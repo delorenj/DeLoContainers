@@ -1270,3 +1270,35 @@
 2024-12-23 08:06:21.7|Warn|Auth|Auth-Failure ip 172.23.0.1 username 'nicklaus_rodriguez@banglemail.com'
 2024-12-23 08:06:22.8|Warn|Auth|Auth-Failure ip 172.23.0.1 username ''
 2024-12-23 08:06:24.6|Warn|Auth|Auth-Failure ip 172.23.0.1 username 'nicklaus_rodriguez@banglemail.com'
+2024-12-23 11:34:36.6|Info|Microsoft.Hosting.Lifetime|Application is shutting down...
+2024-12-23 11:34:37.0|Info|ConsoleApp|Exiting main.
+2024-12-23 14:28:33.7|Info|Bootstrap|Starting Prowlarr - /app/prowlarr/bin/Prowlarr - Version 1.27.0.4852
+2024-12-23 14:28:33.9|Info|AppFolderInfo|Data directory is being overridden to [/config]
+2024-12-23 14:28:33.9|Info|AppFolderInfo|Data directory is being overridden to [/config]
+2024-12-23 14:28:34.4|Info|AppFolderInfo|Data directory is being overridden to [/config]
+2024-12-23 14:28:34.6|Info|MigrationController|*** Migrating data source=/config/prowlarr.db;cache size=-20000;datetimekind=Utc;journal mode=Wal;pooling=True;version=3;busytimeout=100 ***
+2024-12-23 14:28:34.7|Info|FluentMigrator.Runner.MigrationRunner|DatabaseEngineVersionCheck migrating
+2024-12-23 14:28:34.7|Info|FluentMigrator.Runner.MigrationRunner|PerformDBOperation 
+2024-12-23 14:28:34.7|Info|NzbDrone.Core.Datastore.Migration.Framework.NzbDroneSQLiteProcessor|Performing DB Operation
+2024-12-23 14:28:34.7|Info|DatabaseEngineVersionCheck|SQLite 3.45.3
+2024-12-23 14:28:34.7|Info|FluentMigrator.Runner.MigrationRunner|=> 0.0385843s
+2024-12-23 14:28:34.7|Info|FluentMigrator.Runner.MigrationRunner|DatabaseEngineVersionCheck migrated
+2024-12-23 14:28:34.7|Info|FluentMigrator.Runner.MigrationRunner|=> 0.04017s
+2024-12-23 14:28:34.8|Info|MigrationController|*** Migrating data source=/config/logs.db;cache size=-20000;datetimekind=Utc;journal mode=Wal;pooling=True;version=3;busytimeout=100 ***
+2024-12-23 14:28:34.8|Info|FluentMigrator.Runner.MigrationRunner|DatabaseEngineVersionCheck migrating
+2024-12-23 14:28:34.8|Info|FluentMigrator.Runner.MigrationRunner|PerformDBOperation 
+2024-12-23 14:28:34.8|Info|NzbDrone.Core.Datastore.Migration.Framework.NzbDroneSQLiteProcessor|Performing DB Operation
+2024-12-23 14:28:34.8|Info|DatabaseEngineVersionCheck|SQLite 3.45.3
+2024-12-23 14:28:34.8|Info|FluentMigrator.Runner.MigrationRunner|=> 0.0030061s
+2024-12-23 14:28:34.8|Info|FluentMigrator.Runner.MigrationRunner|DatabaseEngineVersionCheck migrated
+2024-12-23 14:28:34.8|Info|FluentMigrator.Runner.MigrationRunner|=> 0.0031986s
+2024-12-23 14:28:35.1|Info|Microsoft.Hosting.Lifetime|Now listening on: http://[::]:9696
+2024-12-23 14:28:35.3|Info|CommandExecutor|Starting 3 threads for tasks.
+2024-12-23 14:28:38.1|Info|ManagedHttpDispatcher|IPv4 is available: True, IPv6 will be disabled
+2024-12-23 14:28:40.5|Info|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2024-12-23 14:28:40.5|Info|Microsoft.Hosting.Lifetime|Hosting environment: Production
+2024-12-23 14:28:40.5|Info|Microsoft.Hosting.Lifetime|Content root path: /app/prowlarr/bin
+2024-12-23 14:38:15.3|Info|Auth|Auth-Success ip 172.18.0.1 username 'delorenj'
+2024-12-23 14:40:38.9|Info|ReleaseSearchService|Searching indexer(s): [kickasstorrents.to, The Pirate Bay, 1337x] for Term: [], Offset: 0, Limit: 100, Categories: []
+2024-12-23 14:41:20.6|Info|ReleaseSearchService|Searching indexer(s): [The Pirate Bay, 1337x] for Term: [2024], Offset: 0, Limit: 100, Categories: [2040]
+2024-12-23 14:41:53.5|Info|DownloadService|Report sent to qBittorrent. Red.One.2024.1080p.AMZN.WEBRip.AAC5.1.10bits.x265-Rapta
