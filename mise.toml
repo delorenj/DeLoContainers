@@ -1,1 +1,12 @@
 [tasks]
+backup = "bash scripts/backup.sh"
+"traefik show" = "cd stacks/proxy && docker-compose exec traefik traefik show"
+"traefik status" = "bash scripts/traefik.sh status"
+"stack up" = "cd stacks/${1:-all} && docker-compose up -d"
+"stack down" = "cd stacks/${1:-all} && docker-compose down"
+"stack restart" = "cd stacks/${1:-all} && docker-compose restart"
+"stack logs" = "cd stacks/${1:-all} && docker-compose logs -f"
+
+[env]
+COMPOSE_FILE = "docker-compose.yml"
+DOCKER_DIR = "/home/delorenj/docker"

@@ -6,7 +6,7 @@ A centralized repository for managing Docker containers and infrastructure for t
 
 ```
 /
-├── docker-compose.yml     # Main compose file
+├── docker-compose.yml     # Main compose file (network definitions)
 ├── mise.toml             # Task definitions
 ├── .env                  # Environment variables
 ├── stacks/              # Service stacks
@@ -14,13 +14,11 @@ A centralized repository for managing Docker containers and infrastructure for t
 │   ├── media/           # Media services
 │   └── ai/              # AI services
 ├── scripts/             # Management scripts
-│   ├── health_check.sh  # Service health monitoring
-│   ├── network_check.sh # Network diagnostics
 │   ├── backup.sh        # Backup automation
-│   ├── prune.sh         # System maintenance
-│   ├── init_stack.sh    # Stack initialization
-│   ├── traefik.sh       # Traefik management
-│   └── vpn.sh           # VPN management
+│   ├── init-stack.sh    # Stack initialization
+│   ├── traefik.sh      # Traefik management
+│   ├── vpn.sh          # VPN management
+│   └── prune.sh        # System maintenance
 └── backups/             # Service backups
 ```
 
@@ -38,96 +36,59 @@ A centralized repository for managing Docker containers and infrastructure for t
    # Edit .env with your configuration
    ```
 
-3. Initialize mise tasks:
+3. Start a stack:
    ```bash
-   mise install
+   mise run stack up proxy
    ```
 
-4. Start the base infrastructure:
-   ```bash
-   mise run up proxy
-   ```
-
-## 🛠️ Management Tasks
-
-### System Health
-```bash
-# Check all services
-mise run check
-
-# Check specific service
-mise run check prowlarr
-```
-
-### Network Diagnostics
-```bash
-# Check network status
-mise run network
-
-# Monitor VPN connection
-mise run vpn status
-```
-
-### Service Management
-```bash
-# Start services
-mise run up [stack_name]
-
-# Stop services
-mise run down [stack_name]
-
-# View logs
-mise run logs [service_name]
-
-# Restart services
-mise run restart [service_name]
-```
-
-### Maintenance
-```bash
-# Backup services
-mise run backup [service_name]
-
-# Clean up Docker resources
-mise run prune
-
-# Update services
-mise run update [service_name]
-```
+## 🛠️ Available Tasks
 
 ### Stack Management
 ```bash
-# Initialize new stack
-mise run init <stack_name> <stack_type>
+# Start a stack
+mise run stack up <stack_name>
 
-# Available stack types:
-# - media
-# - ai
-# - proxy
+# Stop a stack
+mise run stack down <stack_name>
+
+# Restart a stack
+mise run stack restart <stack_name>
+
+# View stack logs
+mise run stack logs <stack_name>
+
+# Examples:
+mise run stack up proxy      # Start proxy stack
+mise run stack logs media    # View media stack logs
+mise run stack restart ai    # Restart AI stack
+```
+
+### Backup Management
+```bash
+# Backup all services
+mise run backup
+
+# Backup specific service
+mise run backup prowlarr
+mise run backup qbittorrent
+mise run backup traefik
 ```
 
 ### Traefik Management
 ```bash
-# Add new domain
-mise run traefik add domain.delo.sh
-
-# Show configuration
+# Show Traefik configuration and routes
 mise run traefik show
 
-# Check certificates
-mise run traefik certs
-```
+# Check Traefik status
+mise run traefik status
 
-### VPN Management
-```bash
-# Check VPN status
-mise run vpn status
-
-# Restart VPN connection
-mise run vpn restart
-
-# Test torrent connectivity
-mise run vpn test
+# Available in traefik.sh:
+mise run traefik validate    # Validate configuration
+mise run traefik add        # Add new domain
+mise run traefik remove     # Remove domain
+mise run traefik apply      # Apply changes
+mise run traefik logs       # View logs
+mise run traefik certs      # Check SSL certificates
 ```
 
 ## 🌐 Network Architecture
@@ -137,6 +98,7 @@ The DeLoNET infrastructure uses Traefik as a reverse proxy to route traffic to v
 ### Domain Structure
 - `*.delo.sh` - Main domain for all services
 - Subdomains:
+  - `traefik.delo.sh` - Traefik Dashboard
   - `index.delo.sh` - Prowlarr interface
   - `get.delo.sh` - qBittorrent interface
   - Additional services use their respective subdomains
@@ -174,7 +136,10 @@ graph LR
   - Custom settings
 
 ### System Cleanup
-- Automated cleanup runs via `mise run prune`
+- Use the prune script:
+  ```bash
+  mise run prune
+  ```
 - Removes:
   - Unused containers
   - Dangling images
@@ -184,22 +149,20 @@ graph LR
 ## 📚 Development
 
 ### Adding New Services
-1. Initialize stack:
+1. Create stack directory:
    ```bash
-   mise run init myservice media
+   mkdir -p stacks/<stack_type>/<service_name>
    ```
 
 2. Configure environment:
    ```bash
-   cd stacks/media/myservice
-   cp .env.example .env
+   cd stacks/<stack_type>/<service_name>
+   touch docker-compose.yml .env
    ```
 
-3. Update configuration in `config/` directory
-
-4. Start service:
+3. Start service:
    ```bash
-   mise run up myservice
+   mise run stack up <service_name>
    ```
 
 ### Git Management
