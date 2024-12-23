@@ -1,0 +1,661 @@
+(W) 2024-12-11T18:47:54 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-11T18:47:54 - qBittorrent v5.0.2 started. Process ID: 155
+(N) 2024-12-11T18:47:54 - Using config directory: /config/qBittorrent
+(C) 2024-12-11T18:47:54 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-11T18:47:54 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-11T18:47:54 - Peer ID: "-qB5020-"
+(I) 2024-12-11T18:47:54 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-11T18:47:54 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-11T18:47:54 - Local Peer Discovery support: ON
+(I) 2024-12-11T18:47:54 - Peer Exchange (PeX) support: ON
+(I) 2024-12-11T18:47:54 - Anonymous mode: OFF
+(I) 2024-12-11T18:47:54 - Encryption support: ON
+(W) 2024-12-11T18:47:54 - Couldn't load IP geolocation database. Reason: No such file or directory
+(N) 2024-12-11T18:47:54 - Using built-in WebUI.
+(N) 2024-12-11T18:47:54 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-11T18:47:54 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-11T18:47:57 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-11T18:47:57 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-11T18:47:57 - Successfully listening on IP. IP: "fe80::55e7:cd52:b529:f60%tun0". Port: "TCP/6881"
+(I) 2024-12-11T18:47:57 - Successfully listening on IP. IP: "fe80::55e7:cd52:b529:f60%tun0". Port: "UTP/6881"
+(W) 2024-12-11T18:47:59 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-11T18:47:59 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-11T18:48:33 - WebAPI login failure. Reason: invalid credentials, attempt count: 1, IP: ::ffff:172.21.0.1, username: delorenj
+(W) 2024-12-11T18:48:43 - WebAPI login failure. Reason: invalid credentials, attempt count: 2, IP: ::ffff:172.21.0.1, username: delorenj
+(N) 2024-12-11T18:49:01 - WebAPI login success. IP: ::ffff:172.21.0.1
+(I) 2024-12-11T18:49:52 - Found Python executable. Name: "python3". Version: "3.12.7"
+(N) 2024-12-11T19:00:23 - Added new torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-11T19:00:54 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:10:55 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:20:55 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:21:49 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:23:41 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:25:45 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:30:57 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:40:58 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:43:38 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:45:35 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:47:06 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-11T19:48:42 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-12T12:51:40 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-12T12:51:40 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-12T12:51:40 - Using config directory: /config/qBittorrent
+(C) 2024-12-12T12:51:40 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-12T12:51:40 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-12T12:51:40 - Peer ID: "-qB5020-"
+(I) 2024-12-12T12:51:40 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-12T12:51:40 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-12T12:51:40 - Local Peer Discovery support: ON
+(I) 2024-12-12T12:51:40 - Peer Exchange (PeX) support: ON
+(I) 2024-12-12T12:51:40 - Anonymous mode: OFF
+(I) 2024-12-12T12:51:40 - Encryption support: ON
+(N) 2024-12-12T12:51:40 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-12T12:51:40 - Couldn't load IP geolocation database. Reason: No such file or directory
+(N) 2024-12-12T12:51:40 - Using built-in WebUI.
+(N) 2024-12-12T12:51:40 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-12T12:51:40 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-12T12:51:43 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-12T12:51:43 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-12T12:51:43 - Successfully listening on IP. IP: "fe80::6196:dc6a:8031:5547%tun0". Port: "TCP/6881"
+(I) 2024-12-12T12:51:43 - Successfully listening on IP. IP: "fe80::6196:dc6a:8031:5547%tun0". Port: "UTP/6881"
+(W) 2024-12-12T12:51:45 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-12T12:51:46 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-12T12:52:44 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-12T23:07:57 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-12T23:07:57 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-12T23:07:57 - Using config directory: /config/qBittorrent
+(C) 2024-12-12T23:07:57 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-12T23:07:57 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-12T23:07:57 - Peer ID: "-qB5020-"
+(I) 2024-12-12T23:07:57 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-12T23:07:57 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-12T23:07:57 - Local Peer Discovery support: ON
+(I) 2024-12-12T23:07:57 - Peer Exchange (PeX) support: ON
+(I) 2024-12-12T23:07:57 - Anonymous mode: OFF
+(I) 2024-12-12T23:07:57 - Encryption support: ON
+(N) 2024-12-12T23:07:57 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-12T23:07:57 - Couldn't load IP geolocation database. Reason: No such file or directory
+(N) 2024-12-12T23:07:57 - Using built-in WebUI.
+(N) 2024-12-12T23:07:57 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-12T23:07:57 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-12T23:08:01 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-12T23:08:01 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-12T23:08:01 - Successfully listening on IP. IP: "fe80::2926:30ec:c7bf:4aae%tun0". Port: "TCP/6881"
+(I) 2024-12-12T23:08:01 - Successfully listening on IP. IP: "fe80::2926:30ec:c7bf:4aae%tun0". Port: "UTP/6881"
+(W) 2024-12-12T23:08:02 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-12T23:08:03 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-12T23:09:00 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-13T05:19:01 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-13T05:19:01 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-13T05:19:01 - Using config directory: /config/qBittorrent
+(C) 2024-12-13T05:19:01 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-13T05:19:01 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-13T05:19:01 - Peer ID: "-qB5020-"
+(I) 2024-12-13T05:19:01 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-13T05:19:01 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-13T05:19:01 - Local Peer Discovery support: ON
+(I) 2024-12-13T05:19:01 - Peer Exchange (PeX) support: ON
+(I) 2024-12-13T05:19:01 - Anonymous mode: OFF
+(I) 2024-12-13T05:19:01 - Encryption support: ON
+(N) 2024-12-13T05:19:01 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-13T05:19:01 - Couldn't load IP geolocation database. Reason: No such file or directory
+(N) 2024-12-13T05:19:01 - Using built-in WebUI.
+(N) 2024-12-13T05:19:01 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-13T05:19:01 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-13T05:19:04 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-13T05:19:04 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-13T05:19:04 - Successfully listening on IP. IP: "fe80::12b0:5bea:e6b4:b6df%tun0". Port: "TCP/6881"
+(I) 2024-12-13T05:19:04 - Successfully listening on IP. IP: "fe80::12b0:5bea:e6b4:b6df%tun0". Port: "UTP/6881"
+(W) 2024-12-13T05:19:06 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-13T05:19:08 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-13T05:20:11 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-13T19:23:54 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-13T19:23:54 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-13T19:23:54 - Using config directory: /config/qBittorrent
+(C) 2024-12-13T19:23:54 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-13T19:23:54 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-13T19:23:54 - Peer ID: "-qB5020-"
+(I) 2024-12-13T19:23:54 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-13T19:23:54 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-13T19:23:54 - Local Peer Discovery support: ON
+(I) 2024-12-13T19:23:54 - Peer Exchange (PeX) support: ON
+(I) 2024-12-13T19:23:54 - Anonymous mode: OFF
+(I) 2024-12-13T19:23:54 - Encryption support: ON
+(N) 2024-12-13T19:23:54 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(W) 2024-12-13T19:23:54 - Couldn't load IP geolocation database. Reason: No such file or directory
+(N) 2024-12-13T19:23:54 - Using built-in WebUI.
+(N) 2024-12-13T19:23:54 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-13T19:23:54 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-13T19:23:54 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-13T19:23:54 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-13T19:23:54 - Successfully listening on IP. IP: "fe80::52ab:9c2b:e5c3:f2b1%tun0". Port: "TCP/6881"
+(I) 2024-12-13T19:23:54 - Successfully listening on IP. IP: "fe80::52ab:9c2b:e5c3:f2b1%tun0". Port: "UTP/6881"
+(I) 2024-12-13T19:23:57 - Detected external IP. IP: "109.201.135.166"
+(I) 2024-12-13T19:23:59 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(I) 2024-12-13T19:23:59 - Successfully updated IP geolocation database.
+(W) 2024-12-13T19:26:03 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-13T19:51:28 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-13T19:51:28 - qBittorrent v5.0.2 started. Process ID: 145
+(N) 2024-12-13T19:51:28 - Using config directory: /config/qBittorrent
+(C) 2024-12-13T19:51:28 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-13T19:51:28 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-13T19:51:28 - Peer ID: "-qB5020-"
+(I) 2024-12-13T19:51:28 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-13T19:51:28 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-13T19:51:28 - Local Peer Discovery support: ON
+(I) 2024-12-13T19:51:28 - Peer Exchange (PeX) support: ON
+(I) 2024-12-13T19:51:28 - Anonymous mode: OFF
+(I) 2024-12-13T19:51:28 - Encryption support: ON
+(N) 2024-12-13T19:51:28 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-13T19:51:28 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-13T19:51:28 - Using built-in WebUI.
+(N) 2024-12-13T19:51:28 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-13T19:51:28 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-13T19:51:29 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-13T19:51:29 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-13T19:51:29 - Successfully listening on IP. IP: "fe80::68e6:3ac0:b84c:af48%tun0". Port: "TCP/6881"
+(I) 2024-12-13T19:51:29 - Successfully listening on IP. IP: "fe80::68e6:3ac0:b84c:af48%tun0". Port: "UTP/6881"
+(I) 2024-12-13T19:51:32 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-13T19:52:31 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(I) 2024-12-13T20:05:55 - Successfully listening on IP. IP: "fe80::3f0a:38cf:6d01:9d70%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:05:55 - Successfully listening on IP. IP: "fe80::3f0a:38cf:6d01:9d70%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:06:56 - Successfully listening on IP. IP: "fe80::de76:caff:8985:d0e5%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:06:56 - Successfully listening on IP. IP: "fe80::de76:caff:8985:d0e5%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:14:49 - Successfully listening on IP. IP: "fe80::fd0c:3972:75be:709f%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:14:49 - Successfully listening on IP. IP: "fe80::fd0c:3972:75be:709f%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:23:42 - Successfully listening on IP. IP: "fe80::af29:ea5d:3b6a:38d4%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:23:42 - Successfully listening on IP. IP: "fe80::af29:ea5d:3b6a:38d4%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:24:41 - Successfully listening on IP. IP: "fe80::771a:9f8:af00:578f%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:24:41 - Successfully listening on IP. IP: "fe80::771a:9f8:af00:578f%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:32:48 - Successfully listening on IP. IP: "fe80::d4d0:da6d:7545:509%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:32:48 - Successfully listening on IP. IP: "fe80::d4d0:da6d:7545:509%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:33:34 - Successfully listening on IP. IP: "fe80::ab00:8d8d:6301:a6f4%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:33:34 - Successfully listening on IP. IP: "fe80::ab00:8d8d:6301:a6f4%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:42:15 - Successfully listening on IP. IP: "fe80::af75:5adf:8fe6:1932%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:42:15 - Successfully listening on IP. IP: "fe80::af75:5adf:8fe6:1932%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:56:05 - Successfully listening on IP. IP: "fe80::3666:767a:7082:e07c%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:56:05 - Successfully listening on IP. IP: "fe80::3666:767a:7082:e07c%tun0". Port: "UTP/6881"
+(I) 2024-12-13T20:57:00 - Successfully listening on IP. IP: "fe80::3117:7f78:3296:480e%tun0". Port: "TCP/6881"
+(I) 2024-12-13T20:57:00 - Successfully listening on IP. IP: "fe80::3117:7f78:3296:480e%tun0". Port: "UTP/6881"
+(I) 2024-12-13T21:14:39 - Successfully listening on IP. IP: "fe80::4569:c620:403e:4fbe%tun0". Port: "TCP/6881"
+(I) 2024-12-13T21:14:39 - Successfully listening on IP. IP: "fe80::4569:c620:403e:4fbe%tun0". Port: "UTP/6881"
+(I) 2024-12-13T21:52:59 - Successfully listening on IP. IP: "fe80::a84e:8197:2e14:aa4f%tun0". Port: "TCP/6881"
+(I) 2024-12-13T21:52:59 - Successfully listening on IP. IP: "fe80::a84e:8197:2e14:aa4f%tun0". Port: "UTP/6881"
+(I) 2024-12-13T22:31:21 - Successfully listening on IP. IP: "fe80::d996:f2aa:711a:7ec1%tun0". Port: "TCP/6881"
+(I) 2024-12-13T22:31:21 - Successfully listening on IP. IP: "fe80::d996:f2aa:711a:7ec1%tun0". Port: "UTP/6881"
+(I) 2024-12-13T23:09:45 - Successfully listening on IP. IP: "fe80::2dab:b952:cc84:a554%tun0". Port: "TCP/6881"
+(I) 2024-12-13T23:09:45 - Successfully listening on IP. IP: "fe80::2dab:b952:cc84:a554%tun0". Port: "UTP/6881"
+(I) 2024-12-13T23:48:06 - Successfully listening on IP. IP: "fe80::fcbe:8c22:85d6:7bce%tun0". Port: "TCP/6881"
+(I) 2024-12-13T23:48:06 - Successfully listening on IP. IP: "fe80::fcbe:8c22:85d6:7bce%tun0". Port: "UTP/6881"
+(I) 2024-12-13T23:48:58 - Successfully listening on IP. IP: "fe80::10cb:eab8:e2f1:9270%tun0". Port: "TCP/6881"
+(I) 2024-12-13T23:48:58 - Successfully listening on IP. IP: "fe80::10cb:eab8:e2f1:9270%tun0". Port: "UTP/6881"
+(I) 2024-12-14T00:26:42 - Successfully listening on IP. IP: "fe80::f2f8:29cb:f764:dda6%tun0". Port: "TCP/6881"
+(I) 2024-12-14T00:26:42 - Successfully listening on IP. IP: "fe80::f2f8:29cb:f764:dda6%tun0". Port: "UTP/6881"
+(I) 2024-12-14T00:27:33 - Successfully listening on IP. IP: "fe80::60f0:2453:ff8a:d6fc%tun0". Port: "TCP/6881"
+(I) 2024-12-14T00:27:33 - Successfully listening on IP. IP: "fe80::60f0:2453:ff8a:d6fc%tun0". Port: "UTP/6881"
+(I) 2024-12-14T01:05:21 - Successfully listening on IP. IP: "fe80::5714:9ce5:5c13:ad67%tun0". Port: "TCP/6881"
+(I) 2024-12-14T01:05:21 - Successfully listening on IP. IP: "fe80::5714:9ce5:5c13:ad67%tun0". Port: "UTP/6881"
+(I) 2024-12-14T01:06:18 - Successfully listening on IP. IP: "fe80::fc15:8482:bda8:a0c1%tun0". Port: "TCP/6881"
+(I) 2024-12-14T01:06:18 - Successfully listening on IP. IP: "fe80::fc15:8482:bda8:a0c1%tun0". Port: "UTP/6881"
+(I) 2024-12-14T01:44:23 - Successfully listening on IP. IP: "fe80::4a9d:7e52:e6e8:221c%tun0". Port: "TCP/6881"
+(I) 2024-12-14T01:44:23 - Successfully listening on IP. IP: "fe80::4a9d:7e52:e6e8:221c%tun0". Port: "UTP/6881"
+(I) 2024-12-14T01:45:16 - Successfully listening on IP. IP: "fe80::5f85:37a5:f200:78ef%tun0". Port: "TCP/6881"
+(I) 2024-12-14T01:45:16 - Successfully listening on IP. IP: "fe80::5f85:37a5:f200:78ef%tun0". Port: "UTP/6881"
+(I) 2024-12-14T02:23:19 - Successfully listening on IP. IP: "fe80::f77:57de:4857:f5d2%tun0". Port: "TCP/6881"
+(I) 2024-12-14T02:23:19 - Successfully listening on IP. IP: "fe80::f77:57de:4857:f5d2%tun0". Port: "UTP/6881"
+(I) 2024-12-14T02:24:12 - Successfully listening on IP. IP: "fe80::6265:be4f:5a8:7f58%tun0". Port: "TCP/6881"
+(I) 2024-12-14T02:24:12 - Successfully listening on IP. IP: "fe80::6265:be4f:5a8:7f58%tun0". Port: "UTP/6881"
+(I) 2024-12-14T03:02:10 - Successfully listening on IP. IP: "fe80::6944:4d5e:2083:38f3%tun0". Port: "TCP/6881"
+(I) 2024-12-14T03:02:10 - Successfully listening on IP. IP: "fe80::6944:4d5e:2083:38f3%tun0". Port: "UTP/6881"
+(I) 2024-12-14T03:02:56 - Successfully listening on IP. IP: "fe80::352:167d:869a:796%tun0". Port: "TCP/6881"
+(I) 2024-12-14T03:02:56 - Successfully listening on IP. IP: "fe80::352:167d:869a:796%tun0". Port: "UTP/6881"
+(I) 2024-12-14T03:40:58 - Successfully listening on IP. IP: "fe80::f225:676:3338:dff2%tun0". Port: "TCP/6881"
+(I) 2024-12-14T03:40:58 - Successfully listening on IP. IP: "fe80::f225:676:3338:dff2%tun0". Port: "UTP/6881"
+(I) 2024-12-14T03:41:53 - Successfully listening on IP. IP: "fe80::1079:1c19:fcb4:c621%tun0". Port: "TCP/6881"
+(I) 2024-12-14T03:41:53 - Successfully listening on IP. IP: "fe80::1079:1c19:fcb4:c621%tun0". Port: "UTP/6881"
+(I) 2024-12-14T04:19:52 - Successfully listening on IP. IP: "fe80::d81c:7fdc:4450:a3dd%tun0". Port: "TCP/6881"
+(I) 2024-12-14T04:19:52 - Successfully listening on IP. IP: "fe80::d81c:7fdc:4450:a3dd%tun0". Port: "UTP/6881"
+(I) 2024-12-14T04:20:44 - Successfully listening on IP. IP: "fe80::ca9d:78e8:eeb7:fbaf%tun0". Port: "TCP/6881"
+(I) 2024-12-14T04:20:44 - Successfully listening on IP. IP: "fe80::ca9d:78e8:eeb7:fbaf%tun0". Port: "UTP/6881"
+(I) 2024-12-14T04:58:37 - Successfully listening on IP. IP: "fe80::5c6d:155a:96ac:81ed%tun0". Port: "TCP/6881"
+(I) 2024-12-14T04:58:37 - Successfully listening on IP. IP: "fe80::5c6d:155a:96ac:81ed%tun0". Port: "UTP/6881"
+(I) 2024-12-14T04:59:24 - Successfully listening on IP. IP: "fe80::4ac8:aa51:45c2:7a57%tun0". Port: "TCP/6881"
+(I) 2024-12-14T04:59:24 - Successfully listening on IP. IP: "fe80::4ac8:aa51:45c2:7a57%tun0". Port: "UTP/6881"
+(I) 2024-12-14T05:37:01 - Successfully listening on IP. IP: "fe80::b23b:9aa1:fe3:28f4%tun0". Port: "TCP/6881"
+(I) 2024-12-14T05:37:01 - Successfully listening on IP. IP: "fe80::b23b:9aa1:fe3:28f4%tun0". Port: "UTP/6881"
+(I) 2024-12-14T06:15:23 - Successfully listening on IP. IP: "fe80::2cba:ced9:f653:8a7c%tun0". Port: "TCP/6881"
+(I) 2024-12-14T06:15:23 - Successfully listening on IP. IP: "fe80::2cba:ced9:f653:8a7c%tun0". Port: "UTP/6881"
+(I) 2024-12-14T06:53:41 - Successfully listening on IP. IP: "fe80::4387:d231:f08d:774d%tun0". Port: "TCP/6881"
+(I) 2024-12-14T06:53:41 - Successfully listening on IP. IP: "fe80::4387:d231:f08d:774d%tun0". Port: "UTP/6881"
+(I) 2024-12-14T06:54:25 - Successfully listening on IP. IP: "fe80::b57a:70d4:364a:6f10%tun0". Port: "TCP/6881"
+(I) 2024-12-14T06:54:25 - Successfully listening on IP. IP: "fe80::b57a:70d4:364a:6f10%tun0". Port: "UTP/6881"
+(I) 2024-12-14T07:32:09 - Successfully listening on IP. IP: "fe80::766a:d5e2:88c4:ffe0%tun0". Port: "TCP/6881"
+(I) 2024-12-14T07:32:09 - Successfully listening on IP. IP: "fe80::766a:d5e2:88c4:ffe0%tun0". Port: "UTP/6881"
+(I) 2024-12-14T08:10:18 - Successfully listening on IP. IP: "fe80::9b04:fd98:ac0b:7436%tun0". Port: "TCP/6881"
+(I) 2024-12-14T08:10:18 - Successfully listening on IP. IP: "fe80::9b04:fd98:ac0b:7436%tun0". Port: "UTP/6881"
+(I) 2024-12-14T08:48:35 - Successfully listening on IP. IP: "fe80::e709:b8c3:721:ee5d%tun0". Port: "TCP/6881"
+(I) 2024-12-14T08:48:35 - Successfully listening on IP. IP: "fe80::e709:b8c3:721:ee5d%tun0". Port: "UTP/6881"
+(I) 2024-12-14T09:26:56 - Successfully listening on IP. IP: "fe80::fe9c:cee7:bcc2:f9b5%tun0". Port: "TCP/6881"
+(I) 2024-12-14T09:26:56 - Successfully listening on IP. IP: "fe80::fe9c:cee7:bcc2:f9b5%tun0". Port: "UTP/6881"
+(I) 2024-12-14T09:27:42 - Successfully listening on IP. IP: "fe80::c595:ee77:a27:c0a0%tun0". Port: "TCP/6881"
+(I) 2024-12-14T09:27:42 - Successfully listening on IP. IP: "fe80::c595:ee77:a27:c0a0%tun0". Port: "UTP/6881"
+(I) 2024-12-14T10:05:46 - Successfully listening on IP. IP: "fe80::f2fb:d4b6:df1b:4f8%tun0". Port: "TCP/6881"
+(I) 2024-12-14T10:05:46 - Successfully listening on IP. IP: "fe80::f2fb:d4b6:df1b:4f8%tun0". Port: "UTP/6881"
+(I) 2024-12-14T10:06:36 - Successfully listening on IP. IP: "fe80::71e8:fe8a:6bde:7882%tun0". Port: "TCP/6881"
+(I) 2024-12-14T10:06:36 - Successfully listening on IP. IP: "fe80::71e8:fe8a:6bde:7882%tun0". Port: "UTP/6881"
+(I) 2024-12-14T10:44:38 - Successfully listening on IP. IP: "fe80::9efd:2823:407c:b5c%tun0". Port: "TCP/6881"
+(I) 2024-12-14T10:44:38 - Successfully listening on IP. IP: "fe80::9efd:2823:407c:b5c%tun0". Port: "UTP/6881"
+(I) 2024-12-14T10:45:30 - Successfully listening on IP. IP: "fe80::843:2f90:a925:3516%tun0". Port: "TCP/6881"
+(I) 2024-12-14T10:45:30 - Successfully listening on IP. IP: "fe80::843:2f90:a925:3516%tun0". Port: "UTP/6881"
+(I) 2024-12-14T11:29:56 - Successfully listening on IP. IP: "fe80::a2bd:7363:b70:79ad%tun0". Port: "TCP/6881"
+(I) 2024-12-14T11:29:56 - Successfully listening on IP. IP: "fe80::a2bd:7363:b70:79ad%tun0". Port: "UTP/6881"
+(I) 2024-12-14T11:30:52 - Successfully listening on IP. IP: "fe80::fd4b:ab80:b06d:69fa%tun0". Port: "TCP/6881"
+(I) 2024-12-14T11:30:52 - Successfully listening on IP. IP: "fe80::fd4b:ab80:b06d:69fa%tun0". Port: "UTP/6881"
+(I) 2024-12-14T12:17:07 - Successfully listening on IP. IP: "fe80::8dbf:deff:b754:c315%tun0". Port: "TCP/6881"
+(I) 2024-12-14T12:17:07 - Successfully listening on IP. IP: "fe80::8dbf:deff:b754:c315%tun0". Port: "UTP/6881"
+(I) 2024-12-14T12:18:04 - Successfully listening on IP. IP: "fe80::2c3b:b7aa:26ac:281%tun0". Port: "TCP/6881"
+(I) 2024-12-14T12:18:04 - Successfully listening on IP. IP: "fe80::2c3b:b7aa:26ac:281%tun0". Port: "UTP/6881"
+(I) 2024-12-14T13:04:27 - Successfully listening on IP. IP: "fe80::c9b1:ee98:2e80:90fa%tun0". Port: "TCP/6881"
+(I) 2024-12-14T13:04:27 - Successfully listening on IP. IP: "fe80::c9b1:ee98:2e80:90fa%tun0". Port: "UTP/6881"
+(I) 2024-12-14T13:51:39 - Successfully listening on IP. IP: "fe80::70fc:b7e8:2a62:6c47%tun0". Port: "TCP/6881"
+(I) 2024-12-14T13:51:39 - Successfully listening on IP. IP: "fe80::70fc:b7e8:2a62:6c47%tun0". Port: "UTP/6881"
+(I) 2024-12-14T13:52:28 - Successfully listening on IP. IP: "fe80::de09:aa05:b861:8032%tun0". Port: "TCP/6881"
+(I) 2024-12-14T13:52:28 - Successfully listening on IP. IP: "fe80::de09:aa05:b861:8032%tun0". Port: "UTP/6881"
+(I) 2024-12-14T14:36:30 - Successfully listening on IP. IP: "fe80::7645:3f30:d330:c3b0%tun0". Port: "TCP/6881"
+(I) 2024-12-14T14:36:30 - Successfully listening on IP. IP: "fe80::7645:3f30:d330:c3b0%tun0". Port: "UTP/6881"
+(I) 2024-12-14T14:37:17 - Successfully listening on IP. IP: "fe80::4cf:5cb7:6053:dab2%tun0". Port: "TCP/6881"
+(I) 2024-12-14T14:37:17 - Successfully listening on IP. IP: "fe80::4cf:5cb7:6053:dab2%tun0". Port: "UTP/6881"
+(I) 2024-12-14T15:18:49 - Successfully listening on IP. IP: "fe80::cf46:2a2f:3bbe:40af%tun0". Port: "TCP/6881"
+(I) 2024-12-14T15:18:49 - Successfully listening on IP. IP: "fe80::cf46:2a2f:3bbe:40af%tun0". Port: "UTP/6881"
+(I) 2024-12-14T16:01:01 - Successfully listening on IP. IP: "fe80::7b11:780c:43c5:d916%tun0". Port: "TCP/6881"
+(I) 2024-12-14T16:01:01 - Successfully listening on IP. IP: "fe80::7b11:780c:43c5:d916%tun0". Port: "UTP/6881"
+(I) 2024-12-14T16:43:58 - Successfully listening on IP. IP: "fe80::d883:f008:98ae:976f%tun0". Port: "TCP/6881"
+(I) 2024-12-14T16:43:58 - Successfully listening on IP. IP: "fe80::d883:f008:98ae:976f%tun0". Port: "UTP/6881"
+(W) 2024-12-14T21:38:35 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-14T21:38:35 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-14T21:38:35 - Using config directory: /config/qBittorrent
+(C) 2024-12-14T21:38:35 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-14T21:38:35 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-14T21:38:35 - Peer ID: "-qB5020-"
+(I) 2024-12-14T21:38:35 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-14T21:38:35 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-14T21:38:35 - Local Peer Discovery support: ON
+(I) 2024-12-14T21:38:35 - Peer Exchange (PeX) support: ON
+(I) 2024-12-14T21:38:35 - Anonymous mode: OFF
+(I) 2024-12-14T21:38:35 - Encryption support: ON
+(N) 2024-12-14T21:38:35 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-14T21:38:35 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-14T21:38:35 - Using built-in WebUI.
+(N) 2024-12-14T21:38:35 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-14T21:38:35 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-14T21:38:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-14T21:38:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-14T21:38:37 - Successfully listening on IP. IP: "fe80::e12d:7ba5:192f:6f40%tun0". Port: "TCP/6881"
+(I) 2024-12-14T21:38:37 - Successfully listening on IP. IP: "fe80::e12d:7ba5:192f:6f40%tun0". Port: "UTP/6881"
+(I) 2024-12-14T21:38:39 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-14T21:49:38 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-14T21:49:38 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-14T21:49:38 - Using config directory: /config/qBittorrent
+(C) 2024-12-14T21:49:38 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-14T21:49:38 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-14T21:49:38 - Peer ID: "-qB5020-"
+(I) 2024-12-14T21:49:38 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-14T21:49:38 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-14T21:49:38 - Local Peer Discovery support: ON
+(I) 2024-12-14T21:49:38 - Peer Exchange (PeX) support: ON
+(I) 2024-12-14T21:49:38 - Anonymous mode: OFF
+(I) 2024-12-14T21:49:38 - Encryption support: ON
+(N) 2024-12-14T21:49:38 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-14T21:49:38 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-14T21:49:38 - Using built-in WebUI.
+(N) 2024-12-14T21:49:38 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-14T21:49:38 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-14T21:49:39 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-14T21:49:39 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-14T21:49:39 - Successfully listening on IP. IP: "fe80::2f36:b4a2:6f15:86a4%tun0". Port: "TCP/6881"
+(I) 2024-12-14T21:49:39 - Successfully listening on IP. IP: "fe80::2f36:b4a2:6f15:86a4%tun0". Port: "UTP/6881"
+(I) 2024-12-14T21:49:42 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-14T21:50:40 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-15T00:17:22 - qBittorrent termination initiated
+(N) 2024-12-15T00:17:22 - Saving resume data completed.
+(N) 2024-12-15T00:17:22 - BitTorrent session successfully finished.
+(N) 2024-12-15T00:17:22 - qBittorrent is now ready to exit
+(W) 2024-12-15T00:17:36 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-15T00:17:36 - qBittorrent v5.0.2 started. Process ID: 140
+(N) 2024-12-15T00:17:36 - Using config directory: /config/qBittorrent
+(C) 2024-12-15T00:17:36 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-15T00:17:36 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-15T00:17:36 - Peer ID: "-qB5020-"
+(I) 2024-12-15T00:17:36 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-15T00:17:36 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-15T00:17:36 - Local Peer Discovery support: ON
+(I) 2024-12-15T00:17:36 - Peer Exchange (PeX) support: ON
+(I) 2024-12-15T00:17:36 - Anonymous mode: OFF
+(I) 2024-12-15T00:17:36 - Encryption support: ON
+(N) 2024-12-15T00:17:36 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-15T00:17:36 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-15T00:17:36 - Using built-in WebUI.
+(N) 2024-12-15T00:17:36 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-15T00:17:36 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-15T00:17:39 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-15T00:17:39 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-15T00:17:39 - Successfully listening on IP. IP: "fe80::583a:76a1:137f:b95f%tun0". Port: "TCP/6881"
+(I) 2024-12-15T00:17:39 - Successfully listening on IP. IP: "fe80::583a:76a1:137f:b95f%tun0". Port: "UTP/6881"
+(W) 2024-12-15T00:17:41 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-15T00:17:45 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-15T00:18:40 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(I) 2024-12-17T19:58:00 - Successfully listening on IP. IP: "fe80::667:7d18:9c1:9faa%tun0". Port: "TCP/6881"
+(I) 2024-12-17T19:58:00 - Successfully listening on IP. IP: "fe80::667:7d18:9c1:9faa%tun0". Port: "UTP/6881"
+(W) 2024-12-18T16:48:08 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-18T16:48:08 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-18T16:48:08 - Using config directory: /config/qBittorrent
+(C) 2024-12-18T16:48:08 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-18T16:48:08 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-18T16:48:08 - Peer ID: "-qB5020-"
+(I) 2024-12-18T16:48:08 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-18T16:48:08 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-18T16:48:08 - Local Peer Discovery support: ON
+(I) 2024-12-18T16:48:08 - Peer Exchange (PeX) support: ON
+(I) 2024-12-18T16:48:08 - Anonymous mode: OFF
+(I) 2024-12-18T16:48:08 - Encryption support: ON
+(N) 2024-12-18T16:48:08 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-18T16:48:08 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-18T16:48:08 - Using built-in WebUI.
+(N) 2024-12-18T16:48:08 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-18T16:48:09 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-18T16:48:11 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-18T16:48:11 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-18T16:48:11 - Successfully listening on IP. IP: "fe80::3927:3369:1910:b51a%tun0". Port: "TCP/6881"
+(I) 2024-12-18T16:48:11 - Successfully listening on IP. IP: "fe80::3927:3369:1910:b51a%tun0". Port: "UTP/6881"
+(I) 2024-12-18T16:48:13 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-18T16:49:21 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(I) 2024-12-18T17:08:21 - Successfully listening on IP. IP: "fe80::8d59:5acb:ed17:d73b%tun0". Port: "TCP/6881"
+(I) 2024-12-18T17:08:21 - Successfully listening on IP. IP: "fe80::8d59:5acb:ed17:d73b%tun0". Port: "UTP/6881"
+(I) 2024-12-18T17:18:35 - Successfully listening on IP. IP: "fe80::6c45:cf57:6e73:176f%tun0". Port: "TCP/6881"
+(I) 2024-12-18T17:18:35 - Successfully listening on IP. IP: "fe80::6c45:cf57:6e73:176f%tun0". Port: "UTP/6881"
+(I) 2024-12-18T17:28:50 - Successfully listening on IP. IP: "fe80::74fc:4d71:9504:2dae%tun0". Port: "TCP/6881"
+(I) 2024-12-18T17:28:50 - Successfully listening on IP. IP: "fe80::74fc:4d71:9504:2dae%tun0". Port: "UTP/6881"
+(I) 2024-12-18T17:35:42 - Successfully listening on IP. IP: "fe80::9490:32b9:cca5:2e93%tun0". Port: "TCP/6881"
+(I) 2024-12-18T17:35:42 - Successfully listening on IP. IP: "fe80::9490:32b9:cca5:2e93%tun0". Port: "UTP/6881"
+(I) 2024-12-18T17:56:42 - Successfully listening on IP. IP: "fe80::8dbb:fd03:b3d0:ecc6%tun0". Port: "TCP/6881"
+(I) 2024-12-18T17:56:42 - Successfully listening on IP. IP: "fe80::8dbb:fd03:b3d0:ecc6%tun0". Port: "UTP/6881"
+(W) 2024-12-20T00:22:38 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-20T00:22:38 - qBittorrent v5.0.2 started. Process ID: 145
+(N) 2024-12-20T00:22:38 - Using config directory: /config/qBittorrent
+(C) 2024-12-20T00:22:38 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-20T00:22:38 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-20T00:22:38 - Peer ID: "-qB5020-"
+(I) 2024-12-20T00:22:38 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-20T00:22:38 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-20T00:22:38 - Local Peer Discovery support: ON
+(I) 2024-12-20T00:22:38 - Peer Exchange (PeX) support: ON
+(I) 2024-12-20T00:22:38 - Anonymous mode: OFF
+(I) 2024-12-20T00:22:38 - Encryption support: ON
+(N) 2024-12-20T00:22:38 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-20T00:22:38 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-20T00:22:38 - Using built-in WebUI.
+(N) 2024-12-20T00:22:38 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-20T00:22:38 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-20T00:22:42 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-20T00:22:42 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-20T00:22:42 - Successfully listening on IP. IP: "fe80::4fb3:ef68:e57f:7b3%tun0". Port: "TCP/6881"
+(I) 2024-12-20T00:22:42 - Successfully listening on IP. IP: "fe80::4fb3:ef68:e57f:7b3%tun0". Port: "UTP/6881"
+(W) 2024-12-20T00:22:43 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-20T00:22:44 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-20T00:23:50 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(W) 2024-12-22T18:34:17 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-22T18:34:17 - qBittorrent v5.0.2 started. Process ID: 146
+(N) 2024-12-22T18:34:17 - Using config directory: /config/qBittorrent
+(C) 2024-12-22T18:34:17 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-22T18:34:17 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-22T18:34:17 - Peer ID: "-qB5020-"
+(I) 2024-12-22T18:34:17 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-22T18:34:17 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-22T18:34:17 - Local Peer Discovery support: ON
+(I) 2024-12-22T18:34:17 - Peer Exchange (PeX) support: ON
+(I) 2024-12-22T18:34:17 - Anonymous mode: OFF
+(I) 2024-12-22T18:34:17 - Encryption support: ON
+(N) 2024-12-22T18:34:17 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-22T18:34:17 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-22T18:34:17 - Using built-in WebUI.
+(N) 2024-12-22T18:34:17 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-22T18:34:17 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-22T18:34:20 - Successfully listening on IP. IP: "10.10.101.10". Port: "TCP/6881"
+(I) 2024-12-22T18:34:20 - Successfully listening on IP. IP: "10.10.101.10". Port: "UTP/6881"
+(I) 2024-12-22T18:34:20 - Successfully listening on IP. IP: "fe80::ef4:f772:c13c:1b0c%tun0". Port: "TCP/6881"
+(I) 2024-12-22T18:34:20 - Successfully listening on IP. IP: "fe80::ef4:f772:c13c:1b0c%tun0". Port: "UTP/6881"
+(W) 2024-12-22T18:34:22 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-22T18:34:23 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-22T18:35:32 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T02:57:42 - qBittorrent termination initiated
+(N) 2024-12-23T02:57:42 - Saving resume data completed.
+(N) 2024-12-23T02:57:44 - BitTorrent session successfully finished.
+(N) 2024-12-23T02:57:44 - qBittorrent is now ready to exit
+(W) 2024-12-23T02:58:33 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T02:58:33 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-23T02:58:33 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T02:58:33 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T02:58:33 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T02:58:33 - Peer ID: "-qB5020-"
+(I) 2024-12-23T02:58:33 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T02:58:33 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T02:58:33 - Local Peer Discovery support: ON
+(I) 2024-12-23T02:58:33 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T02:58:33 - Anonymous mode: OFF
+(I) 2024-12-23T02:58:33 - Encryption support: ON
+(N) 2024-12-23T02:58:34 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T02:58:34 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T02:58:34 - Using built-in WebUI.
+(N) 2024-12-23T02:58:34 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T02:58:34 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T02:58:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-23T02:58:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-23T02:58:37 - Successfully listening on IP. IP: "fe80::6322:e3ba:46f1:2e21%tun0". Port: "TCP/6881"
+(I) 2024-12-23T02:58:37 - Successfully listening on IP. IP: "fe80::6322:e3ba:46f1:2e21%tun0". Port: "UTP/6881"
+(W) 2024-12-23T02:58:39 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-23T02:58:41 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-23T02:59:40 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T04:48:27 - qBittorrent termination initiated
+(N) 2024-12-23T04:48:27 - Saving resume data completed.
+(N) 2024-12-23T04:48:29 - BitTorrent session successfully finished.
+(N) 2024-12-23T04:48:29 - qBittorrent is now ready to exit
+(W) 2024-12-23T04:48:34 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T04:48:34 - qBittorrent v5.0.2 started. Process ID: 145
+(N) 2024-12-23T04:48:34 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T04:48:34 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T04:48:34 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T04:48:34 - Peer ID: "-qB5020-"
+(I) 2024-12-23T04:48:34 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T04:48:34 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T04:48:34 - Local Peer Discovery support: ON
+(I) 2024-12-23T04:48:34 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T04:48:34 - Anonymous mode: OFF
+(I) 2024-12-23T04:48:34 - Encryption support: ON
+(N) 2024-12-23T04:48:34 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T04:48:34 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T04:48:34 - Using built-in WebUI.
+(N) 2024-12-23T04:48:34 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T04:48:34 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T04:48:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-23T04:48:37 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-23T04:48:37 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "TCP/6881"
+(I) 2024-12-23T04:48:37 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "UTP/6881"
+(W) 2024-12-23T04:48:39 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-23T04:48:40 - Detected external IP. IP: "109.201.135.166"
+(N) 2024-12-23T04:48:57 - WebAPI login success. IP: ::ffff:172.23.0.2
+(I) 2024-12-23T04:48:58 - Found Python executable. Name: "python3". Version: "3.12.7"
+(W) 2024-12-23T04:49:41 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T04:52:54 - qBittorrent termination initiated
+(N) 2024-12-23T04:52:54 - Saving resume data completed.
+(N) 2024-12-23T04:52:56 - BitTorrent session successfully finished.
+(N) 2024-12-23T04:52:56 - qBittorrent is now ready to exit
+(W) 2024-12-23T04:53:00 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T04:53:00 - qBittorrent v5.0.2 started. Process ID: 141
+(N) 2024-12-23T04:53:00 - Using config directory: /config/qBittorrent
+(N) 2024-12-23T04:53:00 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T04:53:00 - Peer ID: "-qB5020-"
+(I) 2024-12-23T04:53:00 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T04:53:00 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T04:53:00 - Local Peer Discovery support: ON
+(I) 2024-12-23T04:53:00 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T04:53:00 - Anonymous mode: OFF
+(I) 2024-12-23T04:53:00 - Encryption support: ON
+(I) 2024-12-23T04:53:00 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-23T04:53:00 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-23T04:53:00 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "TCP/6881"
+(I) 2024-12-23T04:53:00 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "UTP/6881"
+(N) 2024-12-23T04:53:00 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T04:53:00 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T04:53:00 - Using built-in WebUI.
+(N) 2024-12-23T04:53:00 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T04:53:00 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T04:53:02 - Detected external IP. IP: "109.201.135.166"
+(N) 2024-12-23T04:53:04 - WebAPI login success. IP: ::ffff:172.23.0.2
+(W) 2024-12-23T04:53:12 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T04:58:48 - qBittorrent termination initiated
+(N) 2024-12-23T04:58:48 - Saving resume data completed.
+(N) 2024-12-23T04:58:50 - BitTorrent session successfully finished.
+(N) 2024-12-23T04:58:50 - qBittorrent is now ready to exit
+(W) 2024-12-23T04:58:53 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T04:58:53 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-23T04:58:53 - Using config directory: /config/qBittorrent
+(N) 2024-12-23T04:58:53 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T04:58:53 - Peer ID: "-qB5020-"
+(I) 2024-12-23T04:58:53 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T04:58:53 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T04:58:53 - Local Peer Discovery support: ON
+(I) 2024-12-23T04:58:53 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T04:58:53 - Anonymous mode: OFF
+(I) 2024-12-23T04:58:53 - Encryption support: ON
+(I) 2024-12-23T04:58:53 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-23T04:58:53 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-23T04:58:53 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "TCP/6881"
+(I) 2024-12-23T04:58:53 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "UTP/6881"
+(N) 2024-12-23T04:58:53 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T04:58:53 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T04:58:53 - Using built-in WebUI.
+(N) 2024-12-23T04:58:53 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T04:58:53 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T04:58:54 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-23T04:59:02 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T05:00:28 - qBittorrent termination initiated
+(N) 2024-12-23T05:00:28 - Saving resume data completed.
+(N) 2024-12-23T05:00:30 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:00:30 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:00:33 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:00:33 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-23T05:00:33 - Using config directory: /config/qBittorrent
+(N) 2024-12-23T05:00:33 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T05:00:33 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:00:33 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:00:33 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:00:33 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:00:33 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:00:33 - Anonymous mode: OFF
+(I) 2024-12-23T05:00:33 - Encryption support: ON
+(I) 2024-12-23T05:00:33 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/6881"
+(I) 2024-12-23T05:00:33 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/6881"
+(I) 2024-12-23T05:00:33 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "TCP/6881"
+(I) 2024-12-23T05:00:33 - Successfully listening on IP. IP: "fe80::34e4:a26e:e563:4924%tun0". Port: "UTP/6881"
+(N) 2024-12-23T05:00:33 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:00:33 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:00:33 - Using built-in WebUI.
+(N) 2024-12-23T05:00:33 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:00:33 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T05:00:35 - Detected external IP. IP: "109.201.135.166"
+(W) 2024-12-23T05:00:42 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T05:02:35 - WebAPI login success. IP: ::ffff:172.23.0.2
+(W) 2024-12-23T05:02:45 - File error alert. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H". File: "/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB". Reason: "Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv file_open (/video/Fast & Furious 4 (2009) MultiAudio MultiSub Ac3 5.1 BDRip 1080p H264 [ArMor].mkv.!qB) error: Permission denied"
+(N) 2024-12-23T05:07:39 - qBittorrent termination initiated
+(N) 2024-12-23T05:07:39 - Saving resume data completed.
+(N) 2024-12-23T05:07:41 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:07:41 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:07:46 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:07:46 - qBittorrent v5.0.2 started. Process ID: 145
+(N) 2024-12-23T05:07:46 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:07:46 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:07:46 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T05:07:46 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:07:46 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:07:46 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:07:46 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:07:46 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:07:46 - Anonymous mode: OFF
+(I) 2024-12-23T05:07:46 - Encryption support: ON
+(I) 2024-12-23T05:07:46 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:07:46 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:07:46 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:07:46 - Using built-in WebUI.
+(N) 2024-12-23T05:07:46 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:07:46 - WebUI: Now listening on IP: *, port: 8090
+(W) 2024-12-23T05:07:51 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(N) 2024-12-23T05:13:49 - qBittorrent termination initiated
+(N) 2024-12-23T05:13:49 - Saving resume data completed.
+(N) 2024-12-23T05:13:49 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:13:49 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:13:57 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:13:57 - qBittorrent v5.0.2 started. Process ID: 143
+(N) 2024-12-23T05:13:57 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:13:57 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:13:57 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T05:13:57 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:13:57 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:13:57 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:13:57 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:13:57 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:13:57 - Anonymous mode: OFF
+(I) 2024-12-23T05:13:57 - Encryption support: ON
+(I) 2024-12-23T05:13:57 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:13:57 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:13:57 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:13:57 - Using built-in WebUI.
+(N) 2024-12-23T05:13:57 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:13:57 - WebUI: Now listening on IP: *, port: 8090
+(W) 2024-12-23T05:14:02 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(N) 2024-12-23T05:15:04 - qBittorrent termination initiated
+(N) 2024-12-23T05:15:04 - Saving resume data completed.
+(N) 2024-12-23T05:15:04 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:15:04 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:15:35 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:15:35 - qBittorrent v5.0.2 started. Process ID: 144
+(N) 2024-12-23T05:15:35 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:15:35 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:15:35 - Trying to listen on the following list of IP addresses: "tun0:6881"
+(I) 2024-12-23T05:15:35 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:15:35 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:15:35 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:15:35 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:15:35 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:15:35 - Anonymous mode: OFF
+(I) 2024-12-23T05:15:35 - Encryption support: ON
+(I) 2024-12-23T05:15:35 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:15:35 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:15:35 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:15:35 - Using built-in WebUI.
+(N) 2024-12-23T05:15:35 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:15:35 - WebUI: Now listening on IP: *, port: 8090
+(W) 2024-12-23T05:15:40 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(N) 2024-12-23T05:21:39 - qBittorrent termination initiated
+(N) 2024-12-23T05:21:39 - Saving resume data completed.
+(N) 2024-12-23T05:21:39 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:21:39 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:21:42 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:21:42 - qBittorrent v5.0.2 started. Process ID: 141
+(N) 2024-12-23T05:21:42 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:21:42 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:21:42 - Trying to listen on the following list of IP addresses: "tun0:49152"
+(I) 2024-12-23T05:21:42 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:21:42 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:21:42 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:21:42 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:21:42 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:21:42 - Anonymous mode: OFF
+(I) 2024-12-23T05:21:42 - Encryption support: ON
+(I) 2024-12-23T05:21:42 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:21:42 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:21:42 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:21:42 - Using built-in WebUI.
+(N) 2024-12-23T05:21:42 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:21:42 - WebUI: Now listening on IP: *, port: 8090
+(W) 2024-12-23T05:21:47 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(N) 2024-12-23T05:23:24 - qBittorrent termination initiated

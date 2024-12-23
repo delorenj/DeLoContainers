@@ -1,0 +1,62 @@
+(N) 2024-12-23T05:23:24 - Saving resume data completed.
+(N) 2024-12-23T05:23:24 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:23:24 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:27:33 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:27:33 - qBittorrent v5.0.2 started. Process ID: 145
+(N) 2024-12-23T05:27:33 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:27:33 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:27:33 - Trying to listen on the following list of IP addresses: "tun0:49152"
+(I) 2024-12-23T05:27:33 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:27:33 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:27:33 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:27:33 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:27:33 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:27:33 - Anonymous mode: OFF
+(I) 2024-12-23T05:27:33 - Encryption support: ON
+(I) 2024-12-23T05:27:33 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:27:33 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:27:33 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:27:33 - Using built-in WebUI.
+(N) 2024-12-23T05:27:33 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:27:33 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T05:27:36 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/49152"
+(I) 2024-12-23T05:27:36 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/49152"
+(I) 2024-12-23T05:27:36 - Successfully listening on IP. IP: "fe80::a87d:6d51:d46f:de55%tun0". Port: "TCP/49152"
+(I) 2024-12-23T05:27:36 - Successfully listening on IP. IP: "fe80::a87d:6d51:d46f:de55%tun0". Port: "UTP/49152"
+(W) 2024-12-23T05:27:38 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-23T05:27:49 - Detected external IP. IP: "109.201.135.166"
+(N) 2024-12-23T05:27:57 - WebAPI login success. IP: ::ffff:172.23.0.2
+(W) 2024-12-23T05:30:13 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(W) 2024-12-23T05:30:13 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(N) 2024-12-23T05:30:21 - qBittorrent termination initiated
+(N) 2024-12-23T05:30:21 - Saving resume data completed.
+(N) 2024-12-23T05:30:23 - BitTorrent session successfully finished.
+(N) 2024-12-23T05:30:23 - qBittorrent is now ready to exit
+(W) 2024-12-23T05:30:34 - Detected unclean program exit. Using fallback file to restore settings: /config/qBittorrent/qBittorrent_new.conf
+(N) 2024-12-23T05:30:34 - qBittorrent v5.0.2 started. Process ID: 147
+(N) 2024-12-23T05:30:34 - Using config directory: /config/qBittorrent
+(C) 2024-12-23T05:30:34 - The configured network interface is invalid. Interface: "tun0"
+(N) 2024-12-23T05:30:34 - Trying to listen on the following list of IP addresses: "tun0:49152"
+(I) 2024-12-23T05:30:34 - Peer ID: "-qB5020-"
+(I) 2024-12-23T05:30:34 - HTTP User-Agent: "qBittorrent/5.0.2"
+(I) 2024-12-23T05:30:34 - Distributed Hash Table (DHT) support: ON
+(I) 2024-12-23T05:30:34 - Local Peer Discovery support: ON
+(I) 2024-12-23T05:30:34 - Peer Exchange (PeX) support: ON
+(I) 2024-12-23T05:30:34 - Anonymous mode: OFF
+(I) 2024-12-23T05:30:34 - Encryption support: ON
+(I) 2024-12-23T05:30:34 - UPnP/NAT-PMP support: ON
+(N) 2024-12-23T05:30:34 - Restored torrent. Torrent: "Fast Furious 4 2009 MultiAudio MultiSub Ac3 5 1 BDRip 1080p H"
+(I) 2024-12-23T05:30:34 - IP geolocation database loaded. Type: DBIP-Country-Lite. Build time: Sat Nov 30 21:19:17 2024.
+(N) 2024-12-23T05:30:34 - Using built-in WebUI.
+(N) 2024-12-23T05:30:34 - WebUI translation for selected locale (en) has been successfully loaded.
+(N) 2024-12-23T05:30:34 - WebUI: Now listening on IP: *, port: 8090
+(I) 2024-12-23T05:30:38 - Successfully listening on IP. IP: "10.10.101.6". Port: "TCP/49152"
+(I) 2024-12-23T05:30:38 - Successfully listening on IP. IP: "10.10.101.6". Port: "UTP/49152"
+(I) 2024-12-23T05:30:38 - Successfully listening on IP. IP: "fe80::adda:1da1:8a34:91e%tun0". Port: "TCP/49152"
+(I) 2024-12-23T05:30:38 - Successfully listening on IP. IP: "fe80::adda:1da1:8a34:91e%tun0". Port: "UTP/49152"
+(W) 2024-12-23T05:30:39 - Couldn't download IP geolocation database file. Reason: The remote host name was not found (invalid hostname)
+(I) 2024-12-23T05:30:40 - Detected external IP. IP: "109.201.135.166"
+(N) 2024-12-23T05:30:42 - WebAPI login success. IP: ::ffff:172.23.0.2
+(W) 2024-12-23T05:33:14 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(W) 2024-12-23T05:33:14 - UPnP/NAT-PMP port mapping failed. Message: "could not map port using UPnP[10.10.101.6]: no router found"
+(W) 2024-12-23T09:06:40 - WebUI: Referer header & Target origin mismatch! Source IP: '::ffff:172.23.0.2'. Referer header: 'https://www.google.ie/'. Target origin: 'get.delo.sh'

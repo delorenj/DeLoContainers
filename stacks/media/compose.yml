@@ -1,0 +1,102 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - proxy
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - OPENVPN_USER=${VPNAC_USER}
+      - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
+      - TZ=${TZ}
+      # Adding more ports while keeping our working one (49152)
+      - FIREWALL_VPN_INPUT_PORTS=49152,49153,49154,49155,49156
+    volumes:
+      - ./gluetun:/gluetun
+    ports:
+      # Original working port
+      - 49152:49152/tcp
+      - 49152:49152/udp
+      # Additional ports
+      - 49153:49153/tcp
+      - 49153:49153/udp
+      - 49154:49154/tcp
+      - 49154:49154/udp
+      - 49155:49155/tcp
+      - 49155:49155/udp
+      - 49156:49156/tcp
+      - 49156:49156/udp
+    restart: unless-stopped
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8090
+    volumes:
+      - ./qbittorrent:/config
+      - ${DOWNLOAD_PATH}:/downloads
+      - ${VIDEO_PATH}:/video
+    network_mode: "service:gluetun"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.get.entrypoints=websecure"
+      - "traefik.http.routers.get.rule=Host(`get.delo.sh`) || Host(`get.delorenzo.family`)"
+      - "traefik.http.routers.get.tls=true"
+      - "traefik.http.routers.get.tls.certresolver=letsencrypt"
+      - "traefik.http.services.get.loadbalancer.server.port=8090"
+    restart: unless-stopped
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./prowlarr:/config
+    network_mode: "service:gluetun"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.index.entrypoints=websecure"
+      - "traefik.http.routers.index.rule=Host(`index.delo.sh`) || Host(`index.delorenzo.family`)"
+      - "traefik.http.routers.index.tls=true"
+      - "traefik.http.routers.index.tls.certresolver=letsencrypt"
+      - "traefik.http.services.index.loadbalancer.server.port=9696"
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    depends_on:
+      - gluetun
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - HEADLESS=true
+      - TZ=${TZ}
+    network_mode: "service:gluetun"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flaresolverr.entrypoints=websecure"
+      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.delo.sh`) || Host(`flaresolverr.delorenzo.family`)"
+      - "traefik.http.routers.flaresolverr.tls=true"
+      - "traefik.http.routers.flaresolverr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

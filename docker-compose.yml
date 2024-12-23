@@ -1,0 +1,7 @@
+networks:
+  proxy:
+    name: proxy
+    external: false
+
+# This file defines shared resources used across all stacks
+# Individual stacks can reference these networks using "external: true"
