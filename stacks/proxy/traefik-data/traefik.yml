@@ -17,7 +17,7 @@ entryPoints:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: jaradd@gmail.com  # Your email from the Synology config
+      email: jaradd@gmail.com
       storage: acme.json
       tlsChallenge: {}
 
@@ -25,5 +25,6 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+    
   file:
-    filename: /config.yml
+    directory: "/dynamic"

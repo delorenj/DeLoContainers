@@ -7,9 +7,9 @@ SERVICE=$1
 
 # Service-specific backup configurations
 declare -A BACKUP_PATHS=(
-    ["prowlarr"]="/home/delorenj/docker/stacks/media/prowlarr/config"
-    ["qbittorrent"]="/home/delorenj/docker/stacks/media/qbt/config"
-    ["traefik"]="/home/delorenj/docker/stacks/proxy/traefik/config"
+    ["prowlarr"]="/home/delorenj/docker/stacks/media/prowlarr"
+    ["qbittorrent"]="/home/delorenj/docker/stacks/media/qbittorrent"
+    ["traefik"]="/home/delorenj/docker/stacks/proxy/traefik-data"
 )
 
 backup_service() {
@@ -35,7 +35,7 @@ backup_service() {
     case $service in
         "prowlarr")
             # Backup Prowlarr database
-            docker compose exec prowlarr sqlite3 /config/prowlarr.db ".backup '/config/backup_db/prowlarr.db.bak'"
+            docker compose exec prowlarr sqlite3 /prowlarr.db ".backup '/backup_db/prowlarr.db.bak'"
             cp "$backup_path/backup_db/prowlarr.db.bak" "$backup_dir/"
             ;;
         "qbittorrent")

@@ -48,5 +48,5 @@ bash scripts/traefik.sh remove $DOMAIN
 "system:prune" = "bash scripts/prune.sh"
 
 [env]
-COMPOSE_FILE = "docker-compose.yml"
+COMPOSE_FILE = "compose.yml"
 DOCKER_DIR = "/home/delorenj/docker"

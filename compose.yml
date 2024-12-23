@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  netbox:
+    image: alpine
+    command: sleep infinity
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: proxy

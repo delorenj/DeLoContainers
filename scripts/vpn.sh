@@ -2,7 +2,7 @@
 
 # Configuration
 VPN_SERVICE="gluetun"
-COMPOSE_FILE="/home/delorenj/docker/docker-compose.yml"
+COMPOSE_FILE="/home/delorenj/docker/compose.yml"
 LOG_FILE="/home/delorenj/docker/logs/vpn.log"
 
 # Colors for output

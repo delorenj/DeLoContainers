@@ -98,16 +98,16 @@ create_stack() {
     # Create directory structure
     mkdir -p "$dir"/{config,data,scripts}
     
-    # Create docker-compose.yml based on stack type
+    # Create compose.yml based on stack type
     case $type in
         "media")
-            echo "$MEDIA_STACK_TEMPLATE" > "$dir/docker-compose.yml"
+            echo "$MEDIA_STACK_TEMPLATE" > "$dir/compose.yml"
             ;;
         "ai")
-            echo "$AI_STACK_TEMPLATE" > "$dir/docker-compose.yml"
+            echo "$AI_STACK_TEMPLATE" > "$dir/compose.yml"
             ;;
         "proxy")
-            echo "$PROXY_STACK_TEMPLATE" > "$dir/docker-compose.yml"
+            echo "$PROXY_STACK_TEMPLATE" > "$dir/compose.yml"
             ;;
         *)
             echo "❌ Invalid stack type. Use: media, ai, or proxy"
@@ -167,7 +167,7 @@ EOF
     echo "✅ Stack created successfully at $dir"
     echo "Next steps:"
     echo "1. Edit $dir/.env with your configuration"
-    echo "2. Update docker-compose.yml as needed"
+    echo "2. Update compose.yml as needed"
     echo "3. Run 'mise run up $name' to start the stack"
 }
 

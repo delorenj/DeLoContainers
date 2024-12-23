@@ -1,3 +1,39 @@
+# Logs
+logs/
+**/logs/
+*.log
+
+# Runtime files
+**/prowlarr.pid
+**/prowlarr.db*
+**/.session
+**/.bash_history
+
+# Torrent backup files
+**/BT_backup/
+
+# SSL certificates
+**/acme.json
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Dynamic configuration that should be managed locally
+**/prowlarr/Definitions/
+**/prowlarr/Sentry/
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
 .env
-**/config/*
-backups/
+**/.env
+
+# Operating system files
+.DS_Store
+Thumbs.db

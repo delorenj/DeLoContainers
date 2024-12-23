@@ -6,7 +6,7 @@ A centralized repository for managing Docker containers and infrastructure for t
 
 ```
 /
-├── docker-compose.yml     # Main compose file (network definitions)
+├── compose.yml     # Main compose file (network definitions)
 ├── mise.toml             # Task definitions
 ├── .env                  # Environment variables
 ├── stacks/              # Service stacks
@@ -25,12 +25,14 @@ A centralized repository for managing Docker containers and infrastructure for t
 ## 🚀 Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/delorenj/DeLoContainers.git
    cd DeLoContainers
    ```
 
 2. Set up environment variables:
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
@@ -44,6 +46,7 @@ A centralized repository for managing Docker containers and infrastructure for t
 ## 🛠️ Available Tasks
 
 ### Stack Management
+
 ```bash
 # Start a stack
 mise run stack:up <stack_name>
@@ -64,6 +67,7 @@ mise run stack:restart ai    # Restart AI stack
 ```
 
 ### Backup Management
+
 ```bash
 # Backup all services
 mise run backup:all
@@ -75,6 +79,7 @@ mise run backup:traefik
 ```
 
 ### Traefik Management
+
 ```bash
 # Show Traefik configuration and routes
 mise run traefik:show
@@ -92,6 +97,7 @@ mise run traefik:certs      # Check SSL certificates
 ```
 
 ### System Maintenance
+
 ```bash
 # Clean up Docker system
 mise run system:prune
@@ -102,6 +108,7 @@ mise run system:prune
 The DeLoNET infrastructure uses Traefik as a reverse proxy to route traffic to various services. All traffic is routed through a VPN container (gluetun) for enhanced privacy and security.
 
 ### Domain Structure
+
 - `*.delo.sh` - Main domain for all services
 - Subdomains:
   - `traefik.delo.sh` - Traefik Dashboard
@@ -110,6 +117,7 @@ The DeLoNET infrastructure uses Traefik as a reverse proxy to route traffic to v
   - Additional services use their respective subdomains
 
 ### Network Flow
+
 ```mermaid
 graph LR
     Internet --> Traefik
@@ -121,19 +129,23 @@ graph LR
 ## 📦 Current Services
 
 ### Media Stack
+
 - Prowlarr (Indexer)
 - qBittorrent (Download Client)
 
 ### Proxy Stack
+
 - Traefik (Reverse Proxy)
 - Gluetun (VPN Container)
 
 ### AI Stack
+
 - bolt.diy (Local AI Development)
 
 ## 🔧 Maintenance
 
 ### Backups
+
 - Automatic backups are stored in `/backups`
 - Retention: Last 5 backups per service
 - Backup includes:
@@ -142,6 +154,7 @@ graph LR
   - Custom settings
 
 ### System Cleanup
+
 - Use the prune script:
   ```bash
   mise run system:prune
@@ -155,15 +168,18 @@ graph LR
 ## 📚 Development
 
 ### Adding New Services
+
 1. Create stack directory:
+
    ```bash
    mkdir -p stacks/<stack_type>/<service_name>
    ```
 
 2. Configure environment:
+
    ```bash
    cd stacks/<stack_type>/<service_name>
-   touch docker-compose.yml .env
+   touch compose.yml .env
    ```
 
 3. Start service:
@@ -172,6 +188,7 @@ graph LR
    ```
 
 ### Git Management
+
 - Main branches: `main`, `develop`
 - Feature branches: `feature/*`
 - Stack branches: `stack/*`
@@ -180,6 +197,7 @@ graph LR
 ## 📖 Additional Documentation
 
 Detailed documentation for specific components can be found in their respective directories:
+
 - [Proxy Stack Documentation](stacks/proxy/README.md)
 - [Media Stack Documentation](stacks/media/README.md)
 - [AI Stack Documentation](stacks/ai/README.md)

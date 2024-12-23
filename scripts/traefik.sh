@@ -110,7 +110,7 @@ apply_config() {
     fi
     
     # Reload Traefik
-    docker compose -f "$TRAEFIK_DIR/docker-compose.yml" restart traefik
+    docker compose -f "$TRAEFIK_DIR/compose.yml" restart traefik
     
     # Wait for Traefik to start
     sleep 5
@@ -128,7 +128,7 @@ apply_config() {
 # Function to monitor Traefik logs
 monitor_logs() {
     echo "📊 Monitoring Traefik logs..."
-    docker compose -f "$TRAEFIK_DIR/docker-compose.yml" logs -f traefik
+    docker compose -f "$TRAEFIK_DIR/compose.yml" logs -f traefik
 }
 
 # Function to check SSL certificates

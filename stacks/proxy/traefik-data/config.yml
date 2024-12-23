@@ -1,16 +1,1 @@
-http:
-  middlewares:
-    auth:
-      basicAuth:
-        users:
-          - "admin:$apr1$EZdgAuPP$jNUDwCDFILN/pVDRgqZ34/"  # Generate with: docker run --rm httpd:2.4-alpine htpasswd -nb admin yourpassword
-    
-    securityHeaders:
-      headers:
-        stsSeconds: 31536000
-        browserXssFilter: true
-        contentTypeNosniff: true
-        forceSTSHeader: true
-        stsIncludeSubdomains: true
-        stsPreload: true
-        customFrameOptionsValue: "SAMEORIGIN"
+# This file is intentionally left empty as all dynamic configuration has been moved to the dynamic directory
