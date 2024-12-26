@@ -12,15 +12,12 @@ services:
       - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
       - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
       - TZ=${TZ}
-      # Adding more ports while keeping our working one (49152)
       - FIREWALL_VPN_INPUT_PORTS=49152,49153,49154,49155,49156
     volumes:
       - ./gluetun:/gluetun
     ports:
-      # Original working port
       - 49152:49152/tcp
       - 49152:49152/udp
-      # Additional ports
       - 49153:49153/tcp
       - 49153:49153/udp
       - 49154:49154/tcp
@@ -118,6 +115,28 @@ services:
       - "traefik.http.routers.movies.tls=true"
       - "traefik.http.routers.movies.tls.certresolver=letsencrypt"
       - "traefik.http.services.movies.loadbalancer.server.port=7878"
+    restart: unless-stopped
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    depends_on:
+      - gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./jellyfin:/config
+      - ${MEDIA_PATH}:/media
+    network_mode: "service:gluetun"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jelly.entrypoints=websecure"
+      - "traefik.http.routers.jelly.rule=Host(`jelly.delo.sh`) || Host(`jelly.delorenzo.family`)"
+      - "traefik.http.routers.jelly.tls=true"
+      - "traefik.http.routers.jelly.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jelly.loadbalancer.server.port=8096"
     restart: unless-stopped
 
 networks:
