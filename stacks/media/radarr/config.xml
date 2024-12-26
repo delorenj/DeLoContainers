@@ -5,7 +5,7 @@
   <EnableSsl>False</EnableSsl>
   <LaunchBrowser>True</LaunchBrowser>
   <ApiKey>d21451467db8436881e75391a8b8e4a8</ApiKey>
-  <AuthenticationMethod>None</AuthenticationMethod>
+  <AuthenticationMethod>Forms</AuthenticationMethod>
   <AuthenticationRequired>Enabled</AuthenticationRequired>
   <Branch>master</Branch>
   <LogLevel>debug</LogLevel>
@@ -14,4 +14,5 @@
   <UrlBase></UrlBase>
   <InstanceName>Radarr</InstanceName>
   <UpdateMechanism>Docker</UpdateMechanism>
+  <Theme>dark</Theme>
 </Config>
