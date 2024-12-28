@@ -38,4 +38,10 @@ backups/
 .DS_Store
 Thumbs.db
 
+# Jellyfin
 **/jellyfin/data/
+**/jellyfin/cache/
+**/jellyfin/.cache/
+**/jellyfin/.aspnet/
+**/jellyfin/*.xml
+**/jellyfin/*.json
