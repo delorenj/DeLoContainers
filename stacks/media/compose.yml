@@ -128,7 +128,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ./jellyfin:/config
-      - ${MEDIA_PATH}:/media
+      - ${VIDEO_PATH}:/media
     network_mode: "service:gluetun"
     labels:
       - "traefik.enable=true"

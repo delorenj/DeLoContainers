@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  scripts:
+    image: nginx:alpine
+    container_name: delo-scripts
+    volumes:
+      - ./scripts:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scripts.rule=Host(`delo.sh`)"
+      - "traefik.http.routers.scripts.entrypoints=websecure"
+      - "traefik.http.routers.scripts.tls.certresolver=letsencrypt"
+      - "traefik.http.services.scripts.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true

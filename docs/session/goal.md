@@ -1,3 +1,3 @@
 # Goal
 
-I would like to add RADARR to my media stacks
+I would like to add Jellyfin to my media stack
