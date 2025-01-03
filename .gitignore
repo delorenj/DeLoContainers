@@ -1,47 +1,34 @@
-# Logs
-logs/
-**/logs/
+# General ignores
+*.pid
+*.session
 *.log
-
-# Runtime files
-**/prowlarr.pid
-**/prowlarr.db*
-**/.session
-**/.bash_history
-
-# Torrent backup files
-**/BT_backup/
-
-# SSL certificates
-**/acme.json
-
-# Database files
-*.db
-*.db-shm
-*.db-wal
-
-# Dynamic configuration that should be managed locally
-**/prowlarr/Definitions/
-**/prowlarr/Sentry/
-
-# IDE/Editor files
-.vscode/
-.idea/
+*.tmp
 *.swp
-*.swo
-
-# Environment variables
-.env
-**/.env
-backups/
-# Operating system files
+*.bak
+*.backup
+*.old
+*.env
 .DS_Store
-Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
 
-# Jellyfin
-**/jellyfin/data/
-**/jellyfin/cache/
-**/jellyfin/.cache/
-**/jellyfin/.aspnet/
-**/jellyfin/*.xml
-**/jellyfin/*.json
+# Docker/container specific
+**/Backups/
+**/Sentry/
+**/__processing/
+**/data/
+**/config/
+**/cache/
+**/logs/
+**/temp/
+
+# Specific files
+stacks/proxy/traefik-data/acme.json
+stacks/media/qbittorrent/qBittorrent.conf
+stacks/media/qbittorrent/qBittorrent/qBittorrent-data.conf
+
+# Untracked directories to ignore
+stacks/media/jellyfin/
+stacks/utils/monitoring/
+stacks/utils/portainer/

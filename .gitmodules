@@ -1,0 +1,3 @@
+[submodule "stacks/ai/LibreChat"]
+	path = stacks/ai/LibreChat
+	url = https://github.com/danny-avila/LibreChat
