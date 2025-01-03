@@ -11,6 +11,8 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/acme.json
       - ./traefik-data/dynamic:/dynamic:ro
+      - ./traefik-data/scripts:/scripts:ro
+    entrypoint: ["/scripts/entrypoint.sh", "/entrypoint.sh"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-secure.entrypoints=websecure"
