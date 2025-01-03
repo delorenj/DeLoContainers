@@ -2,11 +2,6 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    networks:
-      - proxy
     ports:
       - "80:80"
       - "443:443"
@@ -24,5 +19,5 @@ services:
       - "traefik.http.routers.traefik-secure.service=api@internal"
     command:
       - "--api.dashboard=true"
-      - "--metrics.prometheus=true"  # Enable Prometheus metrics
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"  # Optional: Configure histogram buckets
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"

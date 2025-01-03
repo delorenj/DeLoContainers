@@ -4,14 +4,11 @@ services:
     container_name: gluetun
     cap_add:
       - NET_ADMIN
-    networks:
-      - proxy
     environment:
       - VPN_SERVICE_PROVIDER=custom
       - OPENVPN_USER=${VPNAC_USER}
       - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
       - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
-      - TZ=${TZ}
       - FIREWALL_VPN_INPUT_PORTS=49152,49153,49154,49155,49156
     volumes:
       - ./gluetun:/gluetun
@@ -26,40 +23,33 @@ services:
       - 49155:49155/udp
       - 49156:49156/tcp
       - 49156:49156/udp
-    restart: unless-stopped
+
   vpn-monitor:
-      image: alpine:latest
-      container_name: vpn-monitor
-      command: |
-        sh -c '
-        apk add --no-cache iproute2
-        while true; do
-          if ip addr show tun0 up > /dev/null 2>&1; then
-            echo "vpn_connected 1" > /metrics
-          else
-            echo "vpn_connected 0" > /metrics
-          fi
-          sleep 30
-        done'
-      volumes:
-        - /sys/class/net:/sys/class/net:ro
-      networks:
-        - proxy
+    image: alpine:latest
+    container_name: vpn-monitor
+    command: |
+      sh -c '
+      apk add --no-cache iproute2
+      while true; do
+        if ip addr show tun0 up > /dev/null 2>&1; then
+          echo "vpn_connected 1" > /metrics
+        else
+          echo "vpn_connected 0" > /metrics
+        fi
+        sleep 30
+      done'
+    volumes:
+      - /sys/class/net:/sys/class/net:ro
+
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    depends_on:
-      - gluetun
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
       - WEBUI_PORT=8090
     volumes:
       - ./qbittorrent:/config
       - ${DOWNLOAD_PATH}:/downloads
       - ${VIDEO_PATH}:/video
-    network_mode: "service:gluetun"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.get.entrypoints=websecure"
@@ -67,32 +57,12 @@ services:
       - "traefik.http.routers.get.tls=true"
       - "traefik.http.routers.get.tls.certresolver=letsencrypt"
       - "traefik.http.services.get.loadbalancer.server.port=8090"
-    restart: unless-stopped
-  exportarr:
-    image: ghcr.io/onedr0p/exportarr:latest
-    container_name: prowlarr-exportarr
-    command: ["prowlarr"]
-    environment:
-      - PORT=9707  # metric port
-      - URL=https://index.delo.sh # URL of prowlarr
-      - APIKEY=${PROWLARR_API_KEY} # Add this to your .env
-    networks:
-      - proxy
-    ports:
-     - "9710:9710"      
-    restart: unless-stopped
+
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
-    depends_on:
-      - gluetun
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
     volumes:
       - ./prowlarr:/config
-    network_mode: "service:gluetun"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.index.entrypoints=websecure"
@@ -100,43 +70,34 @@ services:
       - "traefik.http.routers.index.tls=true"
       - "traefik.http.routers.index.tls.certresolver=letsencrypt"
       - "traefik.http.services.index.loadbalancer.server.port=9696"
-    restart: unless-stopped
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
+  exportarr:
+    image: ghcr.io/onedr0p/exportarr:latest
+    container_name: prowlarr-exportarr
+    network_mode: "service:gluetun"
+    command: ["prowlarr"]
+    environment:
+      - PORT=9710
+      - URL=https://index.delo.sh  # Using external URL since we're behind VPN
+      - APIKEY=${PROWLARR_API_KEY}
     depends_on:
       - gluetun
-    environment:
-      - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=none
-      - HEADLESS=true
-      - TZ=${TZ}
-    network_mode: "service:gluetun"
+      - prowlarr
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.flaresolverr.entrypoints=websecure"
-      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.delo.sh`) || Host(`flaresolverr.delorenzo.family`)"
-      - "traefik.http.routers.flaresolverr.tls=true"
-      - "traefik.http.routers.flaresolverr.tls.certresolver=letsencrypt"
-      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191"
-    restart: unless-stopped
+      - "traefik.http.routers.prowlarr-metrics.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr-metrics.rule=Host(`metrics.prowlarr.delo.sh`)"
+      - "traefik.http.routers.prowlarr-metrics.tls=true"
+      - "traefik.http.routers.prowlarr-metrics.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prowlarr-metrics.loadbalancer.server.port=9710"
 
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
-    depends_on:
-      - gluetun
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
     volumes:
       - ./radarr:/config
       - ${DOWNLOAD_PATH}:/downloads
       - ${VIDEO_PATH}:/video
-    network_mode: "service:gluetun"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.movies.entrypoints=websecure"
@@ -144,21 +105,29 @@ services:
       - "traefik.http.routers.movies.tls=true"
       - "traefik.http.routers.movies.tls.certresolver=letsencrypt"
       - "traefik.http.services.movies.loadbalancer.server.port=7878"
-    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - HEADLESS=true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flaresolverr.entrypoints=websecure"
+      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.delo.sh`) || Host(`flaresolverr.delorenzo.family`)"
+      - "traefik.http.routers.flaresolverr.tls=true"
+      - "traefik.http.routers.flaresolverr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191"
 
   jellyfin:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
-    depends_on:
-      - gluetun
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
     volumes:
       - ./jellyfin:/config
       - ${VIDEO_PATH}:/media
-    network_mode: "service:gluetun"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jelly.entrypoints=websecure"
@@ -166,4 +135,3 @@ services:
       - "traefik.http.routers.jelly.tls=true"
       - "traefik.http.routers.jelly.tls.certresolver=letsencrypt"
       - "traefik.http.services.jelly.loadbalancer.server.port=8096"
-    restart: unless-stopped

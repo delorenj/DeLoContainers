@@ -1,0 +1,32 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.delo.sh`) || Host(`portainer.delorenzo.family`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
+  couchdb:
+    image: couchdb:latest
+    container_name: couchdb
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+    ports:
+      - "5984:5984"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.couchdb.entrypoints=websecure"
+      - "traefik.http.routers.couchdb.rule=Host(`couchdb.delo.sh`) || Host(`couchdb.delorenzo.family`)"
+      - "traefik.http.routers.couchdb.tls=true"
+      - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
+      - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
