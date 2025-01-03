@@ -8,6 +8,11 @@
 		"debug.javascript.defaultRuntimeExecutable": {
 			"pwa-node": "/home/delorenj/.local/share/mise/shims/node"
 		},
-		"python.defaultInterpreterPath": "/home/delorenj/.local/share/mise/shims/python"
+		"python.defaultInterpreterPath": "/home/delorenj/.local/share/mise/shims/python",
+		"docker-compose.files": [
+			"compose.yml",
+			"docker-compose.yml"
+		],
+		"docker-compose.enableTelemetry": true
 	}
 }

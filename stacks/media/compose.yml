@@ -27,7 +27,24 @@ services:
       - 49156:49156/tcp
       - 49156:49156/udp
     restart: unless-stopped
-
+  vpn-monitor:
+      image: alpine:latest
+      container_name: vpn-monitor
+      command: |
+        sh -c '
+        apk add --no-cache iproute2
+        while true; do
+          if ip addr show tun0 up > /dev/null 2>&1; then
+            echo "vpn_connected 1" > /metrics
+          else
+            echo "vpn_connected 0" > /metrics
+          fi
+          sleep 30
+        done'
+      volumes:
+        - /sys/class/net:/sys/class/net:ro
+      networks:
+        - proxy
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -51,7 +68,19 @@ services:
       - "traefik.http.routers.get.tls.certresolver=letsencrypt"
       - "traefik.http.services.get.loadbalancer.server.port=8090"
     restart: unless-stopped
-
+  exportarr:
+    image: ghcr.io/onedr0p/exportarr:latest
+    container_name: prowlarr-exportarr
+    command: ["prowlarr"]
+    environment:
+      - PORT=9707  # metric port
+      - URL=https://index.delo.sh # URL of prowlarr
+      - APIKEY=${PROWLARR_API_KEY} # Add this to your .env
+    networks:
+      - proxy
+    ports:
+     - "9710:9710"      
+    restart: unless-stopped
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -138,7 +167,3 @@ services:
       - "traefik.http.routers.jelly.tls.certresolver=letsencrypt"
       - "traefik.http.services.jelly.loadbalancer.server.port=8096"
     restart: unless-stopped
-
-networks:
-  proxy:
-    external: true

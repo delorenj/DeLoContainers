@@ -23,6 +23,14 @@
 **/logs/
 **/temp/
 
+backups/
+logs/
+logs.db
+logs.db-shm
+logs.db-wal
+prowlarr.db*
+*.db*
+BT_backup/
 # Specific files
 stacks/proxy/traefik-data/acme.json
 stacks/media/qbittorrent/qBittorrent.conf

@@ -1,13 +1,65 @@
-version: '3'
+version: '3.8'
 
 services:
-  netbox:
-    image: alpine
-    command: sleep infinity
-    restart: unless-stopped
-    networks:
-      - proxy
+  # Proxy services
+  traefik:
+    extends:
+      file: stacks/proxy/compose.yml
+      service: traefik
+
+  # Media services
+  gluetun:
+    extends:
+      file: stacks/media/compose.yml
+      service: gluetun
+
+  qbittorrent:
+    extends:
+      file: stacks/media/compose.yml
+      service: qbittorrent
+    depends_on:
+      - gluetun
+
+  jellyfin:
+    extends:
+      file: stacks/media/compose.yml
+      service: jellyfin
+    depends_on:
+      - gluetun
+
+  prowlarr:
+    extends:
+      file: stacks/media/compose.yml
+      service: prowlarr
+    depends_on:
+      - gluetun
+
+  radarr:
+    extends:
+      file: stacks/media/compose.yml
+      service: radarr
+    depends_on:
+      - gluetun
+
+  # Monitoring services
+  prometheus:
+    extends:
+      file: stacks/utils/monitoring/compose.yml
+      service: prometheus
+    depends_on:
+      - traefik
+
+  grafana:
+    extends:
+      file: stacks/utils/monitoring/compose.yml
+      service: grafana
+    depends_on:
+      - prometheus
 
 networks:
   proxy:
     name: proxy
+    driver: bridge
+  internal:
+    name: internal
+    driver: bridge
