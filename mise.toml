@@ -25,6 +25,11 @@ cd stacks/$STACK && docker compose logs -f
 "backup:prowlarr" = "bash scripts/backup.sh prowlarr"
 "backup:qbittorrent" = "bash scripts/backup.sh qbittorrent"
 "backup:traefik" = "bash scripts/backup.sh traefik"
+"backup:gluetun" = "bash scripts/backup.sh gluetun"
+"backup:jellyfin" = "bash scripts/backup.sh jellyfin"
+"backup:radarr" = "bash scripts/backup.sh radarr"
+"backup:prometheus" = "bash scripts/backup.sh prometheus"
+"backup:grafana" = "bash scripts/backup.sh grafana"
 
 # Traefik management
 "traefik:show" = "cd stacks/proxy && docker compose exec traefik traefik show"
