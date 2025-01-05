@@ -1,0 +1,89 @@
+services:
+  weaviate:
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8085"
+      - --scheme
+      - http
+    image: cr.weaviate.io/semitechnologies/weaviate:latest
+    ports:
+      - 8987:8080
+      - 50051:50051
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    restart: on-failure:0
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+      ENABLE_API_BASED_MODULES: "true"
+      CLUSTER_HOSTNAME: "WeaviateNode1"
+
+  ai_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: litellm
+      POSTGRES_USER: llmproxy
+      POSTGRES_PASSWORD: ${LITELLM_DB_PASS}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d litellm -U llmproxy"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    volumes:
+      - ./litellm/config.yaml:/app/config.yaml
+    command:
+      - "--config=/app/config.yaml"
+    ports:
+      - "4000:4000" # Map the container port to the host, change the host port if necessary
+    environment:
+      DATABASE_URL: "postgresql://llmproxy:${LITELLM_DB_PASS}@db:5432/litellm"
+      STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
+    env_file:
+      - .env
+    depends_on:
+      ai_db:
+        condition: service_healthy
+
+  bolt:
+    extends:
+      file: bolt.diy/compose.yml
+      service: app-prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bolt.rule=Host(`bolt.delo.sh`)"
+      - "traefik.http.routers.bolt.entrypoints=websecure"
+      - "traefik.http.routers.bolt.tls=true"
+      - "traefik.http.routers.bolt.tls.certresolver=cloudflare"
+      - "traefik.http.services.bolt.loadbalancer.server.port=5173"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    environment:
+      - NODE_ENV=production
+      - RUNNING_IN_DOCKER=true
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - HuggingFace_API_KEY=${HuggingFace_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPEN_ROUTER_API_KEY=${OPEN_ROUTER_API_KEY}
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GEMINI_API_KEY}
+      - OLLAMA_API_BASE_URL=${OLLAMA_API_BASE_URL}
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY}
+      - TOGETHER_API_BASE_URL=${TOGETHER_API_BASE_URL}
+      - VITE_LOG_LEVEL=${VITE_LOG_LEVEL:-debug}
+      - DEFAULT_NUM_CTX=${DEFAULT_NUM_CTX:-32768}
+
+volumes:
+  prometheus_data:
+  weaviate_data:
+
+networks:
+  proxy:
+    external: true

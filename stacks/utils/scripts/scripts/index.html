@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DeLo Shell Scripts</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #fff;
+        }
+        pre {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .command {
+            color: #89CFF0;
+        }
+        h1, h2 {
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛠 DeLo Shell Scripts</h1>
+    
+    <h2>Available Scripts</h2>
+    
+    <h3>add-new-api-key</h3>
+    <p>Add a new API key to your 1Password vault with clean metadata</p>
+    <pre><code class="command">curl -sS https://sh.delo.sh/add-new-api-key.sh | bash -s -- KEY_NAME KEY_VALUE [VAULT_NAME]</code></pre>
+    
+    <p>Example:</p>
+    <pre><code class="command">curl -sS https://sh.delo.sh/add-new-api-key.sh | bash -s -- OPENAI_API_KEY "sk-..." "Private"</code></pre>
+</body>
+</html>

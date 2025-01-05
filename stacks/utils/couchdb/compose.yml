@@ -3,21 +3,44 @@ services:
     image: couchdb:latest
     container_name: couchdb
     networks:
-      - proxy
-    ports:
-      - "5984:5984"
+      proxy:
+        aliases:
+          - couchdb
+    expose:
+      - "5984"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     volumes:
       - couchdb_data:/opt/couchdb/data
+      - ./local.ini:/opt/couchdb/etc/local.d/local.ini
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.couch.entrypoints=websecure"
       - "traefik.http.routers.couch.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`)"
       - "traefik.http.routers.couch.tls=true"
       - "traefik.http.routers.couch.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.couch-utils.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`) && PathPrefix(`/_utils`)"
+      - "traefik.http.routers.couch-utils.tls=true"
+      - "traefik.http.routers.couch-utils.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.couch-utils.entrypoints=websecure"
+      - "traefik.http.routers.couch-utils.service=couch@docker"
+      - "traefik.http.routers.couch-utils.middlewares=couch-headers@docker"
       - "traefik.http.services.couch.loadbalancer.server.port=5984"
+      - "traefik.http.services.couch.loadbalancer.server.scheme=http"
+      - "traefik.http.services.couch.loadbalancer.passHostHeader=true"
+      - "traefik.http.middlewares.couch-headers.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE"
+      - "traefik.http.middlewares.couch-headers.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.couch-headers.headers.accesscontrolallowheaders=accept,authorization,content-type,origin,referer"
+      - "traefik.http.middlewares.couch-headers.headers.accesscontrolexposeheaders=*"
+      - "traefik.http.middlewares.couch-headers.headers.accesscontrolallowcredentials=true"
+      - "traefik.http.middlewares.couch-headers.headers.addvaryheader=true"
+      - "traefik.http.routers.couch.middlewares=couch-headers@docker"
 volumes:
   couchdb_data:
 

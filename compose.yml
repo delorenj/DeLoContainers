@@ -112,6 +112,32 @@ services:
     extends:
       file: stacks/utils/compose.yml
       service: couchdb
+  scripts:
+    <<: *common
+    extends:
+      file: stacks/utils/scripts/compose.yml
+      service: scripts
+  # ai Stack
+  ai_db:
+    <<: *common
+    extends:
+      file: stacks/ai/compose.yml
+      service: ai_db
+  weaviate:
+    <<: *common
+    extends:
+      file: stacks/ai/compose.yml
+      service: weaviate
+  litellm:
+    <<: *common
+    extends:
+      file: stacks/ai/compose.yml
+      service: litellm
+  bolt:
+    <<: *common
+    extends:
+      file: stacks/ai/compose.yml
+      service: bolt
 networks:
   proxy:
     name: proxy
@@ -122,3 +148,4 @@ volumes:
   loki_data:
   portainer_data:
   couchdb_data:
+  weaviate_data:
