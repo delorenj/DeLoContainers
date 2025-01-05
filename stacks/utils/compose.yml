@@ -30,3 +30,6 @@ services:
       - "traefik.http.routers.couchdb.tls=true"
       - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
+volumes:
+  portainer_data:
+  couchdb_data:

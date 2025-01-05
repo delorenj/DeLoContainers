@@ -21,4 +21,12 @@ services:
 
 networks:
   proxy:
-    external: true
+    name: proxy
+    driver: bridge
+volumes:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  portainer_data:
+  couchdb_data:
+  weaviate_data:
