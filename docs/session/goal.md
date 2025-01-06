@@ -1,6 +1,6 @@
 # Goal
 
-1. Move Traefik configuration out of the proxy dir and into the utils directory
+[x] Move Traefik configuration out of the proxy dir and into the utils directory
 2. Get traefik UI working
 3. Verify that the traefik UI is working
 4. Get Couchdb up and running

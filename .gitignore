@@ -40,3 +40,10 @@ stacks/media/qbittorrent/qBittorrent/qBittorrent-data.conf
 stacks/media/jellyfin/
 stacks/utils/monitoring/
 stacks/utils/portainer/
+stacks/ai/cognee/
+
+stacks/utils/traefik-data/acme.json
+stacks/utils/traefik-data/dynamic/
+stacks/utils/traefik-data/scripts/
+stacks/utils/traefik-data/config.yml
+stacks/utils/traefik-data/traefik.yml
