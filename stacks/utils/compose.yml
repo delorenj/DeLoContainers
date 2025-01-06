@@ -1,43 +1,4 @@
 services:
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.delo.sh`) || Host(`portainer.delorenzo.family`)"
-      - "traefik.http.routers.portainer.tls=true"
-      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-
-  traefik:
-    image: traefik:v2.10
-    container_name: traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik-data/traefik.yml:/traefik.yml:ro
-      - ./traefik/traefik-data/acme.json:/acme.json
-      - ./traefik/traefik-data/dynamic:/dynamic:ro
-      - ./traefik:/scripts:ro
-    entrypoint: ["/scripts/entrypoint.sh", "/entrypoint.sh"]
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.delorenzo.family`) || Host(`traefik.delo.sh`)"
-      - "traefik.http.routers.traefik-secure.middlewares=auth@file"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-    command:
-      - "--api.dashboard=true"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-
   couchdb:
     image: couchdb:latest
     container_name: couchdb
@@ -55,8 +16,9 @@ services:
       - "traefik.http.routers.couchdb.tls=true"
       - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
+    restart: always
+    depends_on:
+      - traefik
 
 volumes:
-  portainer_data:
-  traefik_certs:
   couchdb_data:
