@@ -1,0 +1,25 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data:/data
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.docker.entrypoints=websecure"
+      - "traefik.http.routers.docker.rule=Host(`docker.delo.sh`) || Host(`docker.delorenzo.family`)"
+      - "traefik.http.routers.docker.tls=true"
+      - "traefik.http.routers.docker.tls.certresolver=letsencrypt"
+      - "traefik.http.services.docker.loadbalancer.server.port=9000"
+
+networks:
+  proxy:
+    name: proxy
+    external: true
