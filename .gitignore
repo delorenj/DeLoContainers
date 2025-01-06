@@ -31,19 +31,13 @@ logs.db-wal
 prowlarr.db*
 *.db*
 BT_backup/
-# Specific files
-stacks/proxy/traefik-data/acme.json
-stacks/media/qbittorrent/qBittorrent.conf
-stacks/media/qbittorrent/qBittorrent/qBittorrent-data.conf
 
 # Untracked directories to ignore
 stacks/media/jellyfin/
 stacks/utils/monitoring/
 stacks/utils/portainer/
 stacks/ai/cognee/
+stacks/media/qbittorrent/
 
-stacks/utils/traefik-data/acme.json
-stacks/utils/traefik-data/dynamic/
-stacks/utils/traefik-data/scripts/
-stacks/utils/traefik-data/config.yml
-stacks/utils/traefik-data/traefik.yml
+
+acme.json

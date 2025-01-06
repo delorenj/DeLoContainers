@@ -22,11 +22,10 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik-data/traefik.yml:/traefik.yml:ro
-      - ./traefik-data/acme.json:/acme.json
-      - ./traefik-data/dynamic:/dynamic:ro
-      - ./traefik-data/scripts:/scripts:ro
-    entrypoint: ["/scripts/entrypoint.sh", "/entrypoint.sh"]
+      - ./traefik/traefik-data/traefik.yml:/traefik.yml:ro
+      - ./traefik/traefik-data/acme.json:/acme.json
+      - ./traefik/traefik-data/dynamic:/dynamic:ro
+    entrypoint: ["entrypoint.sh", "/entrypoint.sh"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-secure.entrypoints=websecure"
