@@ -26,11 +26,11 @@ services:
       - ./scripts:/usr/share/nginx/html:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.couchdb.entrypoints=websecure"
-      - "traefik.http.routers.couchdb.rule=Host(`sh.delo.sh`)"
-      - "traefik.http.routers.couchdb.tls=true"
-      - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
-      - "traefik.http.services.couchdb.loadbalancer.server.port=8238"
+      - "traefik.http.routers.scripts.entrypoints=websecure"
+      - "traefik.http.routers.scripts.rule=Host(`sh.delo.sh`)"
+      - "traefik.http.routers.scripts.tls=true"
+      - "traefik.http.routers.scripts.tls.certresolver=letsencrypt"
+      - "traefik.http.services.scripts.loadbalancer.server.port=8238"
     networks:
       - proxy
 
