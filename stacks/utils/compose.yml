@@ -12,11 +12,31 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.couchdb.entrypoints=websecure"
-      - "traefik.http.routers.couchdb.rule=Host(`couch.delo.sh`) || Host(`couchdb.delorenzo.family`)"
+      - "traefik.http.routers.couchdb.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`)"
       - "traefik.http.routers.couchdb.tls=true"
       - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
     restart: always
 
+  scripts:
+    image: nginx:alpine
+    ports:
+      - "8238:80"
+    volumes:
+      - ./scripts:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.couchdb.entrypoints=websecure"
+      - "traefik.http.routers.couchdb.rule=Host(`sh.delo.sh`)"
+      - "traefik.http.routers.couchdb.tls=true"
+      - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
+      - "traefik.http.services.couchdb.loadbalancer.server.port=8238"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    
 volumes:
   couchdb_data:

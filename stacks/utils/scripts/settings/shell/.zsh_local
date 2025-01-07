@@ -1,0 +1,36 @@
+# Machine-specific paths and configurations
+export DELODOCS_ROOT=$HOME/code/DeLoDocs
+
+# WSL-specific configuration
+if [ -f /mnt/c/Users ]; then
+    export ANDROID_SDK_ROOT="/mnt/c/Users/jarad/AppData/Local/Android/Sdk"
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/emulator:$PATH"
+    export PATH=/mnt/c/Users/jarad/AppData/Local/Android/Sdk/platform-tools:/mnt/c/Users/jarad/AppData/Local/Android/Sdk/build-tools/35.0.0:/snap/bin:$PATH
+    export ANDROID_HOME="$ANDROID_SDK_ROOT"
+    export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+    alias cursor='/mnt/c/Users/jarad/AppData/Local/Programs/cursor/Cursor.exe'
+    alias code='/mnt/c/Users/jarad/AppData/Local/Programs/Microsoft\ VS\ Code/bin/code'
+    export DELODOCS_ROOT=/mnt/c/Users/jarad/code/DeLoDocs
+    
+    # Enhanced clipboard functionality for WSL2
+    function pbcopy() {
+        cat - > /dev/null | /mnt/c/Windows/System32/clip.exe
+    }
+
+    function pbpaste() {
+        /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard' 2>/dev/null | tr -d '\r'
+    }
+
+    function clipcopy() {
+        if [ -f "$1" ]; then
+            cat "$1" > /dev/null | /mnt/c/Windows/System32/clip.exe
+            echo "Copied contents of $1 to clipboard"
+        else
+            echo "File not found: $1"
+        fi
+    }
+fi
+
+# Local aliases and functions
+alias ccc='code2prompt'
+export PROMPT_PATH=$DELODOCS_ROOT/AI/Prompts
