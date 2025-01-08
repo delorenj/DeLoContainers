@@ -5,6 +5,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    networks:
+      - proxy
     restart: always
     depends_on:
       - traefik
@@ -23,6 +25,8 @@ services:
       - "80:80"
       - "443:443"
       - "8080:8080"
+    networks:
+      - proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik-data/traefik.yml:/traefik.yml:ro
@@ -44,3 +48,7 @@ services:
 volumes:
   portainer_data:
   traefik-data:
+
+networks:
+  proxy:
+    name: proxy
