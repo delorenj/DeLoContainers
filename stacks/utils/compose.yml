@@ -1,7 +1,7 @@
 services:
   couchdb:
     image: couchdb:latest
-    container_name: couchdb
+    container_name: utils-couchdb
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
@@ -11,26 +11,29 @@ services:
       - "5984:5984"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.couchdb.entrypoints=websecure"
-      - "traefik.http.routers.couchdb.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`)"
-      - "traefik.http.routers.couchdb.tls=true"
-      - "traefik.http.routers.couchdb.tls.certresolver=letsencrypt"
-      - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
+      - "traefik.http.routers.utils-couchdb.entrypoints=websecure"
+      - "traefik.http.routers.utils-couchdb.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`)"
+      - "traefik.http.routers.utils-couchdb.tls=true"
+      - "traefik.http.routers.utils-couchdb.tls.certresolver=letsencrypt"
+      - "traefik.http.services.utils-couchdb.loadbalancer.server.port=5984"
+    networks:
+      - proxy
     restart: always
 
   scripts:
     image: nginx:alpine
+    container_name: utils-scripts
     ports:
       - "8238:80"
     volumes:
       - ./scripts:/usr/share/nginx/html:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.scripts.entrypoints=websecure"
-      - "traefik.http.routers.scripts.rule=Host(`sh.delo.sh`)"
-      - "traefik.http.routers.scripts.tls=true"
-      - "traefik.http.routers.scripts.tls.certresolver=letsencrypt"
-      - "traefik.http.services.scripts.loadbalancer.server.port=8238"
+      - "traefik.http.routers.utils-scripts.entrypoints=websecure"
+      - "traefik.http.routers.utils-scripts.rule=Host(`scripts.delo.sh`)"
+      - "traefik.http.routers.utils-scripts.tls=true"
+      - "traefik.http.routers.utils-scripts.tls.certresolver=letsencrypt"
+      - "traefik.http.services.utils-scripts.loadbalancer.server.port=80"
     networks:
       - proxy
 

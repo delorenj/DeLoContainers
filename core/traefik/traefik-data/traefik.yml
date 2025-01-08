@@ -25,6 +25,9 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+    network: proxy
+    watch: true
+    useBindPortIP: false
     
   file:
     directory: "/dynamic"
