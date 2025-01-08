@@ -11,6 +11,8 @@ services:
       - ./data:/data
     networks:
       - proxy
+    ports:
+      - "9443:9443"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.docker.entrypoints=websecure"
