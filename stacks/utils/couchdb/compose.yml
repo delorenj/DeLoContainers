@@ -11,6 +11,7 @@ services:
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     volumes:
       - couchdb_data:/opt/couchdb/data
+      - couchdb_etc:/opt/couchdb/etc
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.couch.entrypoints=websecure"
@@ -20,6 +21,7 @@ services:
       - "traefik.http.services.couch.loadbalancer.server.port=5984"
 volumes:
   couchdb_data:
+  couchdb_etc:
 
 networks:
   proxy:
