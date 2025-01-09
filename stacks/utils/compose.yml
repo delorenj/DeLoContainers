@@ -1,25 +1,4 @@
 services:
-  couchdb:
-    image: couchdb:latest
-    container_name: utils-couchdb
-    environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-    volumes:
-      - couchdb_data:/opt/couchdb/data
-    ports:
-      - "5984:5984"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.utils-couchdb.entrypoints=websecure"
-      - "traefik.http.routers.utils-couchdb.rule=Host(`couch.delo.sh`) || Host(`couch.delorenzo.family`)"
-      - "traefik.http.routers.utils-couchdb.tls=true"
-      - "traefik.http.routers.utils-couchdb.tls.certresolver=letsencrypt"
-      - "traefik.http.services.utils-couchdb.loadbalancer.server.port=5984"
-    networks:
-      - proxy
-    restart: always
-
   scripts:
     image: nginx:alpine
     container_name: utils-scripts
@@ -36,10 +15,12 @@ services:
       - "traefik.http.services.utils-scripts.loadbalancer.server.port=80"
     networks:
       - proxy
+    
+  
+include:
+  - ./couchdb/compose.yml
 
 networks:
   proxy:
     external: true
-    
-volumes:
-  couchdb_data:
+

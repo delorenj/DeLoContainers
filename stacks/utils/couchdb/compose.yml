@@ -6,12 +6,14 @@ services:
       - proxy
     ports:
       - "5984:5984"
+    env_file:
+      - .env
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     volumes:
-      - couchdb_data:/opt/couchdb/data
-      - couchdb_etc:/opt/couchdb/etc
+      - ./data:/opt/couchdb/data
+      - ./config/local.ini:/opt/couchdb/etc/local.d/local.ini
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.couch.entrypoints=websecure"
