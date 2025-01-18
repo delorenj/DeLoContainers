@@ -2,6 +2,7 @@ services:
   gluetun:
     image: qmcgaw/gluetun
     container_name: gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     environment:
@@ -27,6 +28,7 @@ services:
   vpn-monitor:
     image: alpine:latest
     container_name: vpn-monitor
+    restart: unless-stopped
     command: |
       sh -c '
       apk add --no-cache iproute2
@@ -44,6 +46,7 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    restart: unless-stopped
     environment:
       - WEBUI_PORT=8090
     volumes:
@@ -61,6 +64,7 @@ services:
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
+    restart: unless-stopped
     volumes:
       - ./prowlarr:/config
     labels:
@@ -74,6 +78,7 @@ services:
   exportarr:
     image: ghcr.io/onedr0p/exportarr:latest
     container_name: prowlarr-exportarr
+    restart: unless-stopped
     network_mode: "service:gluetun"
     command: ["prowlarr"]
     environment:
@@ -94,6 +99,7 @@ services:
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
+    restart: unless-stopped
     volumes:
       - ./radarr:/config
       - ${DOWNLOAD_PATH}:/downloads
@@ -109,6 +115,7 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    restart: unless-stopped
     environment:
       - LOG_LEVEL=info
       - LOG_HTML=false
@@ -125,6 +132,7 @@ services:
   jellyfin:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
+    restart: unless-stopped
     volumes:
       - ./jellyfin:/config
       - ${VIDEO_PATH}:/media

@@ -21,6 +21,7 @@ services:
       - "traefik.http.routers.couch.tls=true"
       - "traefik.http.routers.couch.tls.certresolver=letsencrypt"
       - "traefik.http.services.couch.loadbalancer.server.port=5984"
+    restart: unless-stopped
 volumes:
   couchdb_data:
   couchdb_etc:
