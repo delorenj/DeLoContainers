@@ -38,6 +38,8 @@ stacks/utils/monitoring/
 stacks/utils/portainer/
 stacks/ai/cognee/
 stacks/media/qbittorrent/
+stacks/media/prowlarr/Definitions
+stacks/media/prowlarr/asp/
 
 
 acme.json
