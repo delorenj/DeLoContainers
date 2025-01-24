@@ -1,0 +1,3 @@
+include:
+  - ./qdrant/compose.yml
+  - ./litellm/compose.yml

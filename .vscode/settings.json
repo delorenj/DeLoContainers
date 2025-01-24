@@ -2,10 +2,5 @@
     "debug.javascript.defaultRuntimeExecutable": {
         "pwa-node": "/home/delorenj/.local/share/mise/shims/node"
     },
-    "python.defaultInterpreterPath": "/home/delorenj/.local/share/mise/shims/python",
-    "go.goroot": "/Users/jaraddelorenzo/.local/share/mise/installs/go/1.23.4",
-    "go.alternateTools": {
-        "go": "/Users/jaraddelorenzo/.local/share/mise/shims/go",
-        "dlv": "/Users/jaraddelorenzo/.local/share/mise/shims/dlv"
-    }
+    "python.defaultInterpreterPath": "/home/delorenj/.local/share/mise/shims/python"
 }
