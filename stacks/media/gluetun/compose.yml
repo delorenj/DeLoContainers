@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=openvpn
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
+    volumes:
+      - ./gluetun:/gluetun
+    ports:
+      - 8090:8090  # qBittorrent
+      - 9696:9696  # Prowlarr
+      - 7878:7878  # Radarr
+    restart: unless-stopped
