@@ -1,63 +1,50 @@
 # DeLoContainers
 
-This repository contains a collection of Docker containers organized into different stacks for various purposes.
+Docker stack configurations for DeLoNET infrastructure.
 
-## Directory Structure
-
+## Structure
 ```
-.
-├── stacks/
-│   ├── ai/         # AI-related services
-│   ├── media/      # Media management services
-│   ├── proxy/      # Reverse proxy and networking
-│   └── utils/      # Utility services
+core/               # Required infrastructure
+  ├── squid/       # Network proxy
+  ├── traefik/     # Reverse proxy
+  └── portainer/   # Container management
+
+stacks/             # Supplementary services
+  ├── media/       # Media management
+  │   ├── gluetun
+  │   ├── prowlarr
+  │   ├── qbittorrent
+  │   └── radarr
+  ├── utils/       # Utility services
+  │   ├── couchdb
+  │   ├── marker
+  │   └── scripts
+  └── ai/          # AI services
+      ├── LibreChat
+      └── litellm
 ```
 
-## Stack Overview
+## Auto-Deployment
 
-### Media Stack
-Located in `stacks/media/`
-- Prowlarr
-- qBittorrent
-- Gluetun (VPN)
+Stacks auto-deploy on push to main:
+1. Core stacks deploy first (required for remote access)
+2. Supplementary stacks deploy after core success
 
-### Proxy Stack
-Located in `stacks/proxy/`
-- Traefik (Reverse Proxy)
+Required GitHub Secrets:
+- HOST: Target server IP/hostname
+- USERNAME: SSH username
+- SSH_KEY: SSH private key
 
-### Utils Stack
-Located in `stacks/utils/`
-- CouchDB
-- Marker
+### Manual Deployment
+```bash
+cd stack_directory
+docker compose up -d
+```
 
-## Getting Started
-
-1. Copy `.env.example` to `.env` and configure your environment variables
-2. Use the provided scripts in `scripts/` directory for common operations:
-   - `init-stack.sh`: Initialize new stack
-   - `backup.sh`: Backup configurations
-   - `prune.sh`: Clean up unused Docker resources
-   - `traefik.sh`: Manage Traefik configuration
-   - `vpn.sh`: VPN management
-
-## Configuration
-
-Each stack has its own `compose.yml` file and README with specific configuration details. Please refer to individual stack documentation for detailed setup instructions.
-
-## Maintenance
-
-Regular maintenance tasks:
-1. Run `scripts/backup.sh` to backup configurations
-2. Run `scripts/prune.sh` to clean up unused Docker resources
-3. Check logs in `logs/` directory for any issues
-
-## Contributing
-
-1. Create a new branch for your changes
-2. Follow the existing directory structure
-3. Update documentation accordingly
-4. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Adding New Stacks
+1. Choose location:
+   - core/: Required infrastructure
+   - stacks/: Supplementary services
+2. Add compose.yml
+3. Include README.md
+4. Push to main

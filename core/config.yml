@@ -1,0 +1,34 @@
+allowed_dirs:
+  - /Users/jaraddelorenzo
+  - /Volumes
+  - /var/run/docker.sock
+  - /dev
+
+network_config:
+  host_networking: true
+  privileged_mode: true
+  
+container_defaults:
+  cap_add:
+    - NET_ADMIN
+    - SYS_ADMIN
+  security_opt:
+    - seccomp:unconfined
+  privileged: true
+  
+volume_mounts:
+  - source: /Users/jaraddelorenzo
+    target: /host
+    read_only: false
+  - source: /var/run/docker.sock
+    target: /var/run/docker.sock
+    read_only: false
+
+device_access:
+  - /dev/net/tun
+  - /dev/kvm
+  
+environment:
+  DOCKER_HOST: unix:///var/run/docker.sock
+  ROOT_ALLOWED: "true"
+  DISABLE_SECCOMP: "true"

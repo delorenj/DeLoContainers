@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main
+    container_name: litellm
+    environment:
+      - PORT=8000
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

@@ -1,0 +1,72 @@
+name: Deploy Docker Stacks
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'core/**'
+      - 'stacks/**'
+
+jobs:
+  deploy-core:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'core/')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get changed files in core
+        id: core-changes
+        uses: tj-actions/changed-files@v41
+        with:
+          path: core
+
+      - name: Deploy Core Changes
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/docker/core
+            git pull
+            CHANGED_DIRS=$(echo "${{ steps.core-changes.outputs.all_changed_files }}" | xargs -I {} dirname {} | sort -u)
+            for dir in $CHANGED_DIRS; do
+              if [ -f "$dir/compose.yml" ]; then
+                echo "Deploying core stack: $dir"
+                cd $dir
+                docker compose down
+                docker compose up -d
+                cd -
+              fi
+            done
+
+  deploy-stacks:
+    runs-on: ubuntu-latest
+    needs: deploy-core
+    if: contains(github.event.head_commit.modified, 'stacks/')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get changed files in stacks
+        id: stack-changes
+        uses: tj-actions/changed-files@v41
+        with:
+          path: stacks
+
+      - name: Deploy Stack Changes
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/docker/stacks
+            git pull
+            CHANGED_DIRS=$(echo "${{ steps.stack-changes.outputs.all_changed_files }}" | xargs -I {} dirname {} | sort -u)
+            for dir in $CHANGED_DIRS; do
+              if [ -f "$dir/compose.yml" ]; then
+                echo "Deploying supplementary stack: $dir"
+                cd $dir
+                docker compose down
+                docker compose up -d
+                cd -
+              fi
+            done
