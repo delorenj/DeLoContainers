@@ -24,8 +24,16 @@ http:
       tls:
         certResolver: letsencrypt
 
+    qdrant-service:
+      rule: "Host(`qdrant.delo.sh`)"
+      service: qdrant
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
   services:
-    lmstudio:
+    qdrant:
       loadBalancer:
         servers:
-          - url: "http://100.116.213.108:1234"
+          - url: "http://100.116.213.108:6333"
