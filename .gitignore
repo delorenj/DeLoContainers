@@ -38,6 +38,7 @@ stacks/utils/monitoring/
 stacks/utils/portainer/
 stacks/ai/cognee/
 stacks/media/qbittorrent/
+stacks/ai/qdrant/qdrant_data/
 
 
 acme.json
