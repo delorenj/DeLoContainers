@@ -36,4 +36,4 @@ http:
     qdrant:
       loadBalancer:
         servers:
-          - url: "http://100.116.213.108:6333"
+          - url: "http://qdrant:6333"

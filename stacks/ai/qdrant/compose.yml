@@ -5,7 +5,7 @@ services:
       - "6333:6333"  # REST API
       - "6334:6334"  # GRPC API
     volumes:
-      - qdrant_data:/qdrant/storage
+      - ./qdrant_data:/qdrant/storage
     restart: unless-stopped
     networks:
       - proxy
