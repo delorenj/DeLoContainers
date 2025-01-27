@@ -1,22 +1,20 @@
 services:
   qdrant:
-    image: qdrant/qdrant:latest
-    restart: always
-    container_name: qdrant
+    image: qdrant/qdrant
     ports:
-      - 6333:6333
-      - 6334:6334
-    expose:
-      - 6333
-      - 6334
-      - 6335
-    configs:
-      - source: qdrant_config
-        target: /qdrant/config/production.yaml
+      - "6333:6333"  # REST API
+      - "6334:6334"  # GRPC API
     volumes:
-      - ./qdrant_data:/qdrant/storage
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - proxy
 
-configs:
-  qdrant_config:
-    content: |
-      log_level: INFO
+volumes:
+  qdrant_data:
+    name: qdrant_data
+
+networks:
+  proxy:
+    name: proxy
+    external: true

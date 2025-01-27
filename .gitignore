@@ -40,6 +40,5 @@ stacks/ai/cognee/
 stacks/media/qbittorrent/
 stacks/media/prowlarr/Definitions
 stacks/media/prowlarr/asp/
-
-
+stacks/ai/qdrant/qdrant_data/
 acme.json
