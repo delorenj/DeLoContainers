@@ -1,74 +1,8 @@
-services:
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    networks:
-      - proxy
-    restart: always
-    depends_on:
-      - traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.delo.sh`) || Host(`portainer.delorenzo.family`)"
-      - "traefik.http.routers.portainer.tls=true"
-      - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-
-  traefik:
-    image: traefik:v2.10
-    container_name: traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    networks:
-      - proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik-data/traefik.yml:/traefik.yml:ro
-      - ./traefik/traefik-data/acme.json:/acme.json
-      - ./traefik/traefik-data/dynamic:/dynamic:ro
-    entrypoint: ["/entrypoint.sh"]
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.delorenzo.family`) || Host(`traefik.delo.sh`)"
-      - "traefik.http.routers.traefik-secure.middlewares=auth@file"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-    command:
-      - "--api.dashboard=true"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-    restart: unless-stopped
-  
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: qdrant
-    ports:
-      - "6333:6333"
-      - "6334:6334"
-    volumes:
-      - qdrant_data:/qdrant/storage
-    networks:
-      - proxy
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qdrant.entrypoints=websecure"
-      - "traefik.http.routers.qdrant.rule=Host(`qdrant.delo.sh`)"
-      - "traefik.http.routers.qdrant.tls=true"
-      - "traefik.http.routers.qdrant.tls.certresolver=letsencrypt"
-      - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
-
-volumes:
-  portainer_data:
-  traefik-data:
-  qdrant_data:
+include:
+  - ./portainer/compose.yml
+  - ./traefik/compose.yml
 
 networks:
   proxy:
     name: proxy
+    external: true

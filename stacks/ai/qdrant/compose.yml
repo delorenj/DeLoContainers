@@ -9,6 +9,12 @@ services:
     restart: unless-stopped
     networks:
       - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qdrant-service.rule=Host(`qdrant.delo.sh`)"
+      - "traefik.http.routers.qdrant-service.entrypoints=websecure"
+      - "traefik.http.routers.qdrant-service.tls.certresolver=letsencrypt"
+      - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
 
 volumes:
   qdrant_data:

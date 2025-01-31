@@ -16,24 +16,16 @@ http:
       tls:
         certResolver: letsencrypt
 
-    ai-service:
-      rule: "Host(`ai.delo.sh`)"
-      service: lmstudio
+    lms-router:
+      rule: "Host(`lms.delo.sh`)"
+      service: lms-service
       entryPoints:
         - websecure
       tls:
         certResolver: letsencrypt
-
-    qdrant-service:
-      rule: "Host(`qdrant.delo.sh`)"
-      service: qdrant
-      entryPoints:
-        - websecure
-      tls:
-        certResolver: letsencrypt
-
+  
   services:
-    qdrant:
+    lms-service:
       loadBalancer:
         servers:
-          - url: "http://qdrant:6333"
+          - url: "wet-ham:1234"

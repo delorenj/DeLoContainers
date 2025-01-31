@@ -1,3 +1,4 @@
 include:
   - ./qdrant/compose.yml
   - ./litellm/compose.yml
+  - ./letta/compose.yml
