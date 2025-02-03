@@ -53,13 +53,6 @@ services:
       - ./qbittorrent:/config
       - ${DOWNLOAD_PATH}:/downloads
       - ${VIDEO_PATH}:/video
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.get.entrypoints=websecure"
-      - "traefik.http.routers.get.rule=Host(`get.delo.sh`) || Host(`get.delorenzo.family`)"
-      - "traefik.http.routers.get.tls=true"
-      - "traefik.http.routers.get.tls.certresolver=letsencrypt"
-      - "traefik.http.services.get.loadbalancer.server.port=8090"
 
   prowlarr:
     image: linuxserver/prowlarr:latest
@@ -67,67 +60,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./prowlarr:/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.index.entrypoints=websecure"
-      - "traefik.http.routers.index.rule=Host(`index.delo.sh`) || Host(`index.delorenzo.family`)"
-      - "traefik.http.routers.index.tls=true"
-      - "traefik.http.routers.index.tls.certresolver=letsencrypt"
-      - "traefik.http.services.index.loadbalancer.server.port=9696"
 
-  exportarr:
-    image: ghcr.io/onedr0p/exportarr:latest
-    container_name: prowlarr-exportarr
-    restart: unless-stopped
-    network_mode: "service:gluetun"
-    command: ["prowlarr"]
-    environment:
-      - PORT=9710
-      - URL=https://index.delo.sh  # Using external URL since we're behind VPN
-      - APIKEY=${PROWLARR_API_KEY}
-    depends_on:
-      - gluetun
-      - prowlarr
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr-metrics.entrypoints=websecure"
-      - "traefik.http.routers.prowlarr-metrics.rule=Host(`metrics.prowlarr.delo.sh`)"
-      - "traefik.http.routers.prowlarr-metrics.tls=true"
-      - "traefik.http.routers.prowlarr-metrics.tls.certresolver=letsencrypt"
-      - "traefik.http.services.prowlarr-metrics.loadbalancer.server.port=9710"
-
-  radarr:
-    image: linuxserver/radarr:latest
-    container_name: radarr
-    restart: unless-stopped
-    volumes:
-      - ./radarr:/config
-      - ${DOWNLOAD_PATH}:/downloads
-      - ${VIDEO_PATH}:/video
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.movies.entrypoints=websecure"
-      - "traefik.http.routers.movies.rule=Host(`movies.delo.sh`) || Host(`movies.delorenzo.family`)"
-      - "traefik.http.routers.movies.tls=true"
-      - "traefik.http.routers.movies.tls.certresolver=letsencrypt"
-      - "traefik.http.services.movies.loadbalancer.server.port=7878"
-
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    restart: unless-stopped
-    environment:
-      - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=none
-      - HEADLESS=true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.flaresolverr.entrypoints=websecure"
-      - "traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.delo.sh`) || Host(`flaresolverr.delorenzo.family`)"
-      - "traefik.http.routers.flaresolverr.tls=true"
-      - "traefik.http.routers.flaresolverr.tls.certresolver=letsencrypt"
-      - "traefik.http.services.flaresolverr.loadbalancer.server.port=8191"
 
   jellyfin:
     image: linuxserver/jellyfin:latest
@@ -136,10 +69,3 @@ services:
     volumes:
       - ./jellyfin:/config
       - ${VIDEO_PATH}:/media
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jelly.entrypoints=websecure"
-      - "traefik.http.routers.jelly.rule=Host(`jelly.delo.sh`) || Host(`jelly.delorenzo.family`)"
-      - "traefik.http.routers.jelly.tls=true"
-      - "traefik.http.routers.jelly.tls.certresolver=letsencrypt"
-      - "traefik.http.services.jelly.loadbalancer.server.port=8096"
