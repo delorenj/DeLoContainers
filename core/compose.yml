@@ -1,8 +1,0 @@
-include:
-  - ./portainer/compose.yml
-  - ./traefik/compose.yml
-
-networks:
-  proxy:
-    name: proxy
-    external: true
