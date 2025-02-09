@@ -6,7 +6,7 @@ services:
       - POSTGRES_USER=delorenj
       - POSTGRES_DB=letta
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - letta_postgres_data:/var/lib/postgresql/data
     ports:
       - "5435:5432"
     networks:
@@ -32,9 +32,9 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENROUTER_API_KEY}
-      - LMSTUDIO_BASE_URL="https://ai.delo.sh"
+      - LMSTUDIO_BASE_URL="https://lms.delo.sh"
       - OPENAI_API_BASE="https://openrouter.ai/api/v1"
-      - DATABASE_URL=
+      - DATABASE_URL=postgresql://delorenj:admin123@postgres:5432/letta
       - GROQ_API_KEY=${GROQ_API_KEY}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - TOGETHER_API_KEY=${TOGETHER_API_KEY}
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  letta_postgres_data:
 
 networks:
   proxy:
