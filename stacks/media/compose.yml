@@ -14,6 +14,7 @@ services:
     volumes:
       - ./gluetun:/gluetun
     ports:
+      # VPN ports
       - 49152:49152/tcp
       - 49152:49152/udp
       - 49153:49153/tcp
@@ -24,6 +25,10 @@ services:
       - 49155:49155/udp
       - 49156:49156/tcp
       - 49156:49156/udp
+      # Application ports
+      - "8090:8090"  # qBittorrent WebUI
+      # qBittorrent web UI
+      - "8090:8090"
 
   vpn-monitor:
     image: alpine:latest
@@ -49,6 +54,7 @@ services:
     restart: unless-stopped
     environment:
       - WEBUI_PORT=8090
+    network_mode: "service:gluetun"  # Route through VPN
     volumes:
       - ./qbittorrent:/config
       - ${DOWNLOAD_PATH}:/downloads
@@ -58,6 +64,8 @@ services:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
+    ports:
+      - "9696:9696"
     volumes:
       - ./prowlarr:/config
 
@@ -66,6 +74,11 @@ services:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
     restart: unless-stopped
+    ports:
+      - "8096:8096"  # HTTP
+      - "8920:8920"  # Optional HTTPS
+      - "7359:7359/udp"  # Optional service discovery
+      - "1900:1900/udp"  # Optional DLNA
     volumes:
       - ./jellyfin:/config
       - ${VIDEO_PATH}:/media
