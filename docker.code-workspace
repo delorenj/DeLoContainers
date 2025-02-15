@@ -13,6 +13,7 @@
 			"compose.yml",
 			"docker-compose.yml"
 		],
-		"docker-compose.enableTelemetry": true
+		"docker-compose.enableTelemetry": true,
+		"windsurf.autoExecutionPolicy": "auto"
 	}
 }

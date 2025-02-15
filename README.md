@@ -48,3 +48,7 @@ Each stack has its own `compose.yml` file and README with specific configuration
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Tasks
+
+- health: Simple health status report for each compose.yml file in the stacks directory.

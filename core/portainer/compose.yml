@@ -2,6 +2,9 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
+    hostname: portainer
+    ports:
+      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
@@ -20,3 +23,7 @@ services:
 
 volumes:
   portainer_data:
+
+networks:
+  proxy:
+    external: true

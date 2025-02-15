@@ -1,54 +1,16 @@
-# Progress
+# Progress Tracker
 
-## Project Setup
-- [ ] Repository Setup
-  - [x] Create ~/code/CursorMCP directory
-  - [x] Move mcp directory contents
-  - [ ] Update path references
-  - [ ] Initialize git repository
+## Current Goal
+Get rustdesk stack up
 
-## Core Features
-- [ ] Configuration Management
-  - [ ] Parse ./mcp/config.json
-  - [ ] Support node-based servers
-  - [ ] Handle environment variables
-  - [ ] Validate against MCP spec
+## Acceptance Criteria
+- [x] I can connect to the RustDesk server using the docker relay server
 
-- [ ] Server Management
-  - [ ] Start/stop node servers
-  - [ ] Monitor server health
-  - [ ] Handle output streams
-  - [ ] Track server status
+## Details
+The RustDesk stack is now running with the following services:
+- hbbs (ID server) running on ports 31115-31118
+- hbbr (relay server) running on ports 31117 and 31119
 
-- [ ] Tool Registry
-  - [ ] Discover available tools
-  - [ ] Track server-tool mappings
-  - [ ] Support dynamic updates
-
-- [ ] Core Integration
-  - [ ] List available tools command
-  - [ ] Memory recall integration
-  - [ ] Tool execution handling
-
-## Testing & Documentation
-- [ ] Testing
-  - [ ] Config parsing tests
-  - [ ] Server management tests
-  - [ ] Tool execution tests
-  - [ ] Integration tests
-
-- [ ] Documentation
-  - [ ] Setup guide
-  - [ ] Usage examples
-  - [ ] Troubleshooting guide
-
-## Stretch Goals
-- [ ] MCP Tab Interface
-  - [ ] Tool discovery view
-  - [ ] Server status display
-  - [ ] Tool execution UI
-
-## Current Status
-- Phase: Project Setup
-- Blockers: None
-- Next Steps: Update path references and initialize git repository
+To connect, use the following settings in your RustDesk client:
+- ID Server: rustdesk.example.com:31117
+- Relay Server: rustdesk.example.com:31117

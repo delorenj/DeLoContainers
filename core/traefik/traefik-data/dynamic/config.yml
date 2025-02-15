@@ -3,7 +3,7 @@ http:
     auth:
       basicAuth:
         users:
-          - "admin:$apr1$BCP7HW2y$oNmgVEqW27wpXkT1Shm8o0"
+          - "admin:$2y$05$g3/JYH3py0aTjaQ0dObvE.6H0WvI8p77jVjJMb4U0.xa1rfsAZcB6"
 
   routers:
     traefik-dashboard:
