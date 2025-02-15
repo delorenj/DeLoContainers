@@ -1,17 +1,48 @@
 services:
   hbbs:
-    container_name: rustdesk-hbbs
+    container_name: hbbs
     image: rustdesk/rustdesk-server:latest
-    command: hbbs -r rustdesk.example.com:21117
+    command: hbbs
+    volumes:
+      - ./data:/root
+    networks:
+      - proxy
+    depends_on:
+      - hbbr
     ports:
-      - "31115:21115"
-      - "31116:21116"
-      - "31116:21116/udp"
-      - "31118:21118"
+      - 21116:21116
+    restart: always
+
   hbbr:
-    container_name: rustdesk-hbbr
+    container_name: hbbr
     image: rustdesk/rustdesk-server:latest
     command: hbbr
+    volumes:
+      - ./data:/root
+    networks:
+      - proxy
     ports:
-      - "31117:21117"
-      - "31119:21119"
+      - 21117:21117
+    restart: always
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    network_mode: bridge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: Asia/Taipei
+    command: --cleanup --schedule "0 0 3 * * *" hbbr hbbs
+    restart: always
+
+networks:
+  proxy:
+    external: true
+# Because using docker host mode
+# Just in case you forgot the ports:
+# 21114 TCP for web console, only available in Pro version
+# 21115 TCP for NAT type test
+# 21116 TCP TCP hole punching
+# 21116 UDP heartbeat/ID server
+# 21117 TCP relay
