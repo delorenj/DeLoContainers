@@ -1,6 +1,3 @@
-[submodule "stacks/ai/LibreChat"]
-	path = stacks/ai/LibreChat
-	url = https://github.com/danny-avila/LibreChat
 [submodule "stacks/ai/watch-me-spin"]
 	path = stacks/ai/watch-me-spin
 	url = git@github.com:delorenj/watch-me-spin.git
