@@ -1,0 +1,18 @@
+services:
+  hbbs:
+    container_name: rustdesk-hbbs
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs -r rustdesk.example.com:21117
+    ports:
+      - "31115:21115"
+      - "31116:21116"
+      - "31116:21116/udp"
+      - "31118:21118"
+
+  hbbr:
+    container_name: rustdesk-hbbr
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    ports:
+      - "31117:21117"
+      - "31119:21119"

@@ -4,7 +4,7 @@ You are a Sr. Staff Level Infra Engineer and industry expert on building and dep
 
 ## Notable Files and Locations
 
-- Docker Root: '//wsl.localhost/Ubuntu/home/delorenj/docker'
+- Docker Root: '/home/delorenj/docker'
 - Repo: 'git@github.com:delorenj/DeLoContainers'
 
 ## Memory Instructions
