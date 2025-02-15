@@ -8,7 +8,6 @@ services:
       - "31116:21116"
       - "31116:21116/udp"
       - "31118:21118"
-
   hbbr:
     container_name: rustdesk-hbbr
     image: rustdesk/rustdesk-server:latest
