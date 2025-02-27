@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_USER=delorenj
+      - POSTGRES_DB=letta
+    volumes:
+      - letta_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U delorenj"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  letta:
+    image: letta/letta:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.letta.rule=Host(`letta.delo.sh`)"
+      - "traefik.http.routers.letta.entrypoints=websecure"
+      - "traefik.http.routers.letta.tls=true"
+      - "traefik.http.services.letta.loadbalancer.server.port=8283"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENROUTER_API_KEY}
+      - LMSTUDIO_BASE_URL="https://lms.delo.sh"
+      - OPENAI_API_BASE="https://openrouter.ai/api/v1"
+      - DATABASE_URL=postgresql://delorenj:admin123@postgres:5432/letta
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY}
+    networks:
+      - proxy
+    restart: unless-stopped
+
+volumes:
+  letta_postgres_data:
+
+networks:
+  proxy:
+    name: proxy
+    external: true

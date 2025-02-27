@@ -1,0 +1,53 @@
+model_list:
+  - model_name: gpt-3.5-turbo
+    litellm_params:
+      model: azure/gpt-35-turbo
+      api_base: ${AZURE_API_BASE}
+      api_key: ${AZURE_API_KEY}
+      api_version: "2023-07-01-preview"
+
+  - model_name: gpt-4
+    litellm_params:
+      model: azure/gpt-4
+      api_base: ${AZURE_API_BASE}
+      api_key: ${AZURE_API_KEY}
+      api_version: "2023-07-01-preview"
+
+  - model_name: claude-3-sonnet
+    litellm_params:
+      model: anthropic/claude-3-sonnet-20240229
+      api_key: ${ANTHROPIC_API_KEY}
+
+  - model_name: gemini-pro
+    litellm_params:
+      model: gemini/gemini-pro
+      api_key: ${GOOGLE_API_KEY}
+
+  - model_name: openrouter-claude
+    litellm_params:
+      model: openrouter/claude-3.5-sonnet:beta
+      api_key: ${OPENROUTER_API_KEY}
+      api_base: "https://openrouter.ai/api/v1"
+
+# General settings
+general_settings: 
+  master_key: ${LITELLM_MASTER_KEY}
+  database_url: ${DATABASE_URL}
+  # Cache settings
+  cache:
+    type: redis
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+
+# Logging configuration  
+logging:
+  level: info
+  log_requests: true
+  log_responses: true
+
+# Request/response configuration
+server_settings:
+  allow_model_override: true
+  max_parallel_requests: 100
+  timeout: 300

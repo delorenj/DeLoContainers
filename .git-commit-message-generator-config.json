@@ -1,0 +1,10 @@
+{
+  "AI": {
+    "provider": "openai",
+    "model_id": "gpt-4o-mini",
+    "max_tokens": 300,
+    "temperature": 0.3,
+    "user_prompt": "Generate a concise and informative commit message based on the following git diff:\n\n{diff}",
+    "system_prompt": "You are an AI assistant helping to generate Git commit messages."
+  }
+}

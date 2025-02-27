@@ -1,0 +1,21 @@
+services:  
+  scripts:
+    image: nginx:alpine
+    container_name:   scripts
+    ports:
+      - "8238:80"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.utils-scripts.entrypoints=websecure"
+      - "traefik.http.routers.utils-scripts.rule=Host(`scripts.delo.sh`)"
+      - "traefik.http.routers.utils-scripts.tls=true"
+      - "traefik.http.routers.utils-scripts.tls.certresolver=letsencrypt"
+      - "traefik.http.services.utils-scripts.loadbalancer.server.port=8238"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
