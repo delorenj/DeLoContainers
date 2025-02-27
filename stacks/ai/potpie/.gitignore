@@ -1,0 +1,24 @@
+.DS_Store
+.vscode
+*__pycache__
+.venv
+firebase_service_account.json
+firebase_service_account.json:Zone.Identifier
+cli/dist
+cli/.venv
+venv/
+.env
+*.json
+.momentum
+db
+cli/momentum_cli/.momentum
+.hypothesis
+# Ignore all .env.* files
+.env.*
+# Except for .env.template
+!.env.template
+*.log
+.cursorrules
+projects/
+# Ignore PyCharm config
+.idea

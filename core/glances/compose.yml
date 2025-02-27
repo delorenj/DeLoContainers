@@ -1,0 +1,14 @@
+services: 
+  monitoring: 
+    image: nicolargo/glances:latest-full 
+    pid: host 
+    network_mode: host 
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock # Uncomment the below line if you want glances to display host OS detail instead of container's # - /etc/os-release:/etc/os-release:ro environment: - "GLANCES\_OPT=-w" # For nvidia GPUs deploy: resources: reservations: devices: - driver: nvidia count: 1 capabilities: [gpu]    labels:
+      - "com.centurylinklabs.watchtower.enable=true"  # Auto-updates if you use Watchtower`
+      - "traefik.enable=true"
+      - "traefik.http.routers.glances.entrypoints=websecure"
+      - "traefik.http.routers.glances.rule=Host(`glances.delo.sh`)"
+      - "traefik.http.routers.glances.tls=true"
+      - "traefik.http.routers.glances.tls.certresolver=letsencrypt"
+      - "traefik.http.services.glances.loadbalancer.server.port=9005"

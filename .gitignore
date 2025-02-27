@@ -1,0 +1,44 @@
+# General ignores
+*.pid
+*.session
+*.log
+*.tmp
+*.swp
+*.bak
+*.backup
+*.old
+*.env
+.DS_Store
+.idea/
+.vscode/
+*.code-workspace
+
+# Docker/container specific
+**/Backups/
+**/Sentry/
+**/__processing/
+**/data/
+**/config/
+**/cache/
+**/logs/
+**/temp/
+
+backups/
+logs/
+logs.db
+logs.db-shm
+logs.db-wal
+prowlarr.db*
+*.db*
+BT_backup/
+
+# Untracked directories to ignore
+stacks/media/jellyfin/
+stacks/utils/monitoring/
+stacks/utils/portainer/
+stacks/ai/cognee/
+stacks/media/qbittorrent/
+stacks/media/prowlarr/Definitions
+stacks/media/prowlarr/asp/
+stacks/ai/qdrant/qdrant_data/
+acme.json

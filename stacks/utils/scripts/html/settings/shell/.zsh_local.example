@@ -1,0 +1,64 @@
+# Machine-specific Configuration - EXAMPLE FILE
+# Copy this file to ~/.zsh_local and customize for your machine
+
+# Custom Paths
+export PATH=$HOME/bin:$PATH
+export GOPATH=$HOME/go
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
+# Project Directories
+export WORKSPACE=$HOME/workspace
+export PROJECTS_DIR=$HOME/projects
+
+# Development Tools
+export ANDROID_HOME=$HOME/Android/Sdk
+export FLUTTER_ROOT=$HOME/flutter
+
+# Local Services
+export POSTGRES_HOST=localhost
+export REDIS_URL=redis://localhost:6379
+
+# Platform-specific Settings
+case "$(uname)" in
+    "Darwin")  # macOS
+        # macOS specific settings
+        export HOMEBREW_PREFIX="/opt/homebrew"
+        alias ls="ls -G"
+        ;;
+    "Linux")
+        # Linux specific settings
+        alias ls="ls --color=auto"
+        ;;
+esac
+
+# WSL-specific Configuration (if applicable)
+if grep -q Microsoft /proc/version 2>/dev/null; then
+    # WSL-specific paths and settings
+    export WINDOWS_HOME=/mnt/c/Users/$USER
+    
+    # WSL Clipboard functions
+    function pbcopy() {
+        clip.exe
+    }
+    function pbpaste() {
+        powershell.exe Get-Clipboard
+    }
+fi
+
+# Local Aliases
+alias projects="cd $PROJECTS_DIR"
+alias workspace="cd $WORKSPACE"
+
+# Local Functions
+function mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# Local Development Shortcuts
+alias dc="docker-compose"
+alias k="kubectl"
+
+# Remember to:
+# 1. Never commit this file
+# 2. Add .zsh_local to .gitignore
+# 3. Customize based on your specific needs

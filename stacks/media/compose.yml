@@ -1,0 +1,108 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - OPENVPN_USER=${VPNAC_USER}
+      - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
+      - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
+      - FIREWALL_VPN_INPUT_PORTS=6881,6882,6883,6884,6885
+    volumes:
+      - ./gluetun:/gluetun
+    ports:
+      - 6881:6881/tcp
+      - 6881:6881/udp
+      - 6882:6882/tcp
+      - 6882:6882/udp
+      - 6883:6883/tcp
+      - 6883:6883/udp
+      - 6884:6884/tcp
+      - 6884:6884/udp
+      - 6885:6885/tcp
+      - 6885:6885/udp
+      - 8091:8091
+    networks:
+      - proxy
+
+  vpn-monitor:
+    image: alpine:latest
+    container_name: vpn-monitor
+    restart: unless-stopped
+    command: |
+      sh -c '
+      apk add --no-cache iproute2
+      while true; do
+        if ip addr show tun0 up > /dev/null 2>&1; then
+          echo "vpn_connected 1" > /metrics
+        else
+          echo "vpn_connected 0" > /metrics
+        fi
+        sleep 30
+      done'
+    volumes:
+      - /sys/class/net:/sys/class/net:ro
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    environment:
+      - WEBUI_PORT=8091
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./qbittorrent:/config
+      - ${DOWNLOAD_PATH}:/downloads
+      - ${VIDEO_PATH}:/video
+    depends_on:
+      - gluetun
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.rule=Host(`get.delo.sh`)"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8091"
+      - "traefik.docker.network=proxy"
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    volumes:
+      - ./prowlarr:/config
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.delo.sh`)"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    volumes:
+      - ./jellyfin:/config
+      - ${VIDEO_PATH}:/media
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,189 @@
+version: '3.1'
+
+services:
+  # Web frontend
+  web:
+    image: langgenius/dify-web:latest
+    container_name: dify-web
+    restart: unless-stopped
+    networks:
+      - proxy
+      - dify
+    environment:
+      - CONSOLE_API_URL=https://api.dify.delo.sh
+      - APP_API_URL=https://api.dify.delo.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dify-web.rule=Host(`dify.delo.sh`)"
+      - "traefik.http.routers.dify-web.entrypoints=websecure"
+      - "traefik.http.routers.dify-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dify-web.loadbalancer.server.port=3000"
+
+  # API backend
+  api:
+    image: langgenius/dify-api:latest
+    container_name: dify-api
+    restart: unless-stopped
+    networks:
+      - proxy
+      - dify
+    depends_on:
+      - db
+      - redis
+      - weaviate
+    volumes:
+      - ./data/storage:/app/api/storage
+    environment:
+      # Startup mode settings
+      - MODE=api
+      - DEPLOY_ENV=PRODUCTION
+      - LOG_LEVEL=INFO
+      # Database settings
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=dify
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_USE_SSL=false
+      # File storage settings
+      - STORAGE_TYPE=local
+      - STORAGE_LOCAL_PATH=/app/api/storage
+      # Vector database settings (default: weaviate)
+      - VECTOR_STORE=weaviate
+      - WEAVIATE_ENDPOINT=http://weaviate:8080
+      - WEAVIATE_API_KEY=
+      # Web API settings
+      - WEB_API_URL=https://dify.delo.sh
+      # Service API settings
+      - SERVICE_API_URL=https://api.dify.delo.sh
+      # Cors settings (for WebApp development)
+      - CONSOLE_CORS_ALLOW_ORIGINS=https://dify.delo.sh
+      - WEB_API_CORS_ALLOW_ORIGINS=*
+      # Validate setting
+      - VALIDATE_WORKSPACE_DOMAIN=false
+      # Multi-modal settings
+      - MULTIMODAL_VISION_BASE64_MAX_SIZE=10
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dify-api.rule=Host(`api.dify.delo.sh`)"
+      - "traefik.http.routers.dify-api.entrypoints=websecure"
+      - "traefik.http.routers.dify-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dify-api.loadbalancer.server.port=5001"
+
+  # Worker for async jobs
+  worker:
+    image: langgenius/dify-api:latest
+    container_name: dify-worker
+    restart: unless-stopped
+    networks:
+      - dify
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./data/storage:/app/api/storage
+    environment:
+      # Startup mode settings
+      - MODE=worker
+      - DEPLOY_ENV=PRODUCTION
+      - LOG_LEVEL=INFO
+      # Database settings
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=dify
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_USE_SSL=false
+      # File storage settings
+      - STORAGE_TYPE=local
+      - STORAGE_LOCAL_PATH=/app/api/storage
+      # Vector database settings (default: weaviate)
+      - VECTOR_STORE=weaviate
+      - WEAVIATE_ENDPOINT=http://weaviate:8080
+      - WEAVIATE_API_KEY=
+      # Web API settings
+      - WEB_API_URL=https://dify.delo.sh
+      # Service API settings
+      - SERVICE_API_URL=https://api.dify.delo.sh
+      # Multi-modal settings
+      - MULTIMODAL_VISION_BASE64_MAX_SIZE=10
+
+  # Task scheduler
+  scheduler:
+    image: langgenius/dify-api:latest
+    container_name: dify-scheduler
+    restart: unless-stopped
+    networks:
+      - dify
+    depends_on:
+      - db
+      - redis
+    environment:
+      # Startup mode settings
+      - MODE=scheduler
+      - DEPLOY_ENV=PRODUCTION
+      - LOG_LEVEL=INFO
+      # Database settings
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=dify
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_USE_SSL=false
+
+  # Database
+  db:
+    image: postgres:15-alpine
+    container_name: dify-db
+    restart: unless-stopped
+    networks:
+      - dify
+    volumes:
+      - ./data/postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=dify
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: dify-redis
+    restart: unless-stopped
+    networks:
+      - dify
+    volumes:
+      - ./data/redis-data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+
+  # Vector database (Weaviate)
+  weaviate:
+    image: semitechnologies/weaviate:1.23.7
+    container_name: dify-weaviate
+    restart: unless-stopped
+    networks:
+      - dify
+    volumes:
+      - ./data/weaviate-data:/var/lib/weaviate
+    environment:
+      - QUERY_DEFAULTS_LIMIT=20
+      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true
+      - PERSISTENCE_DATA_PATH=/var/lib/weaviate
+      - DEFAULT_VECTORIZER_MODULE=none
+      - ENABLE_MODULES=text2vec-openai,text2vec-cohere,text2vec-huggingface,ref2vec-centroid,generative-openai,generative-cohere,generative-palm,qna-openai
+      - CLUSTER_HOSTNAME=node1
+
+networks:
+  proxy:
+    external: true
+  dify:
+    name: dify_network
