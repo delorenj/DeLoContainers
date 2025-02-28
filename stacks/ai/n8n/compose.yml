@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "7678:5678"
+    environment:
+      - N8N_HOST=n8n.delo.sh
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n.delo.sh/
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./data:/home/node/.n8n
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.delo.sh`)"
+      - "traefik.http.routers.n8n.entrypoints=websecure"
+      - "traefik.http.routers.n8n.tls=true"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: proxy
+    external: true
