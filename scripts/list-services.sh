@@ -47,10 +47,29 @@ find stacks -type f -name "compose.yml" 2>/dev/null | sort | while read -r file;
                 status="\033[1;31m✗\033[0m"
             fi
             
-            if grep -q "container_name:" <<< $(grep -A 20 "^  $service:" "$file" 2>/dev/null); then
-                echo -e "    $status \033[1;36m$service\033[0m → \033[1;33m$container_name\033[0m"
+            # Extract Traefik Host label if it exists
+            traefik_host=$(grep -A 50 "^  $service:" "$file" | 
+                          grep -o "Host(\`[^)]*\`)" | 
+                          head -1 | 
+                          sed "s/Host(\`\(.*\)\`)/\1/")
+            
+            # Check if the host is reachable
+            reachable=""
+            if [ -n "$traefik_host" ]; then
+                if curl -s --head --max-time 2 "https://$traefik_host" >/dev/null 2>&1; then
+                    reachable="\033[1;32m✓\033[0m"
+                else
+                    reachable="\033[1;31m✗\033[0m"
+                fi
+                traefik_info=" 🌐 \033[1;35m$traefik_host\033[0m $reachable"
             else
-                echo -e "    $status \033[1;36m$service\033[0m"
+                traefik_info=""
+            fi
+            
+            if grep -q "container_name:" <<< $(grep -A 20 "^  $service:" "$file" 2>/dev/null); then
+                echo -e "    $status \033[1;36m$service\033[0m → \033[1;33m$container_name\033[0m$traefik_info"
+            else
+                echo -e "    $status \033[1;36m$service\033[0m$traefik_info"
             fi
         done
     else
@@ -58,4 +77,4 @@ find stacks -type f -name "compose.yml" 2>/dev/null | sort | while read -r file;
     fi
 done
 
-echo -e "\n\033[1;32mLegend: \033[1;32m✓\033[0m Running  \033[1;31m✗\033[0m Not Running\033[0m"
+echo -e "\n\033[1;32mLegend: \033[1;32m✓\033[0m Running  \033[1;31m✗\033[0m Not Running  🌐 Web Address\033[0m"

@@ -20,21 +20,18 @@
 │   │   │   └── README.md
 │   │   ├── letta/
 │   │   │   └── compose.yml
-│   │   ├── LibreChat/
-│   │   │   ├── compose.deploy.yml
-│   │   │   ├── compose.yml
-│   │   │   ├── librechat.example.yaml
-│   │   │   ├── rag.yml
-│   │   │   └── README.md
 │   │   ├── litellm/
 │   │   │   ├── compose.yml
 │   │   │   └── config.yaml
+│   │   ├── n8n/
+│   │   │   ├── compose2.yml
+│   │   │   ├── compose.yml
+│   │   │   └── README.md
 │   │   ├── qdrant/
 │   │   │   ├── compose.yml
 │   │   │   └── README.md
 │   │   ├── watch-me-spin/
 │   │   │   └── compose.yml
-│   │   ├── compose.yml
 │   │   └── README.md
 │   ├── media/
 │   │   ├── exportarr/
@@ -58,4 +55,4 @@
 │       │   └── compose.yml
 │       └── README.md
 └── README.md
-23 directories, 37 files
+23 directories, 34 files
