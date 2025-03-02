@@ -1,0 +1,5 @@
+default:
+    #!/bin/zsh
+    echo "Bring up n8n..."
+    docker compose down && docker compose up -d
+    echo "Running at https://n8n.delo.sh"
