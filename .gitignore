@@ -23,6 +23,7 @@
 **/logs/
 **/temp/
 
+# Database and state files
 backups/
 logs/
 logs.db
@@ -31,6 +32,12 @@ logs.db-wal
 prowlarr.db*
 *.db*
 BT_backup/
+
+# Docker volumes and runtime data
+**/volumes/
+**/_data/
+**/.docker/
+docker-compose.override.yml
 
 # Untracked directories to ignore
 stacks/media/jellyfin/
@@ -42,3 +49,10 @@ stacks/media/prowlarr/Definitions
 stacks/media/prowlarr/asp/
 stacks/ai/qdrant/qdrant_data/
 acme.json
+
+# Allow these files even if they match above patterns
+!docker-compose.yml
+!docker-compose.*.example.yml
+!.env.example
+!config/example/
+!README.md
