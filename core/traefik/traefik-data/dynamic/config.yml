@@ -24,8 +24,21 @@ http:
       tls:
         certResolver: letsencrypt
   
+    draw-router:
+      rule: "Host(`draw.delo.sh`)"
+      service: draw-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
   services:
     lms-service:
       loadBalancer:
         servers:
           - url: "wet-ham:1234"
+
+    draw-service:
+      loadBalancer:
+        servers:
+          - url: "wet-ham:3002"

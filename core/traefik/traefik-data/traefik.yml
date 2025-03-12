@@ -18,7 +18,7 @@ certificatesResolvers:
   letsencrypt:
     acme:
       email: jaradd@gmail.com
-      storage: acme.json
+      storage: /etc/traefik/acme.json
       tlsChallenge: {}
 
 providers:

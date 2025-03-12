@@ -3,16 +3,12 @@ services:
     image: portainer/portainer-ce:latest
     container_name: portainer
     hostname: portainer
-    ports:
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     networks:
       - proxy
     restart: always
-    depends_on:
-      - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.entrypoints=websecure"
