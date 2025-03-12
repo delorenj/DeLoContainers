@@ -56,3 +56,7 @@ acme.json
 !.env.example
 !config/example/
 !README.md
+dist/
+frontend/
+!frontend/.keep
+excalidraw-complete
