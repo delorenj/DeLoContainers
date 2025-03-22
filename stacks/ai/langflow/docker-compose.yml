@@ -12,6 +12,13 @@ services:
       - LANGFLOW_CONFIG_DIR=app/langflow
     volumes:
       - langflow-data:/app/langflow
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.langflow.rule=Host(`langflow.delo.sh`)"
+      - "traefik.http.routers.langflow.entrypoints=websecure"
+      - "traefik.http.routers.langflow.tls.certresolver=letsencrypt"
+      - "traefik.http.services.langflow.loadbalancer.server.port=7860"
 
   postgres:
     image: postgres:16
