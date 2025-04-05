@@ -11,6 +11,7 @@ export async function authenticateUser(req, res, mode?: RateLimiterMode): Promis
   console.log("authenticateUser called. Request headers:", req.headers);
   return withAuth(supaAuthenticateUser)(req, res, mode);
 }
+
 function setTrace(team_id: string, api_key: string) {
   try {
     setTraceAttributes({
@@ -22,6 +23,7 @@ function setTrace(team_id: string, api_key: string) {
   }
 
 }
+
 export async function supaAuthenticateUser(
   req,
   res,
@@ -71,77 +73,76 @@ export async function supaAuthenticateUser(
     // Skip the rest of the authentication flow
     return { success: true, team_id: team_id, plan: "self-hosted" };
   }
-    normalizedApi = parseApi(token);
+  normalizedApi = parseApi(token);
 
-    console.log("Calling Supabase with api_key:", normalizedApi);
-    const { data, error } = await supabase_service.rpc(
-      'get_key_and_price_id_2', { api_key: normalizedApi }
-    );
-    console.log("Supabase response:", data, error);
-    // get_key_and_price_id_2 rpc definition:
-    // create or replace function get_key_and_price_id_2(api_key uuid)
-    //   returns table(key uuid, team_id uuid, price_id text) as $$
-    //   begin
-    //     if api_key is null then
-    //       return query
-    //       select null::uuid as key, null::uuid as team_id, null::text as price_id;
-    //     end if;
+  console.log("Calling Supabase with api_key:", normalizedApi);
+  const { data, error } = await supabase_service.rpc(
+    'get_key_and_price_id_2', { api_key: normalizedApi }
+  );
+  console.log("Supabase response:", data, error);
+  // get_key_and_price_id_2 rpc definition:
+  // create or replace function get_key_and_price_id_2(api_key uuid)
+  //   returns table(key uuid, team_id uuid, price_id text) as $$
+  //   begin
+  //     if api_key is null then
+  //       return query
+  //       select null::uuid as key, null::uuid as team_id, null::text as price_id;
+  //     end if;
 
-    //     return query
-    //     select ak.key, ak.team_id, s.price_id
-    //     from api_keys ak
-    //     left join subscriptions s on ak.team_id = s.team_id
-    //     where ak.key = api_key;
-    //   end;
-    //   $$ language plpgsql;
+  //     return query
+  //     select ak.key, ak.team_id, s.price_id
+  //     from api_keys ak
+  //     left join subscriptions s on ak.team_id = s.team_id
+  //     where ak.key = api_key;
+  //   end;
+  //   $$ language plpgsql;
 
-    if (error) {
-      console.error('Error fetching key and price_id:', error);
-    } else {
-      // console.log('Key and Price ID:', data);
-    }
+  if (error) {
+    console.error('Error fetching key and price_id:', error);
+  } else {
+    // console.log('Key and Price ID:', data);
+  }
 
-    if (error || !data || data.length === 0) {
-      return {
-        success: false,
-        error: "Unauthorized: Invalid token",
-        status: 401,
-      };
-    }
-    const internal_team_id = data[0].team_id;
-    team_id = internal_team_id;
+  if (error || !data || data.length === 0) {
+    return {
+      success: false,
+      error: "Unauthorized: Invalid token",
+      status: 401,
+    };
+  }
+  const internal_team_id = data[0].team_id;
+  team_id = internal_team_id;
 
-    const plan = getPlanByPriceId(data[0].price_id);
-    // HyperDX Logging
-    setTrace(team_id, normalizedApi);
-    subscriptionData = {
-      team_id: team_id,
-      plan: plan
-    }
-    switch (mode) {
-      case RateLimiterMode.Crawl:
-        rateLimiter = getRateLimiter(RateLimiterMode.Crawl, token, subscriptionData.plan);
-        break;
-      case RateLimiterMode.Scrape:
-        rateLimiter = getRateLimiter(RateLimiterMode.Scrape, token, subscriptionData.plan);
-        break;
-      case RateLimiterMode.Search:
-        rateLimiter = getRateLimiter(RateLimiterMode.Search, token, subscriptionData.plan);
-        break;
-      case RateLimiterMode.CrawlStatus:
-        rateLimiter = getRateLimiter(RateLimiterMode.CrawlStatus, token);
-        break;
-      
-      case RateLimiterMode.Preview:
-        rateLimiter = getRateLimiter(RateLimiterMode.Preview, token);
-        break;
-      default:
-        rateLimiter = getRateLimiter(RateLimiterMode.Crawl, token);
-        break;
-      // case RateLimiterMode.Search:
-      //   rateLimiter = await searchRateLimiter(RateLimiterMode.Search, token);
-      //   break;
-    }
+  const plan = getPlanByPriceId(data[0].price_id);
+  // HyperDX Logging
+  setTrace(team_id, normalizedApi);
+  subscriptionData = {
+    team_id: team_id,
+    plan: plan
+  }
+  switch (mode) {
+    case RateLimiterMode.Crawl:
+      rateLimiter = getRateLimiter(RateLimiterMode.Crawl, token, subscriptionData.plan);
+      break;
+    case RateLimiterMode.Scrape:
+      rateLimiter = getRateLimiter(RateLimiterMode.Scrape, token, subscriptionData.plan);
+      break;
+    case RateLimiterMode.Search:
+      rateLimiter = getRateLimiter(RateLimiterMode.Search, token, subscriptionData.plan);
+      break;
+    case RateLimiterMode.CrawlStatus:
+      rateLimiter = getRateLimiter(RateLimiterMode.CrawlStatus, token);
+      break;
+    
+    case RateLimiterMode.Preview:
+      rateLimiter = getRateLimiter(RateLimiterMode.Preview, token);
+      break;
+    default:
+      rateLimiter = getRateLimiter(RateLimiterMode.Crawl, token);
+      break;
+    // case RateLimiterMode.Search:
+    //   rateLimiter = await searchRateLimiter(RateLimiterMode.Search, token);
+    //   break;
   }
 
   const team_endpoint_token = team_id;
@@ -170,16 +171,6 @@ export async function supaAuthenticateUser(
     (mode === RateLimiterMode.Scrape || mode === RateLimiterMode.Preview || mode === RateLimiterMode.Search)
   ) {
     return { success: true, team_id: "preview" };
-    // check the origin of the request and make sure its from firecrawl.dev
-    // const origin = req.headers.origin;
-    // if (origin && origin.includes("firecrawl.dev")){
-    //   return { success: true, team_id: "preview" };
-    // }
-    // if(process.env.ENV !== "production") {
-    //   return { success: true, team_id: "preview" };
-    // }
-
-    // return { success: false, error: "Unauthorized: Invalid token", status: 401 };
   }
 
   // make sure api key is valid, based on the api_keys table in supabase
@@ -202,7 +193,7 @@ export async function supaAuthenticateUser(
     subscriptionData = data[0];
   }
 
-  return { success: true, team_id: subscriptionData.team_id, plan: subscriptionData.plan ?? ""};
+  return { success: true, team_id: subscriptionData.team_id, plan: subscriptionData.plan ?? "" };
 }
 
 function getPlanByPriceId(price_id: string) {
