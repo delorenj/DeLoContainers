@@ -23,7 +23,7 @@ http:
         - websecure
       tls:
         certResolver: letsencrypt
-  
+
     draw-router:
       rule: "Host(`draw.delo.sh`)"
       service: draw-service
@@ -44,23 +44,14 @@ http:
     lms-service:
       loadBalancer:
         servers:
-          - url: "wet-ham:1234"
+          - url: "http://localhost:1234"
 
     draw-service:
       loadBalancer:
         servers:
-          - url: "wet-ham:3002"
+          - url: "http://localhost:3002"
 
     syncthing-service:
       loadBalancer:
         servers:
-          - url: "http://127.0.0.1:45821"
-
-  routers:
-    syncthing-router:
-      rule: "Host(`sync.delo.sh`)"
-      service: syncthing-service
-      entryPoints:
-        - websecure
-      tls:
-        certResolver: letsencrypt
+          - url: "http://localhost:8384"
