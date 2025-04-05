@@ -1,0 +1,28 @@
+services:
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    hostname: adguard
+    volumes:
+      - ./conf:/opt/adguardhome/conf
+      - ./work:/opt/adguardhome/work
+    ports:
+      # DNS (UDP & TCP)
+      - "53:53/udp"
+      - "53:53/tcp"
+      # Map container's port 80 to host's port 8000 (avoiding conflict with Traefik)
+      - "8000:80/tcp"
+    networks:
+      - proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguard.entrypoints=websecure"
+      - "traefik.http.routers.adguard.rule=Host(`adguard.delo.sh`)"
+      - "traefik.http.routers.adguard.tls=true"
+      - "traefik.http.routers.adguard.tls.certresolver=letsencrypt"
+      - "traefik.http.services.adguard.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
