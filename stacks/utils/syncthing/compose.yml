@@ -1,0 +1,23 @@
+services:
+  syncthing:
+    image: syncthing/syncthing
+    container_name: syncthing
+    hostname: big-chungus-sync
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./data:/var/syncthing
+    network_mode: host
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sync.rule=Host(`sync.delo.sh`)"
+      - "traefik.http.routers.sync.entrypoints=websecure"
+      - "traefik.http.routers.sync.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sync.loadbalancer.server.port=8384"
