@@ -74,6 +74,7 @@ apps/api/.env.local
 
 apps/test-suite/node_modules/
 
-
 apps/test-suite/.env
 apps/test-suite/logs
+
+vibe-box/model/**/*
