@@ -1,0 +1,20 @@
+services:
+  nerd-dictation:
+    build: .
+    container_name: nerd-dictation
+    volumes:
+      - ./model:/root/.config/nerd-dictation/model
+      - ./config:/config
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XDG_RUNTIME_DIR}/pulse:/run/user/1000/pulse
+    devices:
+      - /dev/snd:/dev/snd
+      - /dev/dri:/dev/dri
+    environment:
+      - DISPLAY=${DISPLAY}
+      - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    command: begin --verbose 2 --pulse-device-name alsa_input.usb-LOUD_Technologies_Inc._Onyx_Artist_1-2-00.analog-stereo --suspend-on-start
