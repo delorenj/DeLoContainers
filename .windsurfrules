@@ -5,7 +5,6 @@ A personal collection of containers running in the DeLoNET infrastructure.
 ## Project Guidelines
 
 1. Each containerized service shall have a corresponding README.md that keeps detailed notes on updates and configurations at a high level.
-2. Only do work related to the current goal referenced in the docker root's `session/goal.md` file.
 3. If you deem it necessary to deviate from the current goal, please consult with me first.
 4. After your task is complete, upsert the `session/progress.md` progress tracker following the strict rules set in the progressTrackerRules.md
 5. If you are dealing with a topic that you are not 100% confident about, you are to immediately seek outside resources using the MCP tools you have available.
@@ -16,22 +15,19 @@ A personal collection of containers running in the DeLoNET infrastructure.
 
 
 ## Infrastructure Documentation
-**Version: 2025.02.15**
 **Environment: Home Infrastructure (DeLoHome)**
 
 ## System Architecture Overview
-Infrastructure hosted on WSL2 (Ubuntu) running on Windows host
-Root Path: /home/delorenj/docker
+Infrastructure hosted on Ubuntu 24.10
+Root Path: /home/delorenj/code/DeLoContainers
 
 ## Stack Organization
 ```
-/docker
 ├── stacks/
 │   ├── ai/         # AI and ML services
 │   ├── media/      # Media management and streaming
 │   └── utils/      # Infrastructure utilities
 ├── core/           # Core infrastructure components
-├── backups/        # Backup configurations and scripts
 └── logs/           # Centralized logging
 ```
 
@@ -41,11 +37,10 @@ Root Path: /home/delorenj/docker
 **Purpose**: Machine learning and AI service hosting
 - **Vector Database**: Qdrant
 - **LLM Management**: LiteLLM
-- **Chat Services**: LibreChat
-- **Custom Services**:
   - Letta
-  - Watch-me-spin
-  - Cognee
+  - n8n
+  - FireCrawl
+  - langflow
 - **Environment**: Configured via `/stacks/ai/.env`
 
 ### Media Stack (`/stacks/media`)
@@ -71,77 +66,6 @@ Root Path: /home/delorenj/docker
   - RustDesk (Remote Access)
   - Monitoring Stack
   - Marker Service
+  - Syncthing (mainly to sync DeLoDocs across all my devices)
+  - Vibe-Box (live transcription service for vibe coding)
 - **Environment**: Configured via `/stacks/utils/.env`
-
-## Network Configuration
-
-### VPN Configuration
-- **Provider**: VPN.ac
-- **Implementation**: Gluetun container
-- **Ports**: 49152-49156 (TCP/UDP)
-- **Monitoring**: Basic uptime monitoring of tun0 interface
-
-## Maintenance Procedures
-
-### Required Access
-1. WSL2 access on host machine
-2. Docker CLI access
-3. Access to environment files in each stack directory
-
-### Deployment
-Each stack can be managed independently:
-```bash
-cd /home/delorenj/docker/stacks/<stack_name>
-docker-compose up -d
-```
-
-### Monitoring
-Currently implemented:
-- Basic VPN connection monitoring
-- Container status through Docker
-
-### Backup Locations
-- Container configurations: Within respective service directories
-- Media data: Managed through ${VIDEO_PATH}
-- Download data: Managed through ${DOWNLOAD_PATH}
-
-## Critical Dependencies
-1. WSL2 Ubuntu environment
-2. Docker + Docker Compose
-3. Active VPN.ac subscription
-4. Sufficient storage for media stack
-
-## Known Issues/Limitations
-1. Basic monitoring only - no comprehensive metrics
-2. No centralized reverse proxy
-3. Limited network segmentation between stacks
-
-## Documentation
-Infrastructure documentation maintained in:
-`C:/Users/jarad/code/DeLoDocs/Home/Infrastructure`
-
-## Emergency Procedures
-1. VPN Failure:
-   - Check Gluetun container logs
-   - Verify VPN.ac credentials in .env
-   - Monitor tun0 interface status
-
-2. Media Stack Issues:
-   - Verify VPN connection first
-   - Check individual service logs
-   - Verify volume mounts
-
-3. AI Stack Issues:
-   - Check Qdrant persistence
-   - Verify LiteLLM configuration
-   - Monitor resource usage
-
-## Contact Information
-*[Requires update with relevant emergency contacts]*
-
-## Change Management
-All changes should be:
-1. Documented in the DeLoDocs vault
-2. Tested in isolation where possible
-3. Backed up before major changes
-4. Committed to version control if applicable
