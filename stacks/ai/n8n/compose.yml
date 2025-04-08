@@ -1,9 +1,12 @@
-version: "3.8"
-
 volumes:
   db_storage:
   n8n_storage:
   redis_storage:
+
+
+networks:
+  proxy:
+    external: true
 
 x-shared: &shared
   restart: unless-stopped
@@ -19,9 +22,7 @@ x-shared: &shared
     - QUEUE_BULL_REDIS_HOST=redis
     - QUEUE_HEALTH_CHECK_ACTIVE=true
     - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-  links:
-    - postgres
-    - redis
+    - WEBHOOK_URL=https://n8n.delo.sh
   volumes:
     - n8n_storage:/home/node/.n8n
   depends_on:
@@ -37,7 +38,7 @@ services:
     environment:
       - POSTGRES_USER=${N8N_POSTGRES_USER}
       - POSTGRES_PASSWORD=${N8N_POSTGRES_PASSWORD}
-        POSTGRES_DB=n8n
+      - POSTGRES_DB=n8n
       - POSTGRES_NON_ROOT_USER=${N8N_POSTGRES_NON_ROOT_USER}
       - POSTGRES_NON_ROOT_PASSWORD=${N8N_POSTGRES_NON_ROOT_PASSWORD}
     volumes:
@@ -72,9 +73,16 @@ services:
       - "traefik.http.routers.n8n.tls=true"
       - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
       - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - "traefik.docker.network=proxy"
+    networks:
+      - default
+      - proxy
 
   n8n-worker:
     <<: *shared
     command: worker
     depends_on:
       - n8n
+    networks:
+      - default
+      - proxy
