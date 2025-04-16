@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+
+# Script to update Cloudflare DNS records for delo.sh
+# Make this file executable with: chmod +x cloudflare-dns-update.sh
+
+echo "Cloudflare DNS Update for delo.sh"
+echo "================================="
+echo ""
+echo "To fix your DNS issues, you need to:"
+echo ""
+echo "1. Log into your Cloudflare account"
+echo "2. Go to the DNS settings for delo.sh"
+echo "3. Update the following DNS records:"
+echo ""
+echo "Main domain:"
+echo "- delo.sh: A record -> 73.195.114.125 (grey cloud/proxy disabled)"
+echo ""
+echo "Subdomains based on your Traefik configuration:"
+echo "- traefik.delo.sh: A record -> 73.195.114.125 (grey cloud/proxy disabled)"
+echo "- lms.delo.sh: A record -> 73.195.114.125 (grey cloud/proxy disabled)"
+echo "- draw.delo.sh: A record -> 73.195.114.125 (grey cloud/proxy disabled)"
+echo "- sync.delo.sh: A record -> 73.195.114.125 (grey cloud/proxy disabled)"
+echo ""
+echo "The 'grey cloud' setting means you need to disable Cloudflare's proxy feature"
+echo "for these records by clicking on the orange cloud icon until it turns grey."
+echo ""
+echo "Once you've updated these records, wait for the DNS changes to propagate,"
+echo "which could take up to 24 hours but often happens within minutes."
+echo ""
+echo "To check if the changes have propagated, run: dig delo.sh"
+echo "And verify the A records point to 73.195.114.125 instead of Cloudflare IPs."
+echo ""
+echo "Your current home IP address: 73.195.114.125"

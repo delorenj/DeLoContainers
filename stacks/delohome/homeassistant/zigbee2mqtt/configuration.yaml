@@ -1,0 +1,40 @@
+version: 4
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883
+serial: {}
+advanced:
+  log_level: info
+  channel: 11
+  network_key:
+    - 208
+    - 226
+    - 147
+    - 251
+    - 118
+    - 75
+    - 175
+    - 123
+    - 236
+    - 204
+    - 164
+    - 123
+    - 117
+    - 86
+    - 132
+    - 131
+  pan_id: 33091
+  ext_pan_id:
+    - 51
+    - 17
+    - 192
+    - 19
+    - 16
+    - 77
+    - 205
+    - 41
+frontend:
+  enabled: false
+  port: 8080
+homeassistant:
+  enabled: false
