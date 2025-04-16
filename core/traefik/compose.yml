@@ -5,28 +5,19 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8099:8080"
     networks:
       - proxy
     volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-        read_only: true
-      - ./traefik-data/traefik.yml:/traefik.yml:ro
-      - ./traefik-data/acme.json:/etc/traefik/acme.json
+      - ./traefik-data/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik-data/dynamic:/dynamic:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik-data/letsencrypt:/letsencrypt
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.delo.sh`)"
-      - "traefik.http.routers.traefik-secure.middlewares=auth@file"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-    command:
-      - "--api.dashboard=true"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      - "traefik.enable=false"
+    command: []
     restart: unless-stopped
+    extra_hosts: 
+      - host.docker.internal:172.17.0.1    
 
   whoami:
     image: traefik/whoami

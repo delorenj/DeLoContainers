@@ -1,33 +1,49 @@
+# traefik.yml (Static Configuration)
+
+# Enable API and dashboard (optional, can be disabled for security)
 api:
   dashboard: true
-  debug: true
+  # insecure: true # Use only for local testing without auth
 
+# Configure Log levels (ERROR, DEBUG, INFO, WARN)
+log:
+  level: DEBUG # Set to DEBUG for detailed troubleshooting logs
+
+# Enable Access Logs
+accessLog: true
+
+# Define Entrypoints (HTTP and HTTPS)
 entryPoints:
   web:
     address: ":80"
+    # Optional: Redirect HTTP to HTTPS
     http:
       redirections:
         entryPoint:
           to: websecure
           scheme: https
-
   websecure:
     address: ":443"
 
+# Define Providers
+providers:
+  # Enable Docker provider
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false # Recommended: only expose containers with traefik.enable=true label
+    network: proxy # Specify the network Traefik and services should use
+
+  # Enable File provider for dynamic configuration
+  file:
+    directory: /dynamic # Directory inside the container where dynamic config files are
+    watch: true # Watch for changes in the dynamic config directory
+
+# Define Certificate Resolvers (Let's Encrypt)
 certificatesResolvers:
   letsencrypt:
     acme:
       email: jaradd@gmail.com
-      storage: /etc/traefik/acme.json
-      tlsChallenge: {}
-
-providers:
-  docker:
-    endpoint: "unix:///var/run/docker.sock"
-    exposedByDefault: false
-    network: proxy
-    watch: true
-    useBindPortIP: false
-    
-  file:
-    directory: "/dynamic"
+      storage: /letsencrypt/acme.json
+      # Use the HTTP challenge
+      httpChallenge:
+        entryPoint: web

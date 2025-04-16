@@ -1,0 +1,123 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:latest
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - ./config:/config
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - postgres
+      - mosquitto
+    environment:
+      - TZ=America/New_York
+    expose:
+      - "8123"
+    ports:
+      - "8123:8123"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha.delo.sh`)"
+      - "traefik.http.routers.homeassistant.tls=true"
+      - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
+      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+      - "traefik.docker.network=proxy"
+  # Postgres
+  postgres:
+    container_name: homeassistant-postgres
+    image: postgres:14
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=homeassistant
+      - POSTGRES_PASSWORD=homeassistant
+      - POSTGRES_DB=homeassistant
+    networks:
+      - proxy
+
+  mosquitto:
+    container_name: homeassistant-mosquitto
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - proxy
+
+  nodered:
+    container_name: homeassistant-nodered
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./nodered:/data
+    environment:
+      - TZ=America/New_York
+    networks:
+      - proxy
+
+  grafana:
+    container_name: homeassistant-grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=homeassistant
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - proxy
+
+  influxdb:
+    container_name: homeassistant-influxdb
+    image: influxdb:2.7
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=homeassistant
+      - DOCKER_INFLUXDB_INIT_PASSWORD=homeassistant
+      - DOCKER_INFLUXDB_INIT_ORG=delorenj
+      - DOCKER_INFLUXDB_INIT_BUCKET=homeassistant
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=super-secret-token
+    networks:
+      - proxy
+
+  zigbee2mqtt:
+    container_name: homeassistant-zigbee2mqtt
+    image: koenkk/zigbee2mqtt:latest
+    restart: unless-stopped
+    volumes:
+      - ./zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyACM0
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=America/New_York
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
