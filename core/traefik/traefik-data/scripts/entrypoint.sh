@@ -1,3 +1,3 @@
 #!/bin/sh
-chmod 600 /acme.json
+chmod 600 /etc/traefik/acme.json
 exec "$@"
