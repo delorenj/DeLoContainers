@@ -14,24 +14,22 @@
 │   └── README.md
 ├── stacks/
 │   ├── ai/
-│   │   ├── cognee/
+│   │   ├── firecrawl/
 │   │   │   ├── compose.yml
-│   │   │   ├── pyproject.toml
 │   │   │   └── README.md
+│   │   ├── langflow/
+│   │   │   └── docker-compose.yml
 │   │   ├── letta/
 │   │   │   └── compose.yml
 │   │   ├── litellm/
 │   │   │   ├── compose.yml
 │   │   │   └── config.yaml
 │   │   ├── n8n/
-│   │   │   ├── compose2.yml
 │   │   │   ├── compose.yml
 │   │   │   └── README.md
 │   │   ├── qdrant/
 │   │   │   ├── compose.yml
 │   │   │   └── README.md
-│   │   ├── watch-me-spin/
-│   │   │   └── compose.yml
 │   │   └── README.md
 │   ├── media/
 │   │   ├── exportarr/
@@ -40,19 +38,27 @@
 │   │   │   └── README.md
 │   │   ├── compose.yml*
 │   │   └── README.md
+│   ├── monitoring/
+│   │   ├── compose.yml
+│   │   └── prometheus.yml
 │   └── utils/
+│       ├── adguard/
+│       │   └── compose.yml
 │       ├── couchdb/
 │       │   ├── compose.yml
 │       │   └── README.md
 │       ├── marker/
 │       │   ├── compose.yml
 │       │   └── README.md
-│       ├── monitoring/
-│       │   └── compose.yml
 │       ├── rustdesk/
 │       │   └── compose.yml
 │       ├── scripts/
 │       │   └── compose.yml
+│       ├── syncthing/
+│       │   └── compose.yml
+│       ├── vibe-box/
+│       │   ├── compose.yml
+│       │   └── README.md
 │       └── README.md
 └── README.md
-23 directories, 34 files
+26 directories, 37 files
