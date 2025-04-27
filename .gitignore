@@ -80,3 +80,4 @@ apps/test-suite/logs
 vibe-box/model/**/*
 AdGuardHome.yaml
 .aider*
+.specstory/
