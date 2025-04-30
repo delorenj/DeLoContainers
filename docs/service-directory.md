@@ -17,8 +17,10 @@
 │   │   ├── firecrawl/
 │   │   │   ├── compose.yml
 │   │   │   └── README.md
-│   │   ├── graphiti/
-│   │   │   └── compose.yml
+<<<<<<< HEAD
+
+=======
+>>>>>>> 31a2aedc49672dc9848547ce5746d8e93b5f7e9f
 │   │   ├── langflow/
 │   │   │   └── docker-compose.yml
 │   │   ├── letta/
@@ -60,6 +62,15 @@
 │       │   └── compose.yml
 │       ├── syncthing/
 │       │   └── compose.yml
+<<<<<<< HEAD
 │       └── README.md
 └── README.md
 27 directories, 37 files
+=======
+│       ├── vibe-box/
+│       │   ├── compose.yml
+│       │   └── README.md
+│       └── README.md
+└── README.md
+26 directories, 37 files
+>>>>>>> 31a2aedc49672dc9848547ce5746d8e93b5f7e9f

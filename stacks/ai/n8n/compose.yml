@@ -10,8 +10,9 @@ networks:
 
 x-shared: &shared
   restart: unless-stopped
-  image: docker.n8n.io/n8nio/n8n
+  image: n8nio/n8n
   environment:
+    - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true 
     - DB_TYPE=postgresdb
     - DB_POSTGRESDB_HOST=postgres
     - DB_POSTGRESDB_PORT=5432
