@@ -16,16 +16,15 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/etc/traefik/acme.json
       - ./traefik-data/dynamic:/dynamic:ro
+      - ./entrypoint.sh:/entrypoint.sh
+    entrypoint: /entrypoint.sh
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.delo.sh`)"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.triumphbox.dev`)"
       - "traefik.http.routers.traefik-secure.middlewares=auth@file"
       - "traefik.http.routers.traefik-secure.service=api@internal"
-    command:
-      - "--api.dashboard=true"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=letsencrypt"
     restart: unless-stopped
 
   whoami:
@@ -36,10 +35,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.entrypoints=websecure"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.triumphbox.dev`)"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
 
 networks:
   proxy:
-    name: proxy
     external: true

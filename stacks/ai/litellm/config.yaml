@@ -16,7 +16,7 @@ model_list:
   - model_name: claude-3-sonnet
     litellm_params:
       model: anthropic/claude-3-sonnet-20240229
-      api_key: ${ANTHROPIC_API_KEY}
+      ***REMOVED***
 
   - model_name: gemini-pro
     litellm_params:
@@ -29,6 +29,17 @@ model_list:
       api_key: ${OPENROUTER_API_KEY}
       api_base: "https://openrouter.ai/api/v1"
 
+# Router settings
+router_settings:
+  routing_strategy: "simple-shuffle"  # Options: least-busy, usage-based, simple-shuffle
+  num_retries: 3
+  timeout: 30  # Seconds
+  fallbacks: [
+    {
+      "gpt-4": ["openrouter-claude", "claude-3-sonnet"]
+    }
+  ]
+
 # General settings
 general_settings: 
   master_key: ${LITELLM_MASTER_KEY}
@@ -39,15 +50,44 @@ general_settings:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
+    ttl: 3600  # Cache expiration in seconds
+    async_redis: true  # Enable async Redis client
 
 # Logging configuration  
 logging:
   level: info
   log_requests: true
   log_responses: true
+  log_file: "/app/logs/litellm.log"  # Log to file
+  verbose: false
 
 # Request/response configuration
 server_settings:
   allow_model_override: true
   max_parallel_requests: 100
   timeout: 300
+  environment: "production"  # Options: development, production
+  health_check_path: "/health"
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+
+# Rate limiting
+litellm_settings:
+  success_callback: ["redis"]
+  drop_params: ["api_key"]  # Remove sensitive data from logs
+  set_verbose: false
+  telemetry: false  # Disable telemetry
+
+# Key management
+key_management:
+  max_budget: 0  # 0 means unlimited
+  max_parallel_requests: 100
+  budget_duration: "monthly"  # Options: daily, weekly, monthly
+
+# Proxy admin UI settings
+ui:
+  enabled: true
+  path: "/ui"
+  auth_required: true

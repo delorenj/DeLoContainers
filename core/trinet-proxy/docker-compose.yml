@@ -1,0 +1,15 @@
+services:
+  haproxy:
+    image: haproxy:latest
+    container_name: mssql-proxy
+    ports:
+      - "1433:1433"
+    networks: 
+      - egress
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    restart: unless-stopped
+
+networks:
+  egress:
+    external: true
