@@ -1,0 +1,31 @@
+services:
+  ai-hub:
+    image: ai-learning-hub
+    ports:
+      - "${AI_HUB_PORT:-3001}:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+    volumes:
+      - ai_hub_content:/content
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai-hub.rule=Host(`ai.triumphbox.dev`)"
+      - "traefik.http.routers.ai-hub.entrypoints=websecure"
+      - "traefik.http.routers.ai-hub.tls.certresolver=letsencrypt"
+      - "traefik.http.services.ai-hub.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+
+volumes:
+  ai_hub_content:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/code/ai-learning-hub/content
+
+networks:
+  proxy:
+    external: true

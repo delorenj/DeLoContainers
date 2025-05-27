@@ -15,6 +15,7 @@ services:
       - "traefik.http.routers.qdrant.entrypoints=websecure"
       - "traefik.http.routers.qdrant.tls.certresolver=letsencrypt"
       - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+      - "traefik.docker.network=proxy"
 
 volumes:
   qdrant_data:
