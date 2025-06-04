@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "memory-bank": {
+      "command": "/home/delorenj/.local/bin/memory-bank-mcp",
+      "args": [],
+      "env": {},
+      "timeout": 120000
+    }
+  }
+}

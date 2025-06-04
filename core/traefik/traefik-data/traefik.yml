@@ -1,6 +1,7 @@
 api:
   dashboard: true
   debug: true
+  insecure: true
 
 entryPoints:
   web:
@@ -19,7 +20,8 @@ certificatesResolvers:
     acme:
       email: jaradd@gmail.com
       storage: /etc/traefik/acme.json
-      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: web
 
 providers:
   docker:

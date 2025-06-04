@@ -23,3 +23,11 @@
 - Document ports and configurations in README.md
 - Use Traefik labels for service discovery
 - Use linuxserver images when possible
+
+## Best Practices
+- Always use `docker compose` and never `docker-compose`
+- Prefer `compose.yml` over `docker-compose.yml`
+- Always perform a `tree` command before beginning your tasks to get an inventory of containers, configs, etc
+
+## Mise Tasks
+- Maintain a set of mise tasks to wrap common functionality to make management of my containers frictionless and fun
