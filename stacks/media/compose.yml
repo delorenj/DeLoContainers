@@ -105,7 +105,11 @@ services:
 
 volumes:
   emma_media:
-    external: true
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.50,rw,nfsvers=4
+      device: ":/volume1/video"
   downloads_volume:
     external: true
 

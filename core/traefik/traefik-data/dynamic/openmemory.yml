@@ -1,0 +1,28 @@
+http:
+  routers:
+    openmemory-ui:
+      rule: "Host(`memory.delo.sh`)"
+      service: openmemory-ui
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    openmemory-api:
+      rule: "Host(`memory-api.delo.sh`)"
+      service: openmemory-api
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    openmemory-ui:
+      loadBalancer:
+        servers:
+          - url: "http://openmemory-ui:3000"
+
+    openmemory-api:
+      loadBalancer:
+        servers:
+          - url: "http://openmemory-mcp:8765"
