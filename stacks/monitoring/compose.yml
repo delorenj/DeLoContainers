@@ -4,8 +4,7 @@ services:
     container_name: prometheus
     restart: unless-stopped
     networks:
-      - proxy # Connect to the proxy network
-      - monitoring
+      - proxy
     ports:
       - "9090:9090"
     volumes:
@@ -28,17 +27,18 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     networks:
-      - proxy # Connect to the proxy network
-      - monitoring
+      - proxy
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
       - TZ=${TZ}
       - GF_PATHS_DATA=/var/lib/grafana
       - GF_PATHS_LOGS=/var/log/grafana
-      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=${defaultUsername}
+      - GF_SECURITY_ADMIN_PASSWORD=${defaultPassword}
     depends_on:
       - prometheus
     labels:
@@ -48,12 +48,14 @@ services:
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.grafana-auth.basicauth.users=${defaultUsername}:${defaultPassword}"
+      - "traefik.http.network=proxy"
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
     restart: unless-stopped
     networks:
-      - monitoring
+      - proxy
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -63,7 +65,6 @@ services:
       - "--path.sysfs=/host/sys"
       - "--path.rootfs=/rootfs"
       - "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
-    # No ports exposed to host, Prometheus scrapes it internally
     labels:
       - "traefik.enable=false"
 
@@ -72,7 +73,7 @@ services:
     container_name: cadvisor
     restart: unless-stopped
     networks:
-      - monitoring
+      - proxy
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -82,15 +83,11 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       # If using cgroup v1
       # - /cgroup:/cgroup:ro
-    # No ports exposed to host, Prometheus scrapes it internally
-    # Port 8080 is exposed internally for Prometheus scraping
     labels:
       - "traefik.enable=false"
 
 networks:
-  monitoring:
-    driver: bridge
-  proxy: # Add the external proxy network definition
+  proxy:
     external: true
 
 volumes:
