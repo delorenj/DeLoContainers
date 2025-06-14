@@ -48,8 +48,7 @@ services:
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-      - "traefik.http.middlewares.grafana-auth.basicauth.users=${defaultUsername}:${defaultPassword}"
-      - "traefik.http.network=proxy"
+      - "traefik.docker.network=proxy"
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter

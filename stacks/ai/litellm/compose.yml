@@ -5,45 +5,28 @@ services:
       args:
         target: runtime
     image: ghcr.io/berriai/litellm:main-stable
-    Uncomment these lines to start proxy with config.yaml file
     volumes:
       - ./config.yaml:/app/config.yaml
     command:
       - "--config=/app/config.yaml"
     ports:
-      - "4000:4000" Map the container port to the host, change the host port if necessary
+      - "4000:4000"
     environment:
-        DATABASE_URL: "postgresql://birdcock:Admin123!@db:5432/litellm"
-        STORE_MODEL_IN_DB: "True" allows adding models to proxy via UI
+      DATABASE_URL: "postgresql://${defaultUsername}:${defaultPassword}@postgres:5432/db"
+      STORE_MODEL_IN_DB: "True"
     env_file:
-      - .env Load local .env file
+      - .env
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.litellm.entrypoints=websecure"
+      - "traefik.http.routers.litellm.rule=Host(`litellm.delo.sh`)"
+      - "traefik.http.routers.litellm.tls=true"
+      - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+      - "traefik.docker.network=proxy"
 
-  db:
-    image: postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: litellm
-      POSTGRES_USER: birdcock
-      POSTGRES_PASSWORD: Admin123!
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d litellm -U birdcock"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
-
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - prometheus_data:/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=15d'
-    restart: always
-
-volumes:
-  prometheus_data:
-    driver: local
+networks:
+  proxy:
+    external: true
