@@ -4,157 +4,38 @@
 
 ## Overview
 
-DeLoContainers is a comprehensive Docker-based infrastructure with {{ files | length }} configuration files organized into modular components and service stacks.
-
-## Directory Structure Analysis
-
-```
-{% for file in files | sort(attribute='path') %}
-{{ file.path }}
-{% endfor %}
-```
+DeLoContainers is a comprehensive Docker-based infrastructure, organized into modular core components and distinct service stacks. This document provides a high-level architectural overview.
 
 ## Core Components
 
-{% set core_files = [] %}
-{% for file in files %}
-{% if file.path.startswith('core/') %}
-{% set _ = core_files.append(file) %}
-{% endif %}
-{% endfor %}
-
-{% if core_files %}
-### Traefik Reverse Proxy Configuration
-
-Found {{ core_files | length }} core configuration files:
-
-{% for file in core_files %}
-#### {{ file.path }}
-{% if file.path.endswith('.yml') or file.path.endswith('.yaml') %}
-```yaml
-{{ file.content }}
-```
-{% else %}
-```
-{{ file.content }}
-```
-{% endif %}
-
-{% endfor %}
-{% endif %}
+The core infrastructure, primarily managed under the `core/` directory, includes essential services like the Traefik reverse proxy. Key configuration files for Traefik are located in `core/traefik/traefik-data/`.
 
 ## Service Stacks
 
-{% set stack_dirs = [] %}
+Services are organized into logical stacks within the `stacks/` directory. Each subdirectory typically represents a distinct stack (e.g., `ai`, `media`, `utils`).
+
+{% set stack_names = [] %}
 {% for file in files %}
-{% if file.path.startswith('stacks/') %}
-{% set path_parts = file.path.split('/') %}
-{% if path_parts | length > 1 %}
-{% set stack_name = path_parts[1] %}
-{% if stack_name not in stack_dirs %}
-{% set _ = stack_dirs.append(stack_name) %}
-{% endif %}
-{% endif %}
-{% endif %}
+  {% if file.path.startswith('stacks/') %}
+    {% set parts = file.path.split('/') %}
+    {% if parts | length > 1 and parts[1] not in stack_names %}
+      {% set _ = stack_names.append(parts[1]) %}
+    {% endif %}
+  {% endif %}
 {% endfor %}
 
-{% for stack in stack_dirs | sort %}
-### {{ stack | title }} Stack
-
-{% set stack_files = [] %}
-{% for file in files %}
-{% if file.path.startswith('stacks/' + stack + '/') %}
-{% set _ = stack_files.append(file) %}
-{% endif %}
-{% endfor %}
-
-Services in this stack ({{ stack_files | length }} files):
-
-{% for file in stack_files %}
-- **{{ file.path }}**
-{% if file.path.endswith('compose.yml') or file.path.endswith('docker-compose.yml') %}
-  
-  Services defined:
-{% set lines = file.content.split('\n') %}
-{% set in_services = false %}
-{% for line in lines %}
-{% if line.strip() == 'services:' %}
-{% set in_services = true %}
-{% elif in_services and line and not line.startswith(' ') and ':' in line %}
-{% if not line.startswith('#') and 'networks:' not in line and 'volumes:' not in line %}
-  - {{ line.split(':')[0].strip() }}
-{% endif %}
-{% endif %}
-{% endfor %}
-{% endif %}
-{% endfor %}
-
+The primary stacks include:
+{% for stack_name in stack_names | sort | unique %}
+- **{{ stack_name | title }} Stack**: Manages {{ stack_name }}-related services. Key configurations are typically in `stacks/{{ stack_name }}/compose.yml`.
 {% endfor %}
 
 ## Traefik Dynamic Configuration
 
-{% set traefik_dynamic_files = [] %}
-{% for file in files %}
-{% if file.path.startswith('core/traefik/traefik-data/dynamic/') and file.path.endswith('.yml') %}
-{% set _ = traefik_dynamic_files.append(file) %}
-{% endif %}
-{% endfor %}
-
-{% if traefik_dynamic_files %}
-The following services are configured for external access:
-
-{% for config_file in traefik_dynamic_files %}
-### {{ config_file.path.split('/')[-1].replace('.yml', '') | title }}
-
-{% set config_content = config_file.content %}
-{% set lines = config_content.split('\n') %}
-{% for line in lines %}
-{% if 'Host(' in line %}
-- **Domain**: {{ line.split('Host(`')[1].split('`)')[0] if 'Host(`' in line else 'N/A' }}
-{% endif %}
-{% if 'url:' in line and 'http' in line %}
-- **Backend**: {{ line.split('url:')[1].strip().replace('"', '') }}
-{% endif %}
-{% endfor %}
-
-```yaml
-{{ config_content }}
-```
-
-{% endfor %}
-{% endif %}
+Traefik's dynamic configuration, defining routing rules for services, is located in `core/traefik/traefik-data/dynamic/`. These files map hostnames to backend services.
 
 ## Network Architecture
 
-{% set compose_files = [] %}
-{% for file in files %}
-{% if file.path.endswith('compose.yml') or file.path.endswith('docker-compose.yml') %}
-{% set _ = compose_files.append(file) %}
-{% endif %}
-{% endfor %}
-
-{% if compose_files %}
-### Docker Networks
-
-{% for compose_file in compose_files %}
-{% if 'networks:' in compose_file.content %}
-**{{ compose_file.path }}**:
-{% set lines = compose_file.content.split('\n') %}
-{% set in_networks = false %}
-{% for line in lines %}
-{% if line.strip() == 'networks:' %}
-{% set in_networks = true %}
-{% elif in_networks and line and not line.startswith(' ') %}
-{% set in_networks = false %}
-{% elif in_networks and line.strip() and not line.strip().startswith('#') %}
-{% if ':' in line %}
-- {{ line.split(':')[0].strip() }}
-{% endif %}
-{% endif %}
-{% endfor %}
-{% endif %}
-{% endfor %}
-{% endif %}
+Docker networks are defined within the various `compose.yml` files across the `core/` and `stacks/` directories, enabling communication between containers. The `proxy` network is crucial for Traefik integration.
 
 ## Service Endpoints
 
