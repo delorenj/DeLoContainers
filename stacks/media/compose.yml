@@ -57,8 +57,8 @@ services:
       - PGID=${PGID}
     volumes:
       - ./qbittorrent:/config
-      - downloads_volume:/downloads:cached
-      - emma_media:/video:cached
+      - ./downloads:/downloads:cached
+      - ./video:/video:cached
     depends_on:
       - gluetun
     labels:
@@ -69,39 +69,6 @@ services:
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8091"
       - "traefik.docker.network=proxy"
-
-  prowlarr:
-    image: linuxserver/prowlarr:latest
-    container_name: prowlarr
-    restart: unless-stopped
-    volumes:
-      - ./prowlarr:/config
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr.entrypoints=websecure"
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.delo.sh`)"
-      - "traefik.http.routers.prowlarr.tls=true"
-      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-
-  jellyfin:
-    image: linuxserver/jellyfin:latest
-    container_name: jellyfin
-    restart: unless-stopped
-    volumes:
-      - ./jellyfin:/config
-      - emma_media:/media
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.entrypoints=websecure"
-      - "traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)"
-      - "traefik.http.routers.jellyfin.tls=true"
-      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
-      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
 
 volumes:
   emma_media:

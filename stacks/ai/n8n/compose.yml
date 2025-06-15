@@ -1,52 +1,42 @@
-volumes:
-  db_storage:
-  n8n_storage:
-  redis_storage:
-
-networks:
-  proxy:
-    external: true
-
 x-shared: &shared
-  restart: unless-stopped
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
   image: n8nio/n8n
+  restart: unless-stopped
   environment:
     - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
     - DB_TYPE=postgresdb
     - DB_POSTGRESDB_HOST=postgres
     - DB_POSTGRESDB_PORT=5432
     - DB_POSTGRESDB_DATABASE=n8n
-    - DB_POSTGRESDB_USER=${N8N_POSTGRES_NON_ROOT_USER}
-    - DB_POSTGRESDB_PASSWORD=${N8N_POSTGRES_NON_ROOT_PASSWORD}
+    - DB_POSTGRESDB_USER=delorenj  # Using the main postgres user instead of tonny
+    - DB_POSTGRESDB_PASSWORD=PeepeePeeeEEEEpEeeeepeepEEE12PEE
     - EXECUTIONS_MODE=queue
     - QUEUE_BULL_REDIS_HOST=redis
     - QUEUE_HEALTH_CHECK_ACTIVE=true
-    - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+    - N8N_ENCRYPTION_KEY=sdkfj944tjgfdskjg49srijg4irgjskrgj4wkjtsj
     - WEBHOOK_URL=https://n8n.delo.sh
   volumes:
     - n8n_storage:/home/node/.n8n
-  depends_on:
-    redis:
-      condition: service_healthy
-    postgres:
-      condition: service_healthy
 
 services:
   postgres:
     image: postgres:16
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${N8N_POSTGRES_USER}
-      - POSTGRES_PASSWORD=${N8N_POSTGRES_PASSWORD}
+      - POSTGRES_USER=delorenj
+      - POSTGRES_PASSWORD=PeepeePeeeEEEEpEeeeepeepEEE12PEE
       - POSTGRES_DB=n8n
-      - POSTGRES_NON_ROOT_USER=${N8N_POSTGRES_NON_ROOT_USER}
-      - POSTGRES_NON_ROOT_PASSWORD=${N8N_POSTGRES_NON_ROOT_PASSWORD}
+      - POSTGRES_NON_ROOT_USER=tonny
+      - POSTGRES_NON_ROOT_PASSWORD=PeepeePeeeEEEEpEeeeepeepEEE12PEE
     volumes:
       - db_storage:/var/lib/postgresql/data
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     healthcheck:
-      test:
-        ["CMD-SHELL", "pg_isready -h localhost -U ${N8N_POSTGRES_USER} -d n8n"]
+      test: pg_isready -h localhost -U delorenj -d n8n
       interval: 5s
       timeout: 5s
       retries: 10
@@ -57,7 +47,7 @@ services:
     volumes:
       - redis_storage:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: redis-cli ping
       interval: 5s
       timeout: 5s
       retries: 10
@@ -86,3 +76,12 @@ services:
     networks:
       - default
       - proxy
+
+volumes:
+  db_storage:
+  n8n_storage:
+  redis_storage:
+
+networks:
+  proxy:
+    external: true
