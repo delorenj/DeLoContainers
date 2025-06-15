@@ -1,0 +1,237 @@
+# DeLoContainers - Dynamic Infrastructure Architecture
+
+*Generated from {{ files | length }} files in the codebase*
+
+## Overview
+
+DeLoContainers is a comprehensive Docker-based infrastructure with {{ files | length }} configuration files organized into modular components and service stacks.
+
+## Directory Structure Analysis
+
+```
+{% for file in files | sort(attribute='path') %}
+{{ file.path }}
+{% endfor %}
+```
+
+## Core Components
+
+{% set core_files = [] %}
+{% for file in files %}
+{% if file.path.startswith('core/') %}
+{% set _ = core_files.append(file) %}
+{% endif %}
+{% endfor %}
+
+{% if core_files %}
+### Traefik Reverse Proxy Configuration
+
+Found {{ core_files | length }} core configuration files:
+
+{% for file in core_files %}
+#### {{ file.path }}
+{% if file.path.endswith('.yml') or file.path.endswith('.yaml') %}
+```yaml
+{{ file.content }}
+```
+{% else %}
+```
+{{ file.content }}
+```
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
+## Service Stacks
+
+{% set stack_dirs = [] %}
+{% for file in files %}
+{% if file.path.startswith('stacks/') %}
+{% set path_parts = file.path.split('/') %}
+{% if path_parts | length > 1 %}
+{% set stack_name = path_parts[1] %}
+{% if stack_name not in stack_dirs %}
+{% set _ = stack_dirs.append(stack_name) %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% for stack in stack_dirs | sort %}
+### {{ stack | title }} Stack
+
+{% set stack_files = [] %}
+{% for file in files %}
+{% if file.path.startswith('stacks/' + stack + '/') %}
+{% set _ = stack_files.append(file) %}
+{% endif %}
+{% endfor %}
+
+Services in this stack ({{ stack_files | length }} files):
+
+{% for file in stack_files %}
+- **{{ file.path }}**
+{% if file.path.endswith('compose.yml') or file.path.endswith('docker-compose.yml') %}
+  
+  Services defined:
+{% set lines = file.content.split('\n') %}
+{% set in_services = false %}
+{% for line in lines %}
+{% if line.strip() == 'services:' %}
+{% set in_services = true %}
+{% elif in_services and line and not line.startswith(' ') and ':' in line %}
+{% if not line.startswith('#') and 'networks:' not in line and 'volumes:' not in line %}
+  - {{ line.split(':')[0].strip() }}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% endfor %}
+
+## Traefik Dynamic Configuration
+
+{% set traefik_dynamic_files = [] %}
+{% for file in files %}
+{% if file.path.startswith('core/traefik/traefik-data/dynamic/') and file.path.endswith('.yml') %}
+{% set _ = traefik_dynamic_files.append(file) %}
+{% endif %}
+{% endfor %}
+
+{% if traefik_dynamic_files %}
+The following services are configured for external access:
+
+{% for config_file in traefik_dynamic_files %}
+### {{ config_file.path.split('/')[-1].replace('.yml', '') | title }}
+
+{% set config_content = config_file.content %}
+{% set lines = config_content.split('\n') %}
+{% for line in lines %}
+{% if 'Host(' in line %}
+- **Domain**: {{ line.split('Host(`')[1].split('`)')[0] if 'Host(`' in line else 'N/A' }}
+{% endif %}
+{% if 'url:' in line and 'http' in line %}
+- **Backend**: {{ line.split('url:')[1].strip().replace('"', '') }}
+{% endif %}
+{% endfor %}
+
+```yaml
+{{ config_content }}
+```
+
+{% endfor %}
+{% endif %}
+
+## Network Architecture
+
+{% set compose_files = [] %}
+{% for file in files %}
+{% if file.path.endswith('compose.yml') or file.path.endswith('docker-compose.yml') %}
+{% set _ = compose_files.append(file) %}
+{% endif %}
+{% endfor %}
+
+{% if compose_files %}
+### Docker Networks
+
+{% for compose_file in compose_files %}
+{% if 'networks:' in compose_file.content %}
+**{{ compose_file.path }}**:
+{% set lines = compose_file.content.split('\n') %}
+{% set in_networks = false %}
+{% for line in lines %}
+{% if line.strip() == 'networks:' %}
+{% set in_networks = true %}
+{% elif in_networks and line and not line.startswith(' ') %}
+{% set in_networks = false %}
+{% elif in_networks and line.strip() and not line.strip().startswith('#') %}
+{% if ':' in line %}
+- {{ line.split(':')[0].strip() }}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+## Service Endpoints
+
+{% set traefik_config = none %}
+{% for file in files %}
+{% if file.path == 'core/traefik/traefik-data/dynamic/config.yml' %}
+{% set traefik_config = file %}
+{% endif %}
+{% endfor %}
+
+{% if traefik_config %}
+Based on Traefik configuration, the following services are accessible:
+
+{% set lines = traefik_config.content.split('\n') %}
+{% for line in lines %}
+{% if 'Host(' in line %}
+- {{ line.split('Host(`')[1].split('`)')[0] if 'Host(`' in line else 'N/A' }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+## Configuration Summary
+
+{% set core_count = 0 %}
+{% set stack_count = 0 %}
+{% set docs_count = 0 %}
+{% set compose_count = 0 %}
+
+{% for file in files %}
+{% if file.path.startswith('core/') %}
+{% set core_count = core_count + 1 %}
+{% elif file.path.startswith('stacks/') %}
+{% set stack_count = stack_count + 1 %}
+{% elif file.path.startswith('docs/') %}
+{% set docs_count = docs_count + 1 %}
+{% endif %}
+{% if file.path.endswith('compose.yml') or file.path.endswith('docker-compose.yml') %}
+{% set compose_count = compose_count + 1 %}
+{% endif %}
+{% endfor %}
+
+- **Total Files**: {{ files | length }}
+- **Core Components**: {{ core_count }}
+- **Stack Services**: {{ stack_count }}
+- **Documentation Files**: {{ docs_count }}
+- **Compose Files**: {{ compose_count }}
+
+## Adding New Services
+
+To add a new service to this infrastructure:
+
+1. **Create service stack**: Add to appropriate directory in `stacks/`
+2. **Configure Traefik routing**: Add new `.yml` file in `core/traefik/traefik-data/dynamic/`
+3. **Connect to proxy network**: Ensure service joins the `proxy` network
+4. **Update documentation**: Add service details to `docs/service-directory.md`
+
+### Template for New Service
+
+```yaml
+# core/traefik/traefik-data/dynamic/new-service.yml
+http:
+  routers:
+    new-service:
+      rule: "Host(`new-service.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: new-service
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    new-service:
+      loadBalancer:
+        servers:
+          - url: "http://new-service-container:PORT"
+```
+
+---
+
+*This document was automatically generated from the codebase structure using code2prompt and a custom Jinja2 template.*
