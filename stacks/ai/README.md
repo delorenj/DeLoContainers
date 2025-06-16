@@ -25,6 +25,11 @@ This directory contains AI-related services for model serving, vector storage, a
 - **Purpose**: Custom AI service
 - **Location**: ./letta/
 
+### Flowise
+- **Purpose**: Visual tool for building LLM applications
+- **Location**: ./flowise/
+- **Access**: flowise.delo.sh
+
 ## Architecture
 
 ```plaintext
@@ -33,12 +38,12 @@ This directory contains AI-related services for model serving, vector storage, a
                     │  (Routing)  │
                     └─────────────┘
                           │
-          ┌──────────────┼──────────────┐
-          │              │              │
-    ┌─────────┐   ┌───────────┐  ┌──────────┐
-    │ LiteLLM │   │  Qdrant   │  │  Letta   │
-    │ (4000)  │   │(6333/6334)│  │          │
-    └─────────┘   └───────────┘  └──────────┘
+          ┌──────────────┼──────────────┬──────────────┐
+          │              │              │              │
+    ┌─────────┐   ┌───────────┐  ┌──────────┐  ┌───────────┐
+    │ LiteLLM │   │  Qdrant   │  │  Letta   │  │  Flowise  │
+    │ (4000)  │   │(6333/6334)│  │          │  │  (3000)   │
+    └─────────┘   └───────────┘  └──────────┘  └───────────┘
          │             │              │
     ┌─────────┐       │              │
     │PostgreSQL│       │              │

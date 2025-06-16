@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  flowise:
+    image: flowiseai/flowise:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - FLOWISE_USERNAME=user
+      - FLOWISE_PASSWORD=changeme
+    volumes:
+      - flowise-data:/root/.flowise
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flowise.rule=Host(`flowise.delo.sh`)"
+      - "traefik.http.routers.flowise.entrypoints=websecure"
+      - "traefik.http.routers.flowise.tls.certresolver=myresolver"
+      - "traefik.http.services.flowise.loadbalancer.server.port=3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  flowise-data:
