@@ -1,0 +1,46 @@
+services:
+  audiojangler.py:
+    build:
+      context: . # Use the Dockerfile in the current directory (stacks/media/audiojangler.py)
+    volumes:
+      - ./data/input:/app/input # Map host's ./data/input to container's /app/input
+      - ./data/output:/app/output # Map host's ./data/output to container's /app/output
+    # The entrypoint is defined in the Dockerfile.
+    # Command arguments for audiojangler.py.py should be provided when running the service,
+    # for example:
+    # docker-compose run --rm audiojangler.py --input-video-path /app/input/your_video.mp4 --output-audio-path /app/output/your_audio.mp3
+    #
+    # Or, to see the help message:
+    # docker-compose run --rm audiojangler.py --help
+    #
+    # The '--rm' flag is recommended for one-off tasks to clean up the container after it exits.
+    #
+    # The audiojangler.py.py script expects paths relative to the container's /app directory.
+    # For example, for a video file 'sample.mp4' placed in './data/input/' on the host,
+    # the input path for the script would be '/app/input/sample.mp4'.
+    # Similarly, if the output is specified as '/app/output/audio.mp3',
+    # the resulting 'audio.mp3' will appear in './data/output/' on the host.
+    #
+    # To make it easier to run, you can define specific tasks in a Makefile or script,
+    # or use environment variables in the command if your script supports them.
+    # For now, the command is expected to be fully specified at runtime.
+    #
+    # If you wanted to run a default command (e.g., processing a fixed file name),
+    # you could add a 'command' directive here, like:
+    # command: ["--input-video-path", "/app/input/default_video.mp4", "--output-audio-path", "/app/output/default_audio.mp3"]
+    # However, for a utility script, runtime arguments are more flexible.
+    # The Dockerfile already provides CMD ["--help"] as a default if no command is given.
+    #
+    # Note on user permissions:
+    # If the script writes files to the output volume, these files will be owned by root
+    # inside the container (or the user the container runs as). This might lead to
+    # permission issues on the host if the host user is different.
+    # Solutions include running the container with a specific user ID (user: "${UID}:${GID}")
+    # or changing ownership of the files after they are created. This setup does not
+    # currently address that, which is a common consideration for Docker volume mounts.
+
+    # Example of setting user to current host user to avoid permission issues on output files:
+    # user: "${UID:-1000}:${GID:-1000}" # Defaults to 1000 if UID/GID are not set in environment
+    # This requires UID and GID to be available as environment variables when running compose.
+    # e.g., UID=$(id -u) GID=$(id -g) docker-compose run ...
+    # For simplicity, this is commented out but is a good practice for real-world use.
