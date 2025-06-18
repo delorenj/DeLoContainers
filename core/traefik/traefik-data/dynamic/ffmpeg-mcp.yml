@@ -1,0 +1,15 @@
+http:
+  routers:
+    ffmpeg-mcp:
+      rule: "Host(`ffmpeg-mcp.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: ffmpeg-mcp
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    ffmpeg-mcp:
+      loadBalancer:
+        servers:
+          - url: "http://ffmpeg-mcp-server:8000"
