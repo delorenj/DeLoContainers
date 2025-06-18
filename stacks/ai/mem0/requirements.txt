@@ -4,3 +4,5 @@ pydantic==2.10.4
 mem0ai>=0.1.48
 python-dotenv==1.0.1
 ollama==0.1.0
+pytest
+httpx

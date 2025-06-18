@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-STACKS_DIR="/home/delorenj/docker/stacks"
+STACKS_DIR="./stacks"
 STACK_NAME=$1
 STACK_TYPE=$2
 
@@ -81,42 +81,42 @@ networks:
 
 # Function to validate stack name
 validate_stack_name() {
-    if [[ ! $1 =~ ^[a-zA-Z0-9_-]+$ ]]; then
-        echo "❌ Invalid stack name. Use only letters, numbers, underscores, and hyphens."
-        exit 1
-    fi
+  if [[ ! $1 =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    echo "❌ Invalid stack name. Use only letters, numbers, underscores, and hyphens."
+    exit 1
+  fi
 }
 
 # Function to create stack directory and files
 create_stack() {
-    local name=$1
-    local type=$2
-    local dir="$STACKS_DIR/$type/$name"
-    
-    echo "🏗️ Creating new $type stack: $name"
-    
-    # Create directory structure
-    mkdir -p "$dir"/{config,data,scripts}
-    
-    # Create compose.yml based on stack type
-    case $type in
-        "media")
-            echo "$MEDIA_STACK_TEMPLATE" > "$dir/compose.yml"
-            ;;
-        "ai")
-            echo "$AI_STACK_TEMPLATE" > "$dir/compose.yml"
-            ;;
-        "proxy")
-            echo "$PROXY_STACK_TEMPLATE" > "$dir/compose.yml"
-            ;;
-        *)
-            echo "❌ Invalid stack type. Use: media, ai, or proxy"
-            exit 1
-            ;;
-    esac
-    
-    # Create .env file
-    cat > "$dir/.env" << EOF
+  local name=$1
+  local type=$2
+  local dir="$STACKS_DIR/$type/$name"
+
+  echo "🏗️ Creating new $type stack: $name"
+
+  # Create directory structure
+  mkdir -p "$dir"/{config,data,scripts}
+
+  # Create compose.yml based on stack type
+  case $type in
+  "media")
+    echo "$MEDIA_STACK_TEMPLATE" >"$dir/compose.yml"
+    ;;
+  "ai")
+    echo "$AI_STACK_TEMPLATE" >"$dir/compose.yml"
+    ;;
+  "proxy")
+    echo "$PROXY_STACK_TEMPLATE" >"$dir/compose.yml"
+    ;;
+  *)
+    echo "❌ Invalid stack type. Use: media, ai, or proxy"
+    exit 1
+    ;;
+  esac
+
+  # Create .env file
+  cat >"$dir/.env" <<EOF
 # Stack Configuration
 SERVICE_NAME=$name
 DOMAIN=$name.delo.sh
@@ -125,9 +125,9 @@ IMAGE=
 
 # Service-specific settings
 EOF
-    
-    # Create README.md
-    cat > "$dir/README.md" << EOF
+
+  # Create README.md
+  cat >"$dir/README.md" <<EOF
 # $name Stack
 
 ## Overview
@@ -146,9 +146,9 @@ Description of the $name service goes here.
 ## Notes
 Add any special considerations or requirements here.
 EOF
-    
-    # Create update script
-    cat > "$dir/scripts/update.sh" << EOF
+
+  # Create update script
+  cat >"$dir/scripts/update.sh" <<EOF
 #!/bin/bash
 
 echo "🔄 Updating $name stack..."
@@ -162,21 +162,22 @@ docker compose up -d
 
 echo "✅ Update complete!"
 EOF
-    chmod +x "$dir/scripts/update.sh"
-    
-    echo "✅ Stack created successfully at $dir"
-    echo "Next steps:"
-    echo "1. Edit $dir/.env with your configuration"
-    echo "2. Update compose.yml as needed"
-    echo "3. Run 'mise run up $name' to start the stack"
+  chmod +x "$dir/scripts/update.sh"
+
+  echo "✅ Stack created successfully at $dir"
+  echo "Next steps:"
+  echo "1. Edit $dir/.env with your configuration"
+  echo "2. Update compose.yml as needed"
+  echo "3. Run 'mise run up $name' to start the stack"
 }
 
 # Main execution
 if [ -z "$STACK_NAME" ] || [ -z "$STACK_TYPE" ]; then
-    echo "Usage: $0 <stack_name> <stack_type>"
-    echo "Stack types: media, ai, proxy"
-    exit 1
+  echo "Usage: $0 <stack_name> <stack_type>"
+  echo "Stack types: media, ai, proxy"
+  exit 1
 fi
 
 validate_stack_name "$STACK_NAME"
 create_stack "$STACK_NAME" "$STACK_TYPE"
+

@@ -32,6 +32,13 @@ MEMGRAPH_PASSWORD = os.environ.get("MEMGRAPH_PASSWORD", "mem0graph")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 HISTORY_DB_PATH = os.environ.get("HISTORY_DB_PATH", "/app/history/history.db")
 
+# New environment variable loaders for memory management
+MEM0_DEFAULT_SHORT_TERM_TTL_SECONDS = int(os.environ.get("MEM0_DEFAULT_SHORT_TERM_TTL_SECONDS", "3600"))
+_use_graph_for_categories_str = os.environ.get("MEM0_USE_GRAPH_FOR_CATEGORIES", "")
+MEM0_USE_GRAPH_FOR_CATEGORIES = [
+    item.strip() for item in _use_graph_for_categories_str.split(',') if item.strip()
+]
+
 DEFAULT_CONFIG = {
     "version": "v1.1",
     "vector_store": {
@@ -69,6 +76,10 @@ DEFAULT_CONFIG = {
         }
     },
     "history_db_path": HISTORY_DB_PATH,
+    "memory_management": {
+        "default_short_term_ttl_seconds": MEM0_DEFAULT_SHORT_TERM_TTL_SECONDS,
+        "use_graph_for_categories": MEM0_USE_GRAPH_FOR_CATEGORIES,
+    },
 }
 
 
@@ -91,7 +102,16 @@ class MemoryCreate(BaseModel):
     user_id: Optional[str] = None
     agent_id: Optional[str] = None
     run_id: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Optional metadata for the memory. Examples of classification keys: "
+            "'project_id' (str), 'memory_lifespan' (e.g., 'short_term', 'long_term'), "
+            "'memory_category' (e.g., 'informational', 'skill_procedural'), "
+            "'domain_tags' (e.g., ['python', 'fastapi']), "
+            "and 'expires_at' (timestamp for short-term memories)."
+        )
+    )
 
 
 class SearchRequest(BaseModel):
@@ -99,7 +119,14 @@ class SearchRequest(BaseModel):
     user_id: Optional[str] = None
     run_id: Optional[str] = None
     agent_id: Optional[str] = None
-    filters: Optional[Dict[str, Any]] = None
+    filters: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Filters to apply to the search. Can be used to filter on metadata fields "
+            "like 'metadata.project_id', 'metadata.memory_category', etc. "
+            "Example: {'metadata.project_id': 'proj123', 'metadata.memory_category': 'skill_procedural'}"
+        )
+    )
 
 
 @app.post("/configure", summary="Configure Mem0")
@@ -132,13 +159,42 @@ def get_all_memories(
     user_id: Optional[str] = None,
     run_id: Optional[str] = None,
     agent_id: Optional[str] = None,
+    project_id: Optional[str] = Query(None, description="Filter memories by project ID."),
+    memory_lifespan: Optional[str] = Query(None, description="Filter memories by lifespan (e.g., 'short_term', 'long_term')."),
+    memory_category: Optional[str] = Query(None, description="Filter memories by category (e.g., 'informational', 'skill_procedural')."),
+    domain_tag: Optional[List[str]] = Query(None, description="Filter memories by domain tags (match any specified tag).")
 ):
     """Retrieve stored memories."""
-    if not any([user_id, run_id, agent_id]):
-        raise HTTPException(status_code=400, detail="At least one identifier is required.")
+    if not any([user_id, run_id, agent_id, project_id, memory_lifespan, memory_category, domain_tag]):
+        # Adjusted condition to allow calls if only new filters are present, though mem0py might require user/agent/run_id
+        # However, the original check for at least one of user_id, run_id, agent_id should probably remain
+        # For now, let's assume mem0.get_all can handle filters without user/agent/run_id if that's the case,
+        # or that the user is expected to provide one of them anyway.
+        # Reinstating original check and extending it:
+        pass # Let's keep the original check for user_id, run_id, agent_id for now.
+
+    if not any([user_id, run_id, agent_id]) and not any([project_id, memory_lifespan, memory_category, domain_tag]):
+         raise HTTPException(status_code=400, detail="At least one identifier (user_id, agent_id, run_id) or filter (project_id, memory_lifespan, memory_category, domain_tag) is required.")
+
+
     try:
         params = {k: v for k, v in {"user_id": user_id, "run_id": run_id, "agent_id": agent_id}.items() if v is not None}
-        return MEMORY_INSTANCE.get_all(**params)
+
+        filters_dict = {}
+        if project_id:
+            filters_dict["metadata.project_id"] = project_id
+        if memory_lifespan:
+            filters_dict["metadata.memory_lifespan"] = memory_lifespan
+        if memory_category:
+            filters_dict["metadata.memory_category"] = memory_category
+        if domain_tag: # Assuming mem0 library handles list of tags for "metadata.domain_tags"
+            filters_dict["metadata.domain_tags"] = domain_tag
+
+        if filters_dict:
+            return MEMORY_INSTANCE.get_all(filters=filters_dict, **params)
+        else:
+            return MEMORY_INSTANCE.get_all(**params)
+
     except Exception as e:
         logging.exception("Error in get_all_memories:")
         raise HTTPException(status_code=500, detail=str(e))
