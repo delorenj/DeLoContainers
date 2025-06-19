@@ -1,24 +1,24 @@
 http:
   middlewares:
-    flowy-headers:
+    flowise-headers:
       headers:
         customRequestHeaders:
           X-Forwarded-Proto: "https"
           X-Forwarded-Prefix: "/"
 
   routers:
-    flowy:
-      rule: "Host(`flowy.delo.sh`)"
+    flowise:
+      rule: "Host(`flowise.delo.sh`)"
       entryPoints:
         - websecure
-      service: flowy
+      service: flowise
       middlewares:
-        - flowy-headers
+        - flowise-headers
       tls:
         certResolver: letsencrypt
 
   services:
-    flowy:
+    flowise:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.12:10110"
+          - url: "http://flowise-flowise-1:10010"
