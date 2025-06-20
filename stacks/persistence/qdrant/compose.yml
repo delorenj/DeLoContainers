@@ -10,14 +10,9 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-    environment:
-      - QDRANT__SERVICE__API_KEY=touchmyflappyfoldyholds
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qdrant.rule=Host(`qdrant.delo.sh`)"
-      - "traefik.http.routers.qdrant.entrypoints=websecure"
-      - "traefik.http.routers.qdrant.tls.certresolver=letsencrypt"
-      - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+    # Temporarily disable API key for testing
+    # environment:
+    #   - QDRANT__SERVICE__API_KEY=touchmyflappyfoldyholds
 
 volumes:
   qdrant_data:

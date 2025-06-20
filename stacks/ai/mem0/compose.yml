@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   mem0:
     build:
@@ -20,11 +20,12 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
-  
+    restart: unless-stopped
+
   neo4j:
     image: neo4j:5.26.4
     networks:
-      - proxy  
+      - proxy
     healthcheck:
       test: wget http://localhost:7687 || exit 1
       interval: 1s
@@ -35,10 +36,11 @@ services:
       - neo4j_data:/data
     environment:
       - NEO4J_AUTH=neo4j/mem0graph
-      - NEO4J_PLUGINS=["apoc"] 
+      - NEO4J_PLUGINS=["apoc"]
       - NEO4J_apoc_export_file_enabled=true
       - NEO4J_apoc_import_file_enabled=true
       - NEO4J_apoc_import_file_use__neo4j__config=true
+    restart: unless-stopped
 
 volumes:
   neo4j_data:
