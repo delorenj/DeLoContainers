@@ -41,6 +41,26 @@ services:
     environment:
       - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
 
+  neo4j:
+    image: neo4j:latest
+    networks:
+      - proxy
+    healthcheck:
+      test: wget http://localhost:7687 || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      start_period: 3s
+    volumes:
+      - neo4j_data:/data
+    environment:
+      - NEO4J_AUTH=${defaultUsername}/${defaultPassword}
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+    restart: unless-stopped
+
 #  postgres:
 #    image: postgres:latest
 #    restart: unless-stopped
@@ -63,6 +83,8 @@ volumes:
     name: qdrant_data
   redis_bigchungus:
     name: redis_bigchungus
+  neo4j_data:
+    name: neo4j_data
 
 networks:
   proxy:
