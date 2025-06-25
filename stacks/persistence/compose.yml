@@ -34,11 +34,12 @@ services:
     networks:
       - proxy
     labels:
-      - "traefik.enable=true"
       - "traefik.http.routers.qdrant.rule=Host(`qdrant.delo.sh`)"
       - "traefik.http.routers.qdrant.entrypoints=websecure"
       - "traefik.http.routers.qdrant.tls.certresolver=letsencrypt"
       - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+    environment:
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
 
 #  postgres:
 #    image: postgres:latest

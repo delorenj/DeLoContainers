@@ -1,0 +1,31 @@
+services:
+  langflow:
+    container_name: langflow
+    image: langflowai/langflow:latest # or another version tag on https://hub.docker.com/r/langflowai/langflow
+    pull_policy: always # set to 'always' when using 'latest' image
+    ports:
+      - "7860:7860"
+    environment:
+      - LANGFLOW_DATABASE_URL="${POSTGRES_URL}/langflow"
+      - LANGFLOW_CONFIG_DIR=app/langflow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - proxy
+    volumes:
+      - langflow_data:/app/langflow
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.langflow.rule=Host(`langflow.delo.sh`)"
+      - "traefik.http.routers.langflow.entrypoints=websecure"
+      - "traefik.http.routers.langflow.tls.certresolver=letsencrypt"
+      - "traefik.http.services.langflow.loadbalancer.server.port=7860"
+
+volumes:
+  langflow_data:
+    external: true
+
+networks:
+  proxy:
+    external: true
