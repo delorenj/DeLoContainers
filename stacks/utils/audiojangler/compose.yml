@@ -1,21 +1,21 @@
 services:
-  audiojangler.py:
+  audioutil:
     build:
-      context: . # Use the Dockerfile in the current directory (stacks/media/audiojangler.py)
+      context: . # Use the Dockerfile in the current directory (stacks/media/audioutil)
     volumes:
-      - ./data/input:/app/input # Map host's ./data/input to container's /app/input
-      - ./data/output:/app/output # Map host's ./data/output to container's /app/output
+      - /home/delorenj/Videos:/app/input # Map host's ./data/input to container's /app/input
+      - /home/delorenj/code/DeLoDocs/AI/Dropbox/Transcripts:/app/output # Map host's ./data/output to container's /app/output
     # The entrypoint is defined in the Dockerfile.
-    # Command arguments for audiojangler.py.py should be provided when running the service,
+    # Command arguments for audioutil.py should be provided when running the service,
     # for example:
-    # docker-compose run --rm audiojangler.py --input-video-path /app/input/your_video.mp4 --output-audio-path /app/output/your_audio.mp3
+    # docker-compose run --rm audioutil --input-video-path /app/input/your_video.mp4 --output-audio-path /app/output/your_audio.mp3
     #
     # Or, to see the help message:
-    # docker-compose run --rm audiojangler.py --help
+    # docker-compose run --rm audioutil --help
     #
     # The '--rm' flag is recommended for one-off tasks to clean up the container after it exits.
     #
-    # The audiojangler.py.py script expects paths relative to the container's /app directory.
+    # The audioutil.py script expects paths relative to the container's /app directory.
     # For example, for a video file 'sample.mp4' placed in './data/input/' on the host,
     # the input path for the script would be '/app/input/sample.mp4'.
     # Similarly, if the output is specified as '/app/output/audio.mp3',

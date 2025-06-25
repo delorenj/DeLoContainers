@@ -1,5 +1,5 @@
 import click
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 
 @click.command()
