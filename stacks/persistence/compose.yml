@@ -1,7 +1,6 @@
 services:
   redis:
     image: redis:latest
-    restart: unless-stopped
     ports:
       # Internal: Always 6379
       # External: Configurable
@@ -14,6 +13,7 @@ services:
         # This gets propagated to the redis-server command
         # So NOT configurable
       - REDIS_PORT=6379
+    restart: unless-stopped
     networks:
       - proxy
     labels:
@@ -22,7 +22,6 @@ services:
       - "traefik.http.routers.redis.entrypoints=websecure"
       - "traefik.http.routers.redis.tls.certresolver=letsencrypt"
       - "traefik.http.services.redis.loadbalancer.server.port=6379"
-      - "traefik.docker.network=proxy"
 
   qdrant:
     image: qdrant/qdrant
@@ -58,14 +57,11 @@ services:
 #     timeout: 5s
 #     retries: 10
 
-    networks:
-      - proxy
-
 volumes:
   qdrant_data:
     name: qdrant_data
   redis_bigchungus:
-    driver: local
+    name: redis_bigchungus
 
 networks:
   proxy:

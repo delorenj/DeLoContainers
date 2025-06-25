@@ -2,10 +2,13 @@ default:
     @just --choose
     
 # Print the service map showing compose files and configurations
-service-map:
+build-service-map:
     @tree -L 4 --dirsfirst -F \
-        -P "compose.yml|docker-compose.yml|deploy-compose.yml|README.md|*.toml|*.yaml|*.yml" \
-        --prune | grep -v '^$' > docs/service-directory.md && glow docs/service-directory.md
+        -P "compose.yml|docker-compose.yml" \
+        --prune | grep -v '^$' > docs/service-directory.md
+   
+    @DATE=$(date +'%Y-%m-%d')
+    @gptme -nm openrouter/openai/gpt-4o --no-stream --name "DeLoContainer Service Map Generating $$DATE" "Create an imformative service guide in full markdown format for the DeLoContainer project." docs/service-directory.md
 
 health:
     @bash -c 'echo "Simple Health Status Report for each compose.yml in the stacks directory:"; find stacks -type f -name "compose.yml" -print0 | while IFS= read -r -d "" file; do printf "%s: " "$$file"; if docker-compose -f "$$file" config > /dev/null 2>&1; then echo "HEALTHY"; else echo "UNHEALTHY"; fi; done'

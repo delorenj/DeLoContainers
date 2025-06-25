@@ -49,6 +49,28 @@ Each stack has its own `compose.yml` file and README with specific configuration
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Stack Monitoring
+
+This repository includes an automated stack monitoring system that ensures your Docker services stay running.
+
+### Quick Commands
+
+```bash
+# Check status of all stacks
+./scripts/manage-stacks.sh status
+
+# Simple health check
+./scripts/health-check.sh
+
+# View monitoring logs
+./scripts/manage-stacks.sh logs
+
+# Edit which stacks should be running
+./scripts/manage-stacks.sh config
+```
+
+See [Stack Monitoring Documentation](docs/stack-monitoring.md) for full details.
+
 ## Tasks
 
 - health: Simple health status report for each compose.yml file in the stacks directory.

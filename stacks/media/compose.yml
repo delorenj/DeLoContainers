@@ -2,7 +2,7 @@ services:
   gluetun:
     image: qmcgaw/gluetun
     container_name: gluetun
-    restart: unless-stopped
+    restart: always
     cap_add:
       - NET_ADMIN
     environment:
@@ -31,7 +31,7 @@ services:
   vpn-monitor:
     image: alpine:latest
     container_name: vpn-monitor
-    restart: unless-stopped
+    restart: always
     command: |
       sh -c '
       apk add --no-cache iproute2
