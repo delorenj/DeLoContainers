@@ -30,6 +30,17 @@ This directory contains AI-related services for model serving, vector storage, a
 - **Location**: ./flowise/
 - **Access**: flowise.delo.sh
 
+### Agent Zero
+- **Purpose**: Personal, organic agentic framework
+- **Location**: ./agent-zero/
+- **Access**: agent-zero.delo.sh
+- **Features**:
+  - General-purpose assistant
+  - Persistent memory
+  - Computer as a tool (code/terminal execution)
+  - Multi-agent cooperation
+  - Customizable and extensible via prompts
+
 ## Architecture
 
 ```plaintext
@@ -38,17 +49,17 @@ This directory contains AI-related services for model serving, vector storage, a
                     │  (Routing)  │
                     └─────────────┘
                           │
-          ┌──────────────┼──────────────┬──────────────┐
-          │              │              │              │
-    ┌─────────┐   ┌───────────┐  ┌──────────┐  ┌───────────┐
-    │ LiteLLM │   │  Qdrant   │  │  Letta   │  │  Flowise  │
-    │ (4000)  │   │(6333/6334)│  │          │  │  (3000)   │
-    └─────────┘   └───────────┘  └──────────┘  └───────────┘
-         │             │              │
-    ┌─────────┐       │              │
-    │PostgreSQL│       │              │
-    └─────────┘       │              │
-                      │              │
+          ┌──────────────┼──────────────┬──────────────┬───────────────┐
+          │              │              │              │               │
+    ┌─────────┐   ┌───────────┐  ┌──────────┐  ┌───────────┐   ┌─────────────┐
+    │ LiteLLM │   │  Qdrant   │  │  Letta   │  │  Flowise  │   │ Agent Zero  │
+    │ (4000)  │   │(6333/6334)│  │ (internal)│  │  (10010)  │   │   (80)      │
+    └─────────┘   └───────────┘  └──────────┘  └───────────┘   └─────────────┘
+         │             │              │              │               │
+    ┌─────────┐       │              │              │               │
+    │PostgreSQL│       │              │              │               │
+    └─────────┘       │              │              │               │
+                      │              │              │               │
 ```
 
 ## Network Configuration
@@ -57,6 +68,7 @@ All services are connected to the `proxy` network and accessible through Traefik
 - LiteLLM API endpoint
 - Qdrant vector storage
 - Custom Letta service endpoints
+- Agent Zero UI and API
 
 ## Storage
 
