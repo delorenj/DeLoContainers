@@ -1,36 +1,33 @@
 services:
   agent-zero:
     image: frdel/agent-zero-run:latest
-    restart: always
+    restart: unless-stopped
     # It's good practice to define a container name
     container_name: agent-zero
     # Add any necessary environment variables here
     # environment:
     #   - OPENAI_API_KEY=your_openai_api_key_here
-      # Agent Zero likely needs API keys for LLMs, this is an example.
-      # User should configure these in their .env file and map them here.
+    # Agent Zero likely needs API keys for LLMs, this is an example.
+    # User should configure these in their .env file and map them here.
     volumes:
       - agent-zero-logs-data:/app/logs
       - agent-zero-memory-data:/app/memory
-      - agent-zero-prompts-data:/app/prompts
+      - /home/delorenj/code/DeLoDocs/AI/Prompts:/app/prompts
       # If there are other specific directories to persist, they should be added.
       # For example, if 'knowledge' or 'instruments' also need persistence:
-      # - agent-zero-knowledge-data:/app/knowledge
-      # - agent-zero-instruments-data:/app/instruments
+      - agent-zero-knowledge-data:/app/knowledge
+      - agent-zero-instruments-data:/app/instruments
     networks:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.agent-zero.rule=Host(`agent-zero.delo.sh`)"
+      - "traefik.http.routers.agent-zero.rule=Host(`agents.delo.sh`)"
       - "traefik.http.routers.agent-zero.entrypoints=websecure"
       - "traefik.http.routers.agent-zero.tls.certresolver=letsencrypt"
-      - "traefik.http.services.agent-zero.loadbalancer.server.port=80" # Agent Zero exposes port 80
-      - "traefik.docker.network=proxy"
+      - "traefik.http.services.agent-zero.loadbalancer.server.port=80"
     healthcheck:
-      # Agent Zero doesn't specify a healthcheck endpoint in its documentation.
-      # Using a simple TCP check for port 80.
-      # If a specific healthcheck endpoint becomes known, this should be updated.
-      test: ["CMD", "nc", "-z", "localhost", "80"]
+      # Using curl to check if the web interface is responding
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -44,5 +41,5 @@ volumes:
   agent-zero-logs-data:
   agent-zero-memory-data:
   agent-zero-prompts-data:
-  # agent-zero-knowledge-data:
-  # agent-zero-instruments-data:
+  agent-zero-knowledge-data:
+  agent-zero-instruments-data:

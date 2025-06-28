@@ -1,0 +1,12 @@
+[tasks]
+backup = { run = "/home/delorenj/docker/scripts/backup.sh", description = "Run system backup procedures" }
+docker-stack-monitor = { run = "systemctl start docker-stack-monitor", description = "Start docker stack monitor service" }
+health-check = { run = "/home/delorenj/docker/scripts/health-check.sh", description = "Run system health checks" }
+init-stack = { run = "/home/delorenj/docker/scripts/init-stack.sh", description = "Initialize docker stack environment" }
+list-services = { run = "/home/delorenj/docker/scripts/list-services.sh", description = "List all docker services" }
+manage-stacks = { run = "/home/delorenj/docker/scripts/manage-stacks.sh", description = "Manage docker stacks (start/stop/restart)" }
+port-checker = { run = "/home/delorenj/docker/scripts/port-checker.sh", description = "Check network port availability" }
+prune = { run = "/home/delorenj/docker/scripts/prune.sh", description = "Clean up unused docker resources" }
+stack-monitor = { run = "/home/delorenj/docker/scripts/stack-monitor.py", description = "Monitor docker stack status" }
+traefik = { run = "/home/delorenj/docker/scripts/traefik.sh", description = "Manage Traefik reverse proxy" }
+vpn = { run = "/home/delorenj/docker/scripts/vpn.sh", description = "Manage VPN connections" }

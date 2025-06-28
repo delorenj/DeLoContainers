@@ -58,7 +58,8 @@ services:
     volumes:
       - ./qbittorrent:/config
       - ./downloads:/downloads:cached
-      - ./video:/video:cached
+      - emma_video:/video:cached
+
     depends_on:
       - gluetun
     labels:
@@ -71,7 +72,8 @@ services:
       - "traefik.docker.network=proxy"
 
 volumes:
-  emma_media:
+  emma_video:
+    name: emma_video
     driver: local
     driver_opts:
       type: nfs

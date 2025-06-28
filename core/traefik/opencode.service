@@ -1,0 +1,18 @@
+[Unit]
+Description=OpenCode Server
+After=network.target
+
+[Service]
+Type=simple
+User=delorenj
+Group=delorenj
+WorkingDirectory=/home/delorenj
+ExecStart=/home/delorenj/.opencode/bin/opencode serve --hostname 0.0.0.0 --port 4096
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opencode
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,146 @@
+# Stack Configuration
+# Set enabled: true for stacks that should always be running
+# Set enabled: false to disable a stack
+
+stacks:
+  # Core Infrastructure
+  core/traefik/compose.yml:
+    enabled: true
+    priority: 1
+    description: "Reverse proxy and SSL termination"
+
+  core/portainer/compose.yml:
+    enabled: true
+    priority: 2
+    description: "Docker management UI"
+
+  core/traefik-frontend/compose.yml:
+    enabled: false
+    priority: 3
+    description: "Traefik dashboard frontend"
+
+  # AI Stack
+  stacks/ai/firecrawl/compose.yml:
+    enabled: true
+    priority: 4
+    description: "Web scraping service"
+
+  stacks/ai/flowise/compose.yml:
+    enabled: true
+    priority: 5
+    description: "Low-code AI workflow builder"
+
+  stacks/ai/graphiti/compose.yml:
+    enabled: false
+    priority: 6
+    description: "Graphiti knowledge graph"
+
+  stacks/ai/langflow/compose.yml:
+    enabled: true
+    priority: 7
+    description: "Langflow visual AI builder"
+
+  stacks/ai/letta/compose.yml:
+    enabled: true
+    priority: 8
+    description: "Letta AI assistant"
+
+  stacks/ai/litellm/compose.yml:
+    enabled: false
+    priority: 9
+    description: "LiteLLM proxy"
+
+  stacks/ai/openmemory/api/docker-compose.yml:
+    enabled: true
+    priority: 10
+    description: "Memory management for AI"
+
+  stacks/ai/openmemory/ui/docker-compose.yml:
+    enabled: true
+    priority: 10
+    description: "Memory management for AI frontend"
+
+  stacks/ai/n8n/compose.yml:
+    enabled: true
+    priority: 11
+    description: "n8n workflow automation"
+
+  # Media Stack
+  stacks/media/compose.yml:
+    enabled: true
+    priority: 13
+    description: "Media management services"
+
+  stacks/media/exportarr/compose.yml:
+    enabled: false
+    priority: 14
+    description: "Exportarr metrics"
+
+  # Monitoring Stack
+  stacks/monitoring/compose.yml:
+    enabled: false
+    priority: 15
+    description: "Monitoring and metrics"
+
+  # Persistence Stack
+  stacks/persistence/compose.yml:
+    enabled: true
+    priority: 16
+    description: "Redis, Qdrant, and Postgres databases"
+
+  stacks/persistence/couchdb/compose.yml:
+    enabled: false
+    priority: 17
+    description: "CouchDB database"
+
+  # Utils Stack
+  stacks/utils/adguard/compose.yml:
+    enabled: false
+    priority: 19
+    description: "AdGuard DNS filtering"
+
+  stacks/utils/audiojangler/compose.yml:
+    enabled: false
+    priority: 20
+    description: "Audio processing service"
+
+  stacks/utils/marker/compose.yml:
+    enabled: false
+    priority: 21
+    description: "Document marker service"
+
+  stacks/utils/rustdesk/compose.yml:
+    enabled: false
+    priority: 22
+    description: "RustDesk remote desktop"
+
+  stacks/utils/scripts/compose.yml:
+    enabled: false
+    priority: 23
+    description: "Utility scripts"
+
+  stacks/utils/syncthing/compose.yml:
+    enabled: false
+    priority: 24
+    description: "File synchronization"
+
+  stacks/ai/agent-zero/compose.yml:
+    enabled: true
+    priority: 24
+    description: "Hierarchical Agentic Framework"
+
+  # MCP Servers
+  ffmpeg-mcp-server/docker-compose.yml:
+    enabled: false
+    priority: 25
+    description: "FFmpeg MCP server"
+
+# Global settings
+settings:
+  check_interval: 300 # Check every 5 minutes
+  restart_delay: 30 # Wait 30 seconds between restarts
+  max_retries: 3 # Maximum restart attempts
+  log_file: "/home/delorenj/docker/logs/stack-monitor.log"
+  notification:
+    enabled: false
+    webhook_url: "" # Optional webhook for notifications

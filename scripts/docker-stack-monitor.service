@@ -1,0 +1,24 @@
+[Unit]
+Description=Docker Stack Monitor
+After=docker.service
+Requires=docker.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+User=delorenj
+Group=docker
+WorkingDirectory=/home/delorenj/docker
+ExecStart=/usr/bin/python3 /home/delorenj/docker/scripts/stack-monitor.py monitor
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=docker-stack-monitor
+
+# Environment
+Environment=DOCKER_HOST=unix:///var/run/docker.sock
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+WantedBy=multi-user.target

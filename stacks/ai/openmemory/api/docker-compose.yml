@@ -1,0 +1,31 @@
+services:
+  api:
+    platform: linux/amd64
+    container_name: openmemory-api
+    image: mem0/openmemory-mcp
+    build: .
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - USER=${OPENMEMORY_USER}
+      - QDRANT_HOST=https://qdrant.delo.sh
+      - OLLAMA_NO_INTERACTIVE=1
+    env_file:
+      - .env
+    ports:
+      - "${OPENMEMORY_API_PORT:-8765}:8765"
+    volumes:
+      - memories:/usr/src/openmemory
+    networks:
+      - proxy
+    labels:
+      - "traefik.http.routers.mem0api.rule=Host(`api.mem.delo.sh`)"
+      - "traefik.http.routers.mem0api.entrypoints=websecure"
+      - "traefik.http.routers.mem0api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mem0api.loadbalancer.server.port=${OPENMEMORY_UI_PORT:-3000}"
+
+volumes:
+  memories:
+
+networks:
+  proxy:
+    external: true
