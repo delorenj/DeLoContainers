@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # plugged.in Dashboard App
+  pluggedin-app:
+    image: ghcr.io/veriteknik/pluggedin-app:latest
+    container_name: mcp-pluggedin-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=sqlite:///data/pluggedin.db
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your_super_secret_key_change_this}
+      - NEXTAUTH_URL=https://mcp-admin.delo.sh
+      - PORT=12005
+    volumes:
+      - pluggedin_data:/data
+      - ./config:/config
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcp-admin.rule=Host(`mcp-admin.delo.sh`)"
+      - "traefik.http.routers.mcp-admin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp-admin.loadbalancer.server.port=12005"
+      - "traefik.docker.network=proxy"
+
+  # MCP Proxy Server (using plugged.in proxy)
+  mcp-proxy:
+    image: node:18-alpine
+    container_name: mcp-pluggedin-proxy
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+      npm install -g @pluggedin/mcp-proxy@latest &&
+      npx @pluggedin/mcp-proxy@latest
+        --transport streamable-http
+        --port 12006
+        --host 0.0.0.0
+        --require-api-auth
+        --pluggedin-api-key ${PLUGGEDIN_API_KEY}
+        --pluggedin-api-base-url http://pluggedin-app:12005
+      "
+    environment:
+      - NODE_ENV=production
+      - PLUGGEDIN_API_KEY=${PLUGGEDIN_API_KEY}
+    volumes:
+      - mcp_proxy_data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - proxy
+    depends_on:
+      - pluggedin-app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcp-api.rule=Host(`mcp.delo.sh`)"
+      - "traefik.http.routers.mcp-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp-api.loadbalancer.server.port=12006"
+      - "traefik.docker.network=proxy"
+      # API Key middleware
+      - "traefik.http.middlewares.mcp-auth.headers.customrequestheaders.X-API-Key=${MCP_API_KEY}"
+      - "traefik.http.routers.mcp-api.middlewares=mcp-auth"
+
+  # Example MCP Servers (replace with your actual servers)
+  sequential-thinking-mcp:
+    image: node:18-alpine
+    container_name: mcp-sequential-thinking
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+      npm install -g @your-org/sequential-thinking-mcp@latest &&
+      npx @your-org/sequential-thinking-mcp
+      "
+    environment:
+      - NODE_ENV=production
+      - MCP_SERVER_NAME=sequentialthinking
+    volumes:
+      - sequential_thinking_data:/app/data
+    networks:
+      - proxy
+
+  claude-code-mcp:
+    image: node:18-alpine
+    container_name: mcp-claude-code
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+      npm install -g @your-org/claude-code-mcp@latest &&
+      npx @your-org/claude-code-mcp
+      "
+    environment:
+      - NODE_ENV=production
+      - MCP_SERVER_NAME=claudecode
+    volumes:
+      - claude_code_data:/app/data
+    networks:
+      - proxy
+
+volumes:
+  pluggedin_data:
+  mcp_proxy_data:
+  sequential_thinking_data:
+  claude_code_data:
+
+networks:
+  proxy:
+    external: true
