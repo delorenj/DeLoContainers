@@ -5,13 +5,27 @@ http:
         customRequestHeaders:
           X-Forwarded-Proto: "https"
           X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+        accessControlMaxAge: 100
     
     opencode-auth:
       basicAuth:
         headerField: "X-API-Key"
         users:
           # Format: "username:hashed_password"
-          # Generate with: echo $(htpasswd -nB username) | sed -e s/\\$/\\$\\$/g
+          # Generate with container: docker compose exec opencode /home/mcp/generate-apikey.sh
+          # Or use the management script: ./manage-opencode.sh generate-key
           - "api:$$2y$$10$$YOUR_HASHED_API_KEY_HERE"
 
   routers:
@@ -30,4 +44,8 @@ http:
     opencode:
       loadBalancer:
         servers:
-          - url: "http://localhost:4096"
+          - url: "http://opencode:4096"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "10s"
