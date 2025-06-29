@@ -12,8 +12,8 @@ PORT=${OPENCODE_PORT:-4096}
 if [ "$GENERATE_API_KEY" = "true" ] && [ -z "$OPENCODE_API_KEY" ]; then
     echo "Generating new API key..."
     export CONTAINER_ENV=true
-    /home/mcp/generate-apikey.sh
-    source /home/mcp/.env 2>/dev/null || true
+    /generate-apikey.sh
+    source /root/.env 2>/dev/null || true
 fi
 
 # Display configuration
@@ -23,12 +23,15 @@ echo "  Port: $PORT"
 echo "  Working Directory: $(pwd)"
 
 # Check if OpenCode binary exists and is executable
-if [ ! -x "/home/mcp/.opencode/bin/opencode" ]; then
-    echo "ERROR: OpenCode binary not found or not executable at /home/mcp/.opencode/bin/opencode"
+if [ ! -x "/root/.local/bin/pnpm/opencode" ]; then
+    echo "ERROR: OpenCode binary not found or not executable at /root/.local/bin/pnpm/opencode"
     echo "Please ensure OpenCode is properly installed in the container."
     exit 1
 fi
 
 # Start OpenCode server
 echo "Starting OpenCode server on $HOSTNAME:$PORT..."
-exec /home/mcp/.opencode/bin/opencode serve --hostname "$HOSTNAME" --port "$PORT"
+echo "Binary path: /root/.local/bin/pnpm/opencode"
+echo "Binary exists: $(test -f /root/.local/bin/pnpm/opencode && echo 'yes' || echo 'no')"
+echo "Binary executable: $(test -x /root/.local/bin/pnpm/opencode && echo 'yes' || echo 'no')"
+exec /root/.local/bin/pnpm/opencode serve --hostname "$HOSTNAME" --port "$PORT" --print-logs

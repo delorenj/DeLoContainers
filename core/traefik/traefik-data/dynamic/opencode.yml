@@ -18,15 +18,15 @@ http:
           - "Authorization"
           - "X-API-Key"
         accessControlMaxAge: 100
-    
+
     opencode-auth:
       basicAuth:
         headerField: "X-API-Key"
         users:
           # Format: "username:hashed_password"
-          # Generate with container: docker compose exec opencode /home/mcp/generate-apikey.sh
+          # Generate with container: docker compose exec opencode /generate-apikey.sh
           # Or use the management script: ./manage-opencode.sh generate-key
-          - "api:$$2y$$10$$YOUR_HASHED_API_KEY_HERE"
+          - "api:$$2y$$05$$5NDzY8X6DDq80Vsw6clYYOZ07VLMTU7rKo0GcPASTEmUzDAuZMhCy"
 
   routers:
     opencode:
@@ -49,3 +49,4 @@ http:
           path: "/health"
           interval: "30s"
           timeout: "10s"
+

@@ -37,8 +37,8 @@ echo ""
 
 # If running in container, also save to environment file
 if [ -n "$CONTAINER_ENV" ]; then
-    echo "OPENCODE_API_KEY=$API_KEY" >> /home/mcp/.env
-    echo "OPENCODE_HASHED_KEY=$HASHED" >> /home/mcp/.env
+    echo "OPENCODE_API_KEY=$API_KEY" >> /root/.env
+    echo "OPENCODE_HASHED_KEY=$HASHED" >> /root/.env
     echo ""
     echo "API key saved to container environment file."
 fi
