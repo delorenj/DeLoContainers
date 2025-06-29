@@ -1,0 +1,30 @@
+services:
+  concierge:
+    image: denoland/deno:alpine
+    container_name: concierge
+    command: run --allow-net --allow-env server.ts
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.concierge.rule=Host(`concierge.delo.sh`)"
+      - "traefik.http.routers.concierge.entrypoints=websecure"
+      - "traefik.http.routers.concierge.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.services.concierge.loadbalancer.server.port=8000"
+    networks:
+      - proxy
+    environment:
+      - API_KEY=${CONCIERGE_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    volumes:
+      - ./server.ts:/app/server.ts:ro
+    working_dir: /app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  proxy:
+    external: true

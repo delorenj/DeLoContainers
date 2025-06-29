@@ -132,6 +132,24 @@ The DeLoContainer project is organized into several directories, each containing
 - **Path:** `stacks/utils/syncthing/compose.yml`
 - **Description:** Syncthing is a continuous file synchronization program that synchronizes files between two or more computers in real-time.
 
+### Websites
+
+#### Concierge AI Gateway
+- **Path:** `stacks/websites/concierge/compose.yml`
+- **URL:** https://concierge.delo.sh
+- **Description:** Concierge is an AI-powered gateway service that acts as an ingress point for LLM interactions and agent orchestration. It provides health monitoring, LLM proxy capabilities to OpenRouter, WebSocket support for real-time communication, and API key authentication. The service includes CORS configuration for web clients and serves as a foundation for multi-agent AI systems.
+- **Features:**
+  - Health check and service status monitoring
+  - Authenticated and public API endpoints
+  - LLM proxy with streaming support
+  - WebSocket connections for real-time communication
+  - Rate limiting and security headers via Traefik
+  - Test client interface for development
+
+#### AI Learning Hub
+- **Path:** `stacks/websites/ai-learning-hub` (symlinked)
+- **Description:** Educational platform for AI/ML learning and development resources.
+
 ---
 
 This guide provides a high-level overview of the services within the DeLoContainer project. Each service is configured using Docker Compose, allowing for easy deployment and management.

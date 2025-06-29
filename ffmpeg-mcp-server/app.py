@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import subprocess
 import os
 from typing import Optional
-from fastapi_mcp import FastApiMCP, MCPTool
+from fastapi_mcp import FastApiMCP
 
 app = FastAPI(title="FFmpeg MCP Server")
 
@@ -14,10 +14,6 @@ class AudioExtractionRequest(BaseModel):
     format: Optional[str] = "mp3"  # Default output format
 
 @app.post("/extract-audio/", operation_id="extract_audio")
-@MCPTool(
-    name="extract-audio",
-    description="Extract audio from a video file using FFmpeg"
-)
 async def extract_audio(request: AudioExtractionRequest):
     """
     Extract audio from a video file using FFmpeg.

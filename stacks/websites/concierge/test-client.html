@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concierge Test Client</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007cba;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #005a87;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .response {
+            background-color: #f0f8ff;
+            border: 1px solid #b0d4f1;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .error {
+            background-color: #ffe6e6;
+            border-color: #ffb3b3;
+            color: #d00;
+        }
+        .success {
+            background-color: #e6ffe6;
+            border-color: #b3ffb3;
+            color: #080;
+        }
+        .ws-status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .ws-connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .ws-disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        #wsMessages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏨 Concierge Test Client</h1>
+        
+        <div class="section">
+            <h2>Configuration</h2>
+            <input type="text" id="apiKey" placeholder="API Key" value="concierge-api-key-secure-token-2025">
+            <input type="text" id="baseUrl" placeholder="Base URL" value="https://concierge.delo.sh">
+        </div>
+
+        <div class="section">
+            <h2>Health Check</h2>
+            <button onclick="checkHealth()">Check Health</button>
+            <div id="healthResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>Hello Endpoint</h2>
+            <button onclick="testHello()">Test Hello (Authenticated)</button>
+            <button onclick="testHelloPublic()">Test Hello (Public)</button>
+            <div id="helloResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>LLM Request</h2>
+            <textarea id="llmPrompt" rows="4" placeholder="Enter your prompt here...">Hello! Can you help me understand what the Concierge service does?</textarea>
+            <input type="text" id="llmModel" placeholder="Model (optional)" value="anthropic/claude-3.5-sonnet">
+            <button onclick="sendLLMRequest()">Send LLM Request</button>
+            <div id="llmResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h2>WebSocket Test</h2>
+            <div id="wsStatus" class="ws-status ws-disconnected">Disconnected</div>
+            <button id="wsConnect" onclick="connectWebSocket()">Connect WebSocket</button>
+            <button id="wsDisconnect" onclick="disconnectWebSocket()" disabled>Disconnect</button>
+            <input type="text" id="wsMessage" placeholder="Message to send via WebSocket">
+            <button onclick="sendWebSocketMessage()">Send Message</button>
+            <div id="wsMessages"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+
+        function getHeaders(includeAuth = true) {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (includeAuth) {
+                headers['X-API-Token'] = document.getElementById('apiKey').value;
+            }
+            return headers;
+        }
+
+        function getBaseUrl() {
+            return document.getElementById('baseUrl').value;
+        }
+
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `response ${isError ? 'error' : 'success'}`;
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${getBaseUrl()}/health`);
+                const data = await response.json();
+                showResponse('healthResponse', data, !response.ok);
+            } catch (error) {
+                showResponse('healthResponse', `Error: ${error.message}`, true);
+            }
+        }
+
+        async function testHello() {
+            try {
+                const response = await fetch(`${getBaseUrl()}/hello`, {
+                    headers: getHeaders(true)
+                });
+                const data = await response.json();
+                showResponse('helloResponse', data, !response.ok);
+            } catch (error) {
+                showResponse('helloResponse', `Error: ${error.message}`, true);
+            }
+        }
+
+        async function testHelloPublic() {
+            try {
+                const response = await fetch(`${getBaseUrl()}/hello`, {
+                    headers: getHeaders(false)
+                });
+                const data = await response.json();
+                showResponse('helloResponse', data, !response.ok);
+            } catch (error) {
+                showResponse('helloResponse', `Error: ${error.message}`, true);
+            }
+        }
+
+        async function sendLLMRequest() {
+            const prompt = document.getElementById('llmPrompt').value;
+            const model = document.getElementById('llmModel').value;
+            
+            if (!prompt.trim()) {
+                showResponse('llmResponse', 'Please enter a prompt', true);
+                return;
+            }
+
+            try {
+                const requestBody = {
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ]
+                };
+
+                if (model.trim()) {
+                    requestBody.model = model;
+                }
+
+                const response = await fetch(`${getBaseUrl()}/llm`, {
+                    method: 'POST',
+                    headers: getHeaders(true),
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+                showResponse('llmResponse', data, !response.ok);
+            } catch (error) {
+                showResponse('llmResponse', `Error: ${error.message}`, true);
+            }
+        }
+
+        function connectWebSocket() {
+            const baseUrl = getBaseUrl().replace('https://', 'wss://').replace('http://', 'ws://');
+            const apiKey = document.getElementById('apiKey').value;
+            
+            ws = new WebSocket(`${baseUrl}/ws`, [], {
+                headers: {
+                    'X-API-Token': apiKey
+                }
+            });
+
+            ws.onopen = function() {
+                updateWSStatus(true);
+                addWSMessage('Connected to WebSocket');
+            };
+
+            ws.onmessage = function(event) {
+                addWSMessage(`Received: ${event.data}`);
+            };
+
+            ws.onclose = function() {
+                updateWSStatus(false);
+                addWSMessage('WebSocket connection closed');
+            };
+
+            ws.onerror = function(error) {
+                addWSMessage(`WebSocket error: ${error.message || 'Unknown error'}`);
+            };
+        }
+
+        function disconnectWebSocket() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function sendWebSocketMessage() {
+            const message = document.getElementById('wsMessage').value;
+            if (ws && ws.readyState === WebSocket.OPEN && message.trim()) {
+                ws.send(JSON.stringify({
+                    type: 'test',
+                    message: message,
+                    timestamp: new Date().toISOString()
+                }));
+                document.getElementById('wsMessage').value = '';
+                addWSMessage(`Sent: ${message}`);
+            }
+        }
+
+        function updateWSStatus(connected) {
+            const statusElement = document.getElementById('wsStatus');
+            const connectBtn = document.getElementById('wsConnect');
+            const disconnectBtn = document.getElementById('wsDisconnect');
+            
+            if (connected) {
+                statusElement.textContent = 'Connected';
+                statusElement.className = 'ws-status ws-connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            } else {
+                statusElement.textContent = 'Disconnected';
+                statusElement.className = 'ws-status ws-disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            }
+        }
+
+        function addWSMessage(message) {
+            const messagesDiv = document.getElementById('wsMessages');
+            const timestamp = new Date().toLocaleTimeString();
+            messagesDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-check health on load
+            setTimeout(checkHealth, 1000);
+        });
+    </script>
+</body>
+</html>

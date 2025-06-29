@@ -1,0 +1,49 @@
+http:
+  middlewares:
+    concierge-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Token"
+        accessControlMaxAge: 100
+
+    concierge-ratelimit:
+      rateLimit:
+        burst: 100
+        average: 50
+
+  routers:
+    concierge:
+      rule: "Host(`concierge.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: concierge
+      middlewares:
+        - concierge-headers
+        - concierge-ratelimit
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    concierge:
+      loadBalancer:
+        servers:
+          - url: "http://concierge:8000"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "concierge.delo.sh"

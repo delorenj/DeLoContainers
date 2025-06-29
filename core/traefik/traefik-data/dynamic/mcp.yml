@@ -1,0 +1,66 @@
+http:
+  middlewares:
+    mcp-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+        accessControlMaxAge: 100
+
+    mcp-auth:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+
+  routers:
+    mcp-admin:
+      rule: "Host(`mcp-admin.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: mcp-admin
+      middlewares:
+        - mcp-headers
+      tls:
+        certResolver: letsencrypt
+
+    mcp-api:
+      rule: "Host(`mcp.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: mcp-api
+      middlewares:
+        - mcp-auth
+        - mcp-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    mcp-admin:
+      loadBalancer:
+        servers:
+          - url: "http://mcp-admin-dashboard:8000"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "10s"
+
+    mcp-api:
+      loadBalancer:
+        servers:
+          - url: "http://mcp-proxy-server:8001"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "10s"

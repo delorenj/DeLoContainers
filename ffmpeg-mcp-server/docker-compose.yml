@@ -5,7 +5,7 @@ services:
     build: .
     container_name: ffmpeg-mcp-server
     ports:
-      - "8765:8000"
+      - "8766:8000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}:/config
