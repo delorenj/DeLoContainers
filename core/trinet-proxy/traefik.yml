@@ -1,0 +1,13 @@
+tcp:
+  routers:
+    mssql-router:
+      entryPoints:
+        - "mssql"
+      rule: "HostSNI(`*`)"
+      service: mssql-service
+  
+  services:
+    mssql-service:
+      loadBalancer:
+        servers:
+          - address: "20.115.83.107:1433"
