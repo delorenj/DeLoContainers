@@ -9,8 +9,18 @@ interface ProfileState {
   apps: any[];
 }
 
+// Get user ID at runtime, not build time
+const getUserId = () => {
+  if (typeof window !== 'undefined') {
+    // Client-side: check for environment variable
+    return process.env.NEXT_PUBLIC_USER_ID || 'delorenj';
+  }
+  // Server-side: use default
+  return 'delorenj';
+};
+
 const initialState: ProfileState = {
-  userId: process.env.NEXT_PUBLIC_USER_ID || 'deshraj',
+  userId: getUserId(),
   totalMemories: 0,
   totalApps: 0,
   status: 'idle',
@@ -36,7 +46,7 @@ const profileSlice = createSlice({
     resetProfileState: (state) => {
       state.status = 'idle';
       state.error = null;
-      state.userId = process.env.NEXT_PUBLIC_USER_ID || 'deshraj';
+      state.userId = getUserId();
     },
     setTotalMemories: (state, action: PayloadAction<number>) => {
       state.totalMemories = action.payload;

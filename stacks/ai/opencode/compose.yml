@@ -1,15 +1,20 @@
 services:
   opencode:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../../
+      dockerfile: stacks/ai/opencode/Dockerfile
     image: opencode:latest
     container_name: opencode
+    tty: true
+    stdin_open: true
     environment:
       - OPENCODE_HOSTNAME=0.0.0.0
       - OPENCODE_PORT=4096
-      - GENERATE_API_KEY=${GENERATE_API_KEY:-false}
-      - OPENCODE_API_KEY=${OPENCODE_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "4096:4096"
     volumes:
@@ -19,16 +24,15 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.opencode.entrypoints=websecure"
-      - "traefik.http.routers.opencode.rule=Host(`opencode.delo.sh`)"
-      - "traefik.http.routers.opencode.middlewares=opencode-auth@file,opencode-headers@file"
-      - "traefik.http.routers.opencode.service=opencode"
-      - "traefik.http.routers.opencode.tls=true"
-      - "traefik.http.routers.opencode.tls.certresolver=letsencrypt"
       - "traefik.http.services.opencode.loadbalancer.server.port=4096"
-    restart: unless-stopped
+      - "traefik.http.routers.opencode.rule=Host(`opencode.delo.sh`)"
+      - "traefik.http.routers.opencode.entrypoints=websecure"
+      - "traefik.http.routers.opencode.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.opencode-auth.basicauth.usersfile=/traefik-data/.htpasswd"
+      - "traefik.http.routers.opencode.middlewares=opencode-auth"
+    restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4096/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:4096/openapi"]
       interval: 30s
       timeout: 10s
       retries: 3

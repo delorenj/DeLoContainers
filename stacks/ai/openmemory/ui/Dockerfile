@@ -58,4 +58,4 @@ ENV PORT=$PORT
 ENV HOSTNAME="0.0.0.0"
 
 ENTRYPOINT ["/home/nextjs/entrypoint.sh"]
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]

@@ -14,7 +14,7 @@ services:
       - .env
     environment:
       - PORT={OPENMEMORY_UI_PORT:-3000}
-      - NEXT_PUBLIC_API_URL=http://${OPENMEMORY_API_HOST:-host.docker.internal}:${OPENMEMORY_API_PORT:-8765}
+      - NEXT_PUBLIC_API_URL=https://${OPENMEMORY_API_HOST:-api.mem.delo.sh}
       - NEXT_PUBLIC_USER_ID=${OPENMEMORY_USER:-default_user}
     labels:
       - "traefik.http.routers.mem0ui.rule=Host(`mem.delo.sh`)"

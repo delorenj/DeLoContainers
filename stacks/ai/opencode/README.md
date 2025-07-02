@@ -1,6 +1,6 @@
-# OpenCode Docker Service
+# OpenCode Docker Service 🤖
 
-This directory contains the containerized version of the OpenCode service, built on the mcp-base image.
+This directory contains the containerized version of the OpenCode service with secure API key authentication. The service is accessible both locally for development and remotely via HTTPS with authentication.
 
 ## Quick Start
 
@@ -14,10 +14,81 @@ This directory contains the containerized version of the OpenCode service, built
    docker compose up -d --build
    ```
 
-3. **Generate API key (if needed):**
+3. **Set up authentication:**
    ```bash
-   docker compose exec opencode /home/mcp/generate-apikey.sh
+   # Generate API key and update configurations
+   ./manage-opencode.sh generate-key
+   
+   # Test authentication setup
+   ./manage-opencode.sh test-auth
    ```
+
+## Authentication Setup
+
+### Environment Setup
+For remote access, you need to set the API key in your environment:
+
+```bash
+# Add to your shell profile (.bashrc, .zshrc, etc.)
+export OPENCODE_API_KEY="your-generated-api-key-here"
+```
+
+### API Key Management
+
+The service includes a management script for easy API key operations:
+
+```bash
+# Generate new API key and update all configurations
+./manage-opencode.sh generate-key
+
+# Test authentication setup
+./manage-opencode.sh test-auth
+
+# Check service status
+./manage-opencode.sh status
+
+# Restart services after configuration changes
+./manage-opencode.sh restart
+```
+
+## Usage
+
+### CLI Wrapper
+
+The `oc` script provides easy access to the OpenCode API:
+
+```bash
+# Remote access (requires API key)
+oc --prompt "What is 2+2?"
+
+# Local development (no API key needed)
+oc --local --prompt "What is 2+2?"
+
+# Specify provider and model
+oc --provider deepseek --model deepseek-chat --prompt "Hello"
+
+# Verbose output
+oc --verbose --prompt "Explain quantum computing"
+```
+
+### Access Methods
+
+- **Remote (Authenticated)**: `https://opencode.delo.sh` - Requires X-API-Key header
+- **Local Development**: `http://localhost:4096` - No authentication required
+- **Container-to-Container**: `http://opencode:4096` - No authentication required
+
+### API Authentication
+
+Include the API key in your requests to the remote endpoint:
+
+```bash
+# Using curl
+curl -H "X-API-Key: api:your-api-key" https://opencode.delo.sh/openapi
+
+# Create a session
+curl -X POST -H "X-API-Key: api:your-api-key" -H "Content-Type: application/json" \
+  https://opencode.delo.sh/session_create -d '{}'
+```
 
 ## Configuration
 
@@ -25,51 +96,26 @@ This directory contains the containerized version of the OpenCode service, built
 
 - `OPENCODE_HOSTNAME`: Server hostname (default: 0.0.0.0)
 - `OPENCODE_PORT`: Server port (default: 4096)
-- `GENERATE_API_KEY`: Auto-generate API key on startup (default: false)
-- `OPENCODE_API_KEY`: Pre-configured API key (optional)
+- `OPENCODE_API_KEY`: API key for authentication
+- `OPENCODE_HASHED_KEY`: Hashed key for Traefik (auto-generated)
 
-### API Key Management
+### Security Features
 
-#### Option 1: Auto-generate on startup
-Set `GENERATE_API_KEY=true` in your `.env` file. The container will generate a new API key on startup.
+1. **API Key Authentication**: All remote access requires X-API-Key header
+2. **Local Development Mode**: Bypass authentication for local development
+3. **Automatic SSL**: HTTPS via Traefik with Let's Encrypt certificates
+4. **CORS Protection**: Configured headers for secure cross-origin requests
 
-#### Option 2: Generate manually
-```bash
-# Generate a new API key
-docker compose exec opencode /home/mcp/generate-apikey.sh
+## Available API Endpoints
 
-# Generate with specific key
-docker compose exec opencode /home/mcp/generate-apikey.sh "your-custom-key"
-```
-
-#### Option 3: Pre-configure
-Set `OPENCODE_API_KEY` in your `.env` file with your desired API key.
-
-### Traefik Integration
-
-The service is pre-configured with Traefik labels for automatic SSL and routing. Update the Traefik dynamic configuration file (`/core/traefik/traefik-data/dynamic/opencode.yml`) with the generated hashed API key:
-
-```yaml
-http:
-  middlewares:
-    opencode-auth:
-      basicAuth:
-        headerField: "X-API-Key"
-        users:
-          - "api:$$2y$$10$$YOUR_GENERATED_HASH_HERE"
-```
-
-## Usage
-
-### Access the service
-- **Internal**: `http://opencode:4096`
-- **External**: `https://opencode.delo.sh` (via Traefik)
-
-### API Authentication
-Include the API key in your requests:
-```bash
-curl -H "X-API-Key: api:your-api-key" https://opencode.delo.sh
-```
+- `GET /openapi` - OpenAPI documentation
+- `GET /event` - Server-sent events stream
+- `POST /app_info` - Get app information
+- `POST /session_create` - Create a new session
+- `POST /session_list` - List all sessions
+- `POST /session_chat` - Chat with a model
+- `POST /provider_list` - List available providers
+- `POST /file_search` - Search for files
 
 ## File Structure
 
@@ -78,9 +124,12 @@ opencode/
 ├── Dockerfile              # Container definition
 ├── compose.yml            # Docker Compose configuration
 ├── start-opencode.sh      # Container startup script
-├── generate-apikey.sh     # API key generation utility
+├── manage-opencode.sh     # Management script for auth and deployment
+├── oc                     # CLI wrapper with auth support
 ├── .env.example          # Environment template
+├── .env                  # Environment configuration
 ├── README.md             # This file
+├── auth-plan.md          # Authentication implementation plan
 └── config/               # Configuration directory (mounted as volume)
 ```
 
@@ -102,20 +151,39 @@ docker compose logs -f opencode
 
 ## Troubleshooting
 
-### Service won't start
-1. Check if the OpenCode binary is properly installed in the container
-2. Verify port 4096 is not already in use
-3. Check container logs for specific error messages
+### Authentication Issues
 
-### API authentication issues
-1. Verify the API key is correctly generated
-2. Ensure the Traefik configuration includes the correct hashed key
-3. Check that the `X-API-Key` header format is correct: `api:your-key`
+```bash
+# Check service status
+./manage-opencode.sh status
 
-### Traefik routing issues
-1. Ensure the `proxy` network exists
-2. Verify Traefik can reach the container
-3. Check Traefik logs for routing errors
+# Test authentication
+./manage-opencode.sh test-auth
+
+# Generate new API key if needed
+./manage-opencode.sh generate-key
+```
+
+### Service Issues
+
+1. **Service won't start**: Check provider credentials (OPENAI_API_KEY, etc.)
+2. **Port conflicts**: Verify port 4096 is available
+3. **Container logs**: `docker compose logs -f opencode`
+
+### API Access Issues
+
+1. **Remote access fails**: Ensure OPENCODE_API_KEY is set in environment
+2. **Local access fails**: Use `--local` flag or check if service is running
+3. **Authentication errors**: Verify API key format: `api:your-key`
+
+## Security Considerations
+
+1. **API Key Storage**: Never commit API keys to version control
+2. **Access Patterns**:
+   - Public URL (`https://opencode.delo.sh`) - Requires authentication
+   - Local port (`http://localhost:4096`) - No authentication (development only)
+   - Container-to-container (`http://opencode:4096`) - No authentication (internal only)
+3. **Key Rotation**: Regularly rotate API keys using the management script
 
 ## Migration from Systemd
 
@@ -132,4 +200,9 @@ This containerized version replaces the systemd service. To migrate:
    docker compose up -d --build
    ```
 
-3. Update any scripts or configurations that referenced the systemd service.
+3. Set up authentication:
+   ```bash
+   ./manage-opencode.sh generate-key
+   ```
+
+4. Update any scripts or configurations that referenced the systemd service.

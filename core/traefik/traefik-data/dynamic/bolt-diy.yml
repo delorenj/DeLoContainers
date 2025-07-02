@@ -1,0 +1,41 @@
+http:
+  middlewares:
+    bolt-diy-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+        accessControlMaxAge: 100
+
+  routers:
+    bolt-diy:
+      rule: "Host(`bolt.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: bolt-diy
+      middlewares:
+        - bolt-diy-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    bolt-diy:
+      loadBalancer:
+        servers:
+          - url: "http://bolt-diy:5173"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"

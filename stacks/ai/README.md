@@ -41,6 +41,17 @@ This directory contains AI-related services for model serving, vector storage, a
   - Multi-agent cooperation
   - Customizable and extensible via prompts
 
+### Bolt.DIY
+- **Purpose**: AI-powered web development assistant
+- **Location**: ./bolt-diy/
+- **Access**: bolt.delo.sh
+- **Features**:
+  - Natural language to code generation
+  - Full-stack application development
+  - Multiple AI model support
+  - Real-time code editing and preview
+  - GitHub integration
+
 ## Architecture
 
 ```plaintext
@@ -49,17 +60,17 @@ This directory contains AI-related services for model serving, vector storage, a
                     │  (Routing)  │
                     └─────────────┘
                           │
-          ┌──────────────┼──────────────┬──────────────┬───────────────┐
-          │              │              │              │               │
-    ┌─────────┐   ┌───────────┐  ┌──────────┐  ┌───────────┐   ┌─────────────┐
-    │ LiteLLM │   │  Qdrant   │  │  Letta   │  │  Flowise  │   │ Agent Zero  │
-    │ (4000)  │   │(6333/6334)│  │ (internal)│  │  (10010)  │   │   (80)      │
-    └─────────┘   └───────────┘  └──────────┘  └───────────┘   └─────────────┘
-         │             │              │              │               │
-    ┌─────────┐       │              │              │               │
-    │PostgreSQL│       │              │              │               │
-    └─────────┘       │              │              │               │
-                      │              │              │               │
+          ┌──────────────┼──────────────┬──────────────┬───────────────┬─────────────┐
+          │              │              │              │               │             │
+    ┌─────────┐   ┌───────────┐  ┌──────────┐  ┌───────────┐   ┌─────────────┐ ┌─────────┐
+    │ LiteLLM │   │  Qdrant   │  │  Letta   │  │  Flowise  │   │ Agent Zero  │ │Bolt.DIY │
+    │ (4000)  │   │(6333/6334)│  │ (internal)│  │  (10010)  │   │   (80)      │ │ (5173)  │
+    └─────────┘   └───────────┘  └──────────┘  └───────────┘   └─────────────┘ └─────────┘
+         │             │              │              │               │             │
+    ┌─────────┐       │              │              │               │             │
+    │PostgreSQL│       │              │              │               │             │
+    └─────────┘       │              │              │               │             │
+                      │              │              │               │             │
 ```
 
 ## Network Configuration
@@ -69,11 +80,13 @@ All services are connected to the `proxy` network and accessible through Traefik
 - Qdrant vector storage
 - Custom Letta service endpoints
 - Agent Zero UI and API
+- Bolt.DIY web development interface
 
 ## Storage
 
 - LiteLLM: PostgreSQL database for state
 - Qdrant: Local volume for vector storage
+- Bolt.DIY: Builds from local source code
 - Configuration files stored in respective service directories
 
 ## Security

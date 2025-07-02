@@ -42,7 +42,7 @@ export const useStats = (): UseMemoriesApiReturn => {
     setError(null);
     try {
       const response = await axios.get<APIStatsResponse>(
-        `${URL}/api/v1/stats?user_id=${user_id}`
+        `${URL}/api/v1/stats/?user_id=${user_id}`
       );
       dispatch(setTotalMemories(response.data.total_memories));
       dispatch(setTotalApps(response.data.total_apps));

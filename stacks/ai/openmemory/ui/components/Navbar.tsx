@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { HiHome, HiMiniRectangleStack } from "react-icons/hi2";
 import { RiApps2AddFill } from "react-icons/ri";
-import { FiRefreshCcw } from "react-icons/fi";
+import { FiRefreshCcw, FiSettings } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CreateMemoryDialog } from "@/app/memories/components/CreateMemoryDialog";
@@ -51,6 +51,10 @@ export function Navbar() {
     {
       match: /^\/$/,
       getFetchers: () => [statsApi.fetchStats, memoriesApi.fetchMemories],
+    },
+    {
+      match: /^\/settings$/,
+      getFetchers: () => [], // Settings page handles its own data fetching
     },
   ];
 
@@ -125,6 +129,18 @@ export function Navbar() {
             >
               <RiApps2AddFill />
               Apps
+            </Button>
+          </Link>
+          <Link href="/settings">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`flex items-center gap-2 border-none ${
+                isActive("/settings") ? activeClass : inactiveClass
+              }`}
+            >
+              <FiSettings />
+              Settings
             </Button>
           </Link>
         </div>

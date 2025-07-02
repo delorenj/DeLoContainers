@@ -1,67 +1,139 @@
-# DeLoContainers
+# CLAUDE.md
 
-DeLoContainers is a collection of Docker containers that I use for my personal projects. It is designed to be modular and easy to use, allowing me to quickly and easily deploy and manage a variety of services.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Stack Structure Guidelines
+## Project Overview
 
-- Stacks are organized by service rough category (e.g., media, ai, utils.)
-- Containers that add to the service container ecosystem should be placed in an appropriate stack (e.g., ./stacks/ai/ for AI-related services)
-- Containers that support the DeLoContainers project and infrastructure should be placed in the ./core/ directory (e.g., Traefik, Portainer, etc.)
-- Favor sharing resources between containers to reduce redundancy and improve efficiency (e.g., opt for a new db in the postgres stack rather than creating a new one postgres container for each service)
-- Default to exposing all services via traefik docker labels with the following naming convention: `service-name.delo.sh`
-- Each service should have an accurate yet humorous and snarky fun-to-read README.md with documentation
-- There is a single shared .env file in the root of the project that contains all environment variables for the containers.
-- When a new secret is required that isn't already in the .env file, you can most likely find it in ~/.config/zshyzsh/secrets.zsh (or already exported in your shell)
-- Utilize `mise` tasks to wrap common functionality and make management of containers frictionless and fun
-- Use scripts SPARINGLY.
-- All docker compose files should be named `compose.yml`
-- NEVER start the compose file with a `version:` key, as it is not required in v3.8+ syntax
-- Every service should be a part of the `proxy` network to ensure they can communicate with each other and be accessed via Traefik
+DeLoContainers is a personal Docker infrastructure project that manages multiple service stacks using Docker Compose. Services are organized by category (ai, media, monitoring, persistence, utils, websites) with core infrastructure services in the core directory.
 
-## Code Style
+## Common Development Commands
 
-- YAML indentation: 2 spaces
-- Use standard Docker Compose v3.8+ syntax
-- Document ports and configurations in README.md
-- Use Traefik labels for service discovery
-- Use linuxserver images when possible
-  This project uses the SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) methodology for systematic Test-Driven Development with AI assistance through Claude-Flow orchestration.
+### Stack Management
+```bash
+# List all services with status indicators
+just list-services
 
-## SPARC Development Commands
+# Check health of all compose files
+just health
 
-This project uses the SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) methodology for systematic Test-Driven Development with AI assistance through Claude-Flow orchestration.
+# Restart a specific service
+just restart <stack-name>
 
-### Core SPARC Commands
+# Build service documentation map
+just build-service-map
 
-- `npx claude-flow sparc modes`: List all available SPARC development modes
-- `npx claude-flow sparc run <mode> "<task>"`: Execute specific SPARC mode for a task
-- `npx claude-flow sparc tdd "<feature>"`: Run complete TDD workflow using SPARC methodology
-- `npx claude-flow sparc info <mode>`: Get detailed information about a specific mode
+# Monitor stacks with automated system
+sudo systemctl start docker-monitor
+sudo systemctl status docker-monitor
+```
 
-### Standard Build Commands
+### Docker Operations
+```bash
+# Start a stack
+docker compose -f stacks/<category>/<service>/compose.yml up -d
 
-- `npm run build`: Build the project
-- `npm run test`: Run the test suite
-- `npm run lint`: Run linter and format checks
-- `npm run typecheck`: Run TypeScript type checking
+# View logs for a service
+docker compose -f stacks/<category>/<service>/compose.yml logs -f
 
-## DeLoContainer Workflow
+# Stop and remove a stack
+docker compose -f stacks/<category>/<service>/compose.yml down
 
-1. Github Research
+# Pull latest images for a stack
+docker compose -f stacks/<category>/<service>/compose.yml pull
+```
 
-- Search for existing Docker containers that meet the requirements of the project.
-- Check for existing Dockerfiles, docker-compose files, and documentation.
-- Look for conversations and issues related to the container.
-- Take into consideration possible alternatives to the container proposed by the user.
-- Consider using a different container if it is more suitable for the project.
+### Testing & Development
+```bash
+# Validate a compose file
+docker compose -f <path-to-compose.yml> config
 
-2. Stack Integration
+# Check compose file syntax
+docker compose -f <path-to-compose.yml> config --quiet
 
-- If using an existing container, clone the repository into ~/code/ and follow the instructions in the README.md file.
-- If repo files need to be present, either copy them to the ~/docker/stacks/<stack_name>/<container_name>/ directory or create a new stack for the container.
-- If the stack category is getting sufficiently large, consider splitting it into multiple stacks.
-- Customize the `compose.yml` file to fit the needs of the project.
-- Link the .env to the project root's .env.
-- Configure the container with necessary environment variables and settings.
+# Test service connectivity through Traefik
+curl -H "Host: <service-name>.delo.sh" http://localhost
+```
 
-## Important Notes
+## Architecture & Structure
+
+### Directory Layout
+- `/core/` - Critical infrastructure (Traefik reverse proxy, Portainer management)
+- `/stacks/` - Service categories:
+  - `ai/` - AI/ML services (Flowise, LangFlow, n8n, etc.)
+  - `media/` - Media servers and downloaders
+  - `monitoring/` - System monitoring stack
+  - `persistence/` - Databases and storage (PostgreSQL, Redis, Qdrant)
+  - `utils/` - Utility services (AdGuard, Syncthing, etc.)
+  - `websites/` - Web applications
+- `/scripts/` - Management and automation scripts
+- `/docs/` - Project documentation
+
+### Key Architectural Decisions
+1. **Single .env file**: All environment variables are centralized in the root .env file
+2. **Traefik routing**: All services expose via `<service>.delo.sh` using Docker labels
+3. **Shared proxy network**: All services join the `proxy` network for inter-service communication
+4. **Stack monitoring**: Automated monitoring system (`stack-monitor.py`) manages service health
+5. **No version key**: Compose files use v3.8+ syntax without the deprecated `version:` key
+
+### Service Integration Pattern
+When adding a new service:
+1. Clone the service repo to `~/code/` if needed
+2. Create directory: `stacks/<category>/<service-name>/`
+3. Create `compose.yml` with:
+   - Traefik labels for `<service>.delo.sh` routing
+   - Connection to `proxy` network
+   - Environment variables from root .env
+   - LinuxServer images when available
+4. Update `stack-config.yml` if monitoring is desired
+5. Create humorous yet informative README.md
+
+### Environment Configuration
+The root `.env` file contains:
+- Network settings (DOMAIN, TZ)
+- User/permission settings (PUID, PGID)
+- VPN configurations
+- Service-specific API keys and credentials
+- Path configurations for volumes
+
+Additional secrets may be found in `~/.config/zshyzsh/secrets.zsh`
+
+### Monitoring System
+The project includes an automated monitoring system:
+- Configuration in `stack-config.yml`
+- Priority-based startup ordering
+- Automatic recovery attempts
+- Configurable intervals and retries
+- Systemd service integration
+
+## Important Conventions
+
+1. **Compose files**: Always named `compose.yml` (not docker-compose.yml)
+2. **YAML style**: 2-space indentation
+3. **Service naming**: Use kebab-case for service names
+4. **Traefik labels**: Follow the pattern in existing services
+5. **Documentation**: Each service needs a snarky, humorous README.md
+6. **Task runner**: Use `just` commands where possible instead of raw scripts
+
+## Development Workflow
+
+1. **Research phase**: Check GitHub for existing containers and alternatives
+2. **Integration**: Clone repos to ~/code/, adapt for DeLoContainers standards
+3. **Configuration**: Customize compose.yml, link to root .env
+4. **Testing**: Validate compose file, test Traefik routing
+5. **Documentation**: Create entertaining README.md with setup instructions
+
+## SPARC Development (from global CLAUDE.md)
+
+The project supports SPARC methodology for TDD with AI assistance:
+```bash
+npx claude-flow sparc modes
+npx claude-flow sparc run <mode> "<task>"
+npx claude-flow sparc tdd "<feature>"
+```
+
+## Notes
+
+- Never include time estimations in planning or architecture discussions
+- Update Taskmaster tasks immediately after addressing them
+- Prefer editing existing files over creating new ones
+- Only create documentation when explicitly requested

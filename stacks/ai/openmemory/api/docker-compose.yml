@@ -7,7 +7,7 @@ services:
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - USER=${OPENMEMORY_USER}
-      - QDRANT_HOST=https://qdrant.delo.sh
+      - QDRANT_HOST=http://qdrant:6333
       - OLLAMA_NO_INTERACTIVE=1
     env_file:
       - .env

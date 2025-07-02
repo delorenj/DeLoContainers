@@ -1,0 +1,177 @@
+#!/bin/bash
+
+# OpenCode CLI wrapper with API key support
+# Usage: oc --provider <provider> --model <model> --prompt "<prompt>"
+
+# Default values
+OPENCODE_URL="${OPENCODE_URL:-https://opencode.delo.sh}"  # Use public URL by default
+OPENCODE_API_KEY="${OPENCODE_API_KEY:-}"  # Read from environment
+PROVIDER="openai"
+MODEL=""
+PROMPT=""
+VERBOSE=false
+USE_LOCAL=false  # Flag to bypass auth for local development
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --local | -l)
+    USE_LOCAL=true
+    OPENCODE_URL="http://localhost:4096"
+    shift
+    ;;
+  --provider | -p)
+    PROVIDER="$2"
+    shift 2
+    ;;
+  --model | -m)
+    MODEL="$2"
+    shift 2
+    ;;
+  --prompt)
+    PROMPT="$2"
+    shift 2
+    ;;
+  --url | -u)
+    OPENCODE_URL="$2"
+    shift 2
+    ;;
+  --verbose | -v)
+    VERBOSE=true
+    shift
+    ;;
+  --help | -h)
+    echo "OpenCode CLI wrapper"
+    echo ""
+    echo "Usage: oc [options] --prompt \"<prompt>\""
+    echo ""
+    echo "Options:"
+    echo "  --provider, -p <provider>  AI provider (default: openai)"
+    echo "  --model, -m <model>        Model to use (optional, uses provider default)"
+    echo "  --prompt <prompt>          The prompt to send"
+    echo "  --url, -u <url>           OpenCode server URL (default: https://opencode.delo.sh)"
+    echo "  --local, -l               Use local development mode (http://localhost:4096, no auth)"
+    echo "  --verbose, -v              Show verbose output"
+    echo "  --help, -h                Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  oc --prompt \"What is 2+2?\""
+    echo "  oc --provider deepseek --model deepseek-chat --prompt \"Hello\""
+    echo "  oc --local --prompt \"list directories in /home\""
+    echo ""
+    echo "Available providers: openai, deepseek, anthropic"
+    echo ""
+    echo "Authentication:"
+    echo "  Remote access requires OPENCODE_API_KEY environment variable"
+    echo "  Local development mode (--local) bypasses authentication"
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $1"
+    echo "Use --help for usage information"
+    exit 1
+    ;;
+  esac
+done
+
+# Check if prompt is provided
+if [ -z "$PROMPT" ]; then
+  echo "Error: --prompt is required"
+  echo "Use --help for usage information"
+  exit 1
+fi
+
+# Function for verbose output
+log() {
+  if [ "$VERBOSE" = true ]; then
+    echo "$@" >&2
+  fi
+}
+
+# Function to make API calls with authentication
+api_call() {
+  local endpoint=$1
+  local data=$2
+  
+  # Add API key header if not using local mode and API key is available
+  if [ "$USE_LOCAL" = false ] && [ -n "$OPENCODE_API_KEY" ]; then
+    curl -s -X POST "${OPENCODE_URL}${endpoint}" \
+      -H "Content-Type: application/json" \
+      -u "api:${OPENCODE_API_KEY}" \
+      -d "$data"
+  elif [ "$USE_LOCAL" = false ] && [ -z "$OPENCODE_API_KEY" ]; then
+    echo "Error: OPENCODE_API_KEY environment variable is required for remote access" >&2
+    echo "Use --local flag for local development or set OPENCODE_API_KEY" >&2
+    exit 1
+  else
+    # Local mode - no authentication
+    curl -s -X POST "${OPENCODE_URL}${endpoint}" \
+      -H "Content-Type: application/json" \
+      -d "$data"
+  fi
+}
+
+# Create a session
+log "Creating session..."
+SESSION_RESPONSE=$(api_call "/session_create" "{}")
+SESSION_ID=$(echo "$SESSION_RESPONSE" | jq -r '.id // empty')
+
+if [ -z "$SESSION_ID" ]; then
+  echo "Error: Failed to create session" >&2
+  echo "$SESSION_RESPONSE" | jq . >&2
+  exit 1
+fi
+
+# Get provider list and default model if not specified
+if [ -z "$MODEL" ]; then
+  log "Getting provider information..."
+  PROVIDERS_RESPONSE=$(api_call "/provider_list" "{}")
+  MODEL=$(echo "$PROVIDERS_RESPONSE" | jq -r --arg provider "$PROVIDER" '.default[$provider] // empty')
+
+  if [ -z "$MODEL" ]; then
+    echo "Error: Provider '$PROVIDER' not found or no default model available" >&2
+    echo "Available providers:" >&2
+    echo "$PROVIDERS_RESPONSE" | jq -r '.providers[].id' >&2
+    exit 1
+  fi
+fi
+
+# Send the chat message
+log "Sending prompt to $PROVIDER/$MODEL..."
+CHAT_DATA=$(jq -n \
+  --arg session "$SESSION_ID" \
+  --arg provider "$PROVIDER" \
+  --arg model "$MODEL" \
+  --arg prompt "$PROMPT" \
+  '{
+        sessionID: $session,
+        providerID: $provider,
+        modelID: $model,
+        parts: [{
+            type: "text",
+            text: $prompt
+        }]
+    }')
+
+CHAT_RESPONSE=$(api_call "/session_chat" "$CHAT_DATA")
+
+# Check for errors
+if echo "$CHAT_RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+  echo "Error: Chat request failed" >&2
+  echo "$CHAT_RESPONSE" | jq . >&2
+  exit 1
+fi
+
+# Extract and display the response
+# Find all text parts (skip step-start parts) and concatenate them
+RESPONSE_TEXT=$(echo "$CHAT_RESPONSE" | jq -r '.parts[] | select(.type == "text") | .text // empty')
+
+if [ -z "$RESPONSE_TEXT" ]; then
+  echo "Error: No response received" >&2
+  echo "$CHAT_RESPONSE" | jq . >&2
+  exit 1
+fi
+
+# Output the response
+echo "$RESPONSE_TEXT"
+

@@ -1,0 +1,28 @@
+services:
+  chorescore-web:
+    build:
+      context: ./src  # Path to your source code
+      dockerfile: Dockerfile
+    container_name: chorescore-web
+    networks:
+      - proxy
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chorescore.rule=Host(`chorescore.delo.sh`)"
+      - "traefik.http.routers.chorescore.entrypoints=websecure"
+      - "traefik.http.routers.chorescore.tls.certresolver=letsencrypt"
+      - "traefik.http.services.chorescore.loadbalancer.server.port=3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  proxy:
+    name: proxy
+    external: true

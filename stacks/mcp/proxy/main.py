@@ -40,7 +40,8 @@ async def get_servers() -> Dict[str, str]:
         "github": "http://mcp-github:8012",
         "datetime": "http://mcp-datetime:8011",
         "context7": "http://mcp-context7:8006",
-        "circleci": "http://mcp-circleci:8008"
+        "circleci": "http://mcp-circleci:8008",
+        "openmemory": "http://openmemory-api:8765"
     }
 
 @app.get("/health")

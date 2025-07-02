@@ -1,202 +1,220 @@
 #!/bin/bash
 
-# OpenCode Container Management Script
-
-set -e
+# OpenCode Management Script
+# Provides utilities for managing OpenCode authentication and deployment
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+DOCKER_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+TRAEFIK_CONFIG="$DOCKER_ROOT/core/traefik/traefik-data/dynamic/opencode.yml"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Helper functions
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+    echo -e "${GREEN}[INFO]${NC} $1"
 }
 
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if systemd service exists and is running
-check_systemd_service() {
-    if systemctl is-active --quiet opencode.service 2>/dev/null; then
-        return 0
+generate_api_key() {
+    log_info "Generating new API key..."
+    
+    # Generate new API key
+    NEW_API_KEY=$(openssl rand -hex 32)
+    
+    # Generate hash for Traefik
+    HASHED_KEY=$(htpasswd -nbB api "$NEW_API_KEY" | sed 's/:/: /' | sed 's/\$/\$\$/g')
+    
+    # Update .env file
+    if [ -f "$SCRIPT_DIR/.env" ]; then
+        sed -i "s/^OPENCODE_API_KEY=.*/OPENCODE_API_KEY=$NEW_API_KEY/" "$SCRIPT_DIR/.env"
+        sed -i "s/^OPENCODE_HASHED_KEY=.*/OPENCODE_HASHED_KEY=$HASHED_KEY/" "$SCRIPT_DIR/.env"
     else
+        log_error ".env file not found at $SCRIPT_DIR/.env"
         return 1
     fi
-}
-
-# Stop systemd service
-stop_systemd_service() {
-    log_info "Stopping systemd opencode service..."
-    sudo systemctl stop opencode.service || true
-    sudo systemctl disable opencode.service || true
-    log_success "Systemd service stopped and disabled"
-}
-
-# Start container service
-start_container() {
-    log_info "Starting OpenCode container..."
-    docker compose up -d --build
-    log_success "OpenCode container started"
-}
-
-# Stop container service
-stop_container() {
-    log_info "Stopping OpenCode container..."
-    docker compose down
-    log_success "OpenCode container stopped"
-}
-
-# Generate API key
-generate_api_key() {
-    log_info "Generating API key..."
-    if docker compose ps opencode | grep -q "Up"; then
-        docker compose exec opencode /home/mcp/generate-apikey.sh "$@"
-    else
-        log_error "OpenCode container is not running. Start it first with: $0 start"
-        exit 1
+    
+    # Update main .env file
+    if [ -f "$DOCKER_ROOT/.env" ]; then
+        if grep -q "^OPENCODE_API_KEY=" "$DOCKER_ROOT/.env"; then
+            sed -i "s/^OPENCODE_API_KEY=.*/OPENCODE_API_KEY=$NEW_API_KEY/" "$DOCKER_ROOT/.env"
+        else
+            echo "OPENCODE_API_KEY=$NEW_API_KEY" >> "$DOCKER_ROOT/.env"
+        fi
     fi
+    
+    # Update Traefik configuration
+    if [ -f "$TRAEFIK_CONFIG" ]; then
+        # Extract just the hash part for the YAML file
+        YAML_HASH=$(echo "$HASHED_KEY" | cut -d' ' -f2-)
+        sed -i "s/- \"api:\\\$\\\$.*\"/- \"api:$YAML_HASH\"/" "$TRAEFIK_CONFIG"
+        log_info "Updated Traefik configuration"
+    else
+        log_error "Traefik config not found at $TRAEFIK_CONFIG"
+        return 1
+    fi
+    
+    log_info "New API key generated: $NEW_API_KEY"
+    log_info "Hash for Traefik: $HASHED_KEY"
+    log_warn "Remember to restart Traefik to apply the new configuration"
+    
+    # Export for current session
+    export OPENCODE_API_KEY="$NEW_API_KEY"
+    log_info "API key exported to current session"
 }
 
-# Show status
+test_auth() {
+    log_info "Testing OpenCode authentication..."
+    
+    # Load API key from .env
+    if [ -f "$SCRIPT_DIR/.env" ]; then
+        source "$SCRIPT_DIR/.env"
+    fi
+    
+    if [ -z "$OPENCODE_API_KEY" ]; then
+        log_error "OPENCODE_API_KEY not found in .env file"
+        return 1
+    fi
+    
+    # Test without API key (should fail)
+    log_info "Testing without API key (should fail)..."
+    RESPONSE=$(curl -s -w "%{http_code}" -X POST https://opencode.delo.sh/session_create \
+        -H "Content-Type: application/json" \
+        -d '{}' -o /dev/null)
+    
+    if [ "$RESPONSE" = "401" ]; then
+        log_info "✓ Unauthorized access correctly blocked"
+    else
+        log_warn "⚠ Expected 401, got $RESPONSE"
+    fi
+    
+    # Test with correct API key (should succeed)
+    log_info "Testing with correct API key (should succeed)..."
+    RESPONSE=$(curl -s -w "%{http_code}" -u "api:$OPENCODE_API_KEY" -X POST https://opencode.delo.sh/session_create \
+        -H "Content-Type: application/json" \
+        -d '{}' -o /tmp/opencode_test.json)
+    
+    if [ "$RESPONSE" = "200" ]; then
+        log_info "✓ Authenticated access successful"
+        SESSION_ID=$(jq -r '.id // empty' /tmp/opencode_test.json 2>/dev/null)
+        if [ -n "$SESSION_ID" ]; then
+            log_info "✓ Session created: $SESSION_ID"
+        fi
+    else
+        log_error "✗ Authentication failed, got $RESPONSE"
+        if [ -f /tmp/opencode_test.json ]; then
+            cat /tmp/opencode_test.json
+        fi
+        return 1
+    fi
+    
+    # Test local access (should work without auth)
+    log_info "Testing local access (should work without auth)..."
+    RESPONSE=$(curl -s -w "%{http_code}" -X POST http://localhost:4096/session_create \
+        -H "Content-Type: application/json" \
+        -d '{}' -o /dev/null 2>/dev/null)
+    
+    if [ "$RESPONSE" = "200" ]; then
+        log_info "✓ Local access working"
+    else
+        log_warn "⚠ Local access failed (service may not be running)"
+    fi
+    
+    # Clean up
+    rm -f /tmp/opencode_test.json
+}
+
 show_status() {
-    echo "OpenCode Service Status"
-    echo "======================"
-    echo ""
+    log_info "OpenCode Status:"
+    echo
     
-    # Check systemd service
-    if check_systemd_service; then
-        echo -e "Systemd Service: ${YELLOW}RUNNING${NC}"
-        log_warning "Systemd service is still running. Consider migrating to container."
+    # Check if service is running
+    if docker ps | grep -q "opencode"; then
+        log_info "✓ OpenCode container is running"
     else
-        echo -e "Systemd Service: ${GREEN}STOPPED${NC}"
+        log_warn "⚠ OpenCode container is not running"
     fi
     
-    # Check container
-    if docker compose ps opencode | grep -q "Up"; then
-        echo -e "Container Service: ${GREEN}RUNNING${NC}"
-        echo ""
-        docker compose ps opencode
+    # Check API key
+    if [ -f "$SCRIPT_DIR/.env" ]; then
+        source "$SCRIPT_DIR/.env"
+        if [ -n "$OPENCODE_API_KEY" ]; then
+            log_info "✓ API key configured: ${OPENCODE_API_KEY:0:8}..."
+        else
+            log_warn "⚠ No API key configured"
+        fi
     else
-        echo -e "Container Service: ${RED}STOPPED${NC}"
+        log_error "✗ .env file not found"
     fi
     
-    echo ""
-    echo "Logs (last 10 lines):"
-    echo "--------------------"
-    docker compose logs --tail=10 opencode 2>/dev/null || echo "No container logs available"
+    # Check Traefik config
+    if [ -f "$TRAEFIK_CONFIG" ]; then
+        log_info "✓ Traefik configuration exists"
+    else
+        log_error "✗ Traefik configuration missing"
+    fi
 }
 
-# Migrate from systemd to container
-migrate() {
-    log_info "Starting migration from systemd to container..."
+restart_services() {
+    log_info "Restarting OpenCode services..."
     
-    if check_systemd_service; then
-        log_info "Systemd service is running. Stopping it..."
-        stop_systemd_service
-    else
-        log_info "Systemd service is not running."
-    fi
+    cd "$SCRIPT_DIR"
+    docker compose down
+    docker compose up -d
     
-    # Ensure .env file exists
-    if [ ! -f .env ]; then
-        log_info "Creating .env file from template..."
-        cp .env.example .env
-        log_warning "Please review and update .env file as needed"
-    fi
+    log_info "Restarting Traefik..."
+    cd "$DOCKER_ROOT/core/traefik"
+    docker compose restart traefik
     
-    start_container
-    
-    log_success "Migration completed!"
-    log_info "OpenCode is now running in a container"
-    log_info "Generate an API key with: $0 generate-key"
+    log_info "Services restarted"
 }
 
-# Show help
 show_help() {
-    echo "OpenCode Container Management"
-    echo ""
-    echo "Usage: $0 <command> [options]"
-    echo ""
+    echo "OpenCode Management Script"
+    echo
+    echo "Usage: $0 <command>"
+    echo
     echo "Commands:"
-    echo "  start              Start the OpenCode container"
-    echo "  stop               Stop the OpenCode container"
-    echo "  restart            Restart the OpenCode container"
-    echo "  status             Show service status"
-    echo "  logs               Show container logs"
-    echo "  generate-key [key] Generate API key (optionally with custom key)"
-    echo "  migrate            Migrate from systemd service to container"
-    echo "  build              Rebuild the container image"
-    echo "  shell              Open shell in running container"
-    echo "  help               Show this help message"
-    echo ""
+    echo "  generate-key    Generate a new API key and update configurations"
+    echo "  test-auth       Test authentication setup"
+    echo "  status          Show current status"
+    echo "  restart         Restart OpenCode and Traefik services"
+    echo "  help            Show this help message"
+    echo
     echo "Examples:"
-    echo "  $0 migrate                    # Migrate from systemd to container"
-    echo "  $0 generate-key               # Generate random API key"
-    echo "  $0 generate-key mykey123      # Generate with specific key"
-    echo "  $0 logs -f                    # Follow logs in real-time"
+    echo "  $0 generate-key"
+    echo "  $0 test-auth"
+    echo "  $0 status"
 }
 
 # Main command handling
 case "${1:-help}" in
-    start)
-        start_container
+    generate-key)
+        generate_api_key
         ;;
-    stop)
-        stop_container
-        ;;
-    restart)
-        stop_container
-        start_container
+    test-auth)
+        test_auth
         ;;
     status)
         show_status
         ;;
-    logs)
-        shift
-        docker compose logs "$@" opencode
-        ;;
-    generate-key)
-        shift
-        generate_api_key "$@"
-        ;;
-    migrate)
-        migrate
-        ;;
-    build)
-        log_info "Rebuilding OpenCode container..."
-        docker compose build --no-cache
-        log_success "Container rebuilt"
-        ;;
-    shell)
-        if docker compose ps opencode | grep -q "Up"; then
-            docker compose exec opencode /bin/zsh
-        else
-            log_error "OpenCode container is not running. Start it first with: $0 start"
-            exit 1
-        fi
+    restart)
+        restart_services
         ;;
     help|--help|-h)
         show_help
         ;;
     *)
         log_error "Unknown command: $1"
-        echo ""
         show_help
         exit 1
         ;;

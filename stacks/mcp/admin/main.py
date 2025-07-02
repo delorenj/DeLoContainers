@@ -76,6 +76,12 @@ async def load_servers() -> List[MCPServer]:
             url="http://mcp-circleci:8008",
             description="CircleCI build management and monitoring",
             status="active"
+        ),
+        MCPServer(
+            name="openmemory",
+            url="http://openmemory-api:8765",
+            description="OpenMemory persistent memory storage and retrieval",
+            status="active"
         )
     ]
 
