@@ -5,9 +5,9 @@ echo "Traefik Dashboard: http://localhost:8099/dashboard/"
 
 echo "
 Checking if Traefik detects the following routers:"
-echo "- prowlarr.delo.sh"
-echo "- movies.delo.sh"
-echo "- get.delo.sh"
+echo "- prowlarr.${DOMAIN}"
+echo "- movies.${DOMAIN}"
+echo "- get.${DOMAIN}"
 
 docker inspect --format '{{range .Config.Labels}}{{println .}}{{end}}' $(docker ps -q -f name=prowlarr) | grep traefik
 docker inspect --format '{{range .Config.Labels}}{{println .}}{{end}}' $(docker ps -q -f name=jellyfin) | grep traefik

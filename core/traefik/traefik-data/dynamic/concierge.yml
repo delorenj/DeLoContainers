@@ -26,7 +26,7 @@ http:
 
   routers:
     concierge:
-      rule: "Host(`concierge.delo.sh`)"
+      rule: "Host(`concierge.${DOMAIN}`)"
       entryPoints:
         - websecure
       service: concierge
@@ -46,4 +46,4 @@ http:
           interval: "30s"
           timeout: "10s"
           headers:
-            Host: "concierge.delo.sh"
+            Host: "concierge.${DOMAIN}"

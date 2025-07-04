@@ -1,7 +1,6 @@
 api:
   dashboard: true
   debug: true
-  insecure: true
 
 entryPoints:
   web:
@@ -30,6 +29,7 @@ providers:
     network: proxy
     watch: true
     useBindPortIP: false
-    
+
   file:
     directory: "/dynamic"
+

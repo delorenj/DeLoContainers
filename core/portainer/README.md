@@ -4,7 +4,7 @@ Portainer Community Edition - A lightweight Docker management UI.
 
 ## Access
 
-- Web UI: https://docker.delo.sh or https://docker.delorenzo.family (HTTPS via Traefik reverse proxy)
+- Web UI: https://docker.${DOMAIN} or https://docker.delorenzo.family (HTTPS via Traefik reverse proxy)
 
 ## Features
 
@@ -17,7 +17,7 @@ Portainer Community Edition - A lightweight Docker management UI.
 
 ## First Time Setup
 
-1. After starting the container, navigate to https://docker.delo.sh
+1. After starting the container, navigate to https://docker.${DOMAIN}
 2. Create your initial admin user
 3. Choose "Docker" as the environment type
 4. Start managing your containers!

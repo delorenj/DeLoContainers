@@ -21,7 +21,7 @@ http:
 
   routers:
     chorescore:
-      rule: "Host(`chorescore.delo.sh`)"
+      rule: "Host(`chorescore.${DOMAIN}`)"
       entryPoints:
         - websecure
       service: chorescore

@@ -3,18 +3,18 @@
 echo "Checking if the domains resolve locally..."
 
 echo "
-Checking prowlarr.delo.sh..."
-nslookup prowlarr.delo.sh
+Checking prowlarr.${DOMAIN}..."
+nslookup prowlarr.${DOMAIN}
 
 echo "
-Checking movies.delo.sh..."
-nslookup movies.delo.sh
+Checking movies.${DOMAIN}..."
+nslookup movies.${DOMAIN}
 
 echo "
-Checking get.delo.sh..."
-nslookup get.delo.sh
+Checking get.${DOMAIN}..."
+nslookup get.${DOMAIN}
 
 echo "
 You may need to add these domains to your /etc/hosts file:"
-echo "127.0.0.1 prowlarr.delo.sh movies.delo.sh get.delo.sh"
+echo "127.0.0.1 prowlarr.${DOMAIN} movies.${DOMAIN} get.${DOMAIN}"
 

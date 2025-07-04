@@ -7,7 +7,7 @@ http:
 
   routers:
     traefik-dashboard:
-      rule: "Host(`traefik.delo.sh`)"
+      rule: "Host(`traefik.${DOMAIN}`)"
       service: api@internal
       entryPoints:
         - websecure
@@ -17,7 +17,7 @@ http:
         certResolver: letsencrypt
 
     lms-router:
-      rule: "Host(`lms.delo.sh`)"
+      rule: "Host(`lms.${DOMAIN}`)"
       service: lms-service
       entryPoints:
         - websecure
@@ -25,7 +25,7 @@ http:
         certResolver: letsencrypt
 
     draw-router:
-      rule: "Host(`draw.delo.sh`)"
+      rule: "Host(`draw.${DOMAIN}`)"
       service: draw-service
       entryPoints:
         - websecure

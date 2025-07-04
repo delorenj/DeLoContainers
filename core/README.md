@@ -41,6 +41,6 @@ When adding new services:
 
 ## Monitoring
 
-- Traefik dashboard available at traefik.delo.sh
+- Traefik dashboard available at traefik.${DOMAIN}
 - Prometheus metrics enabled for monitoring
 - Container status visible in Portainer

@@ -21,7 +21,7 @@ http:
 
   routers:
     qdrant:
-      rule: "Host(`qdrant.delo.sh`)"
+      rule: "Host(`qdrant.${DOMAIN}`)"
       entryPoints:
         - websecure
       service: qdrant

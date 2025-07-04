@@ -8,7 +8,7 @@ http:
 
   routers:
     ollama:
-      rule: "Host(`ollama.delo.sh`)"
+      rule: "Host(`ollama.${DOMAIN}`)"
       entryPoints:
         - websecure
       service: ollama
