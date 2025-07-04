@@ -19,14 +19,22 @@ from qdrant_client import models as qdrant_models
 # Load environment variables
 load_dotenv()
 
-# Initialize MCP and memory client
+# Initialize MCP
 mcp = FastMCP("mem0-mcp-server")
 
-# Check if OpenRouter API key is set
-if not os.getenv("OPENROUTER_API_KEY"):
-    raise Exception("OPENROUTER_API_KEY is not set in .env file")
+# Memory client will be initialized lazily when needed
+memory_client = None
 
-memory_client = get_memory_client()
+def get_lazy_memory_client():
+    """Get memory client, initializing it only when first needed"""
+    global memory_client
+    if memory_client is None:
+        try:
+            memory_client = get_memory_client()
+        except Exception as e:
+            logging.error(f"Failed to initialize memory client: {e}")
+            return None
+    return memory_client
 
 # Context variables for user_id and client_name
 user_id_var: contextvars.ContextVar[str] = contextvars.ContextVar("user_id")
@@ -58,7 +66,11 @@ async def add_memories(text: str) -> str:
             if not app.is_active:
                 return f"Error: App {app.name} is currently paused on OpenMemory. Cannot create new memories."
 
-            response = memory_client.add(text,
+            client = get_lazy_memory_client()
+            if not client:
+                return "Error: Memory client is not available"
+                
+            response = client.add(text,
                                          user_id=uid,
                                          metadata={
                                             "source_app": "openmemory",
@@ -142,9 +154,13 @@ async def search_memory(query: str) -> str:
                 conditions.append(qdrant_models.HasIdCondition(has_id=accessible_memory_ids_str))
             filters = qdrant_models.Filter(must=conditions)
             logging.info(f"Filters: {filters}")
-            embeddings = memory_client.embedding_model.embed(query, "search")
-            hits = memory_client.vector_store.client.query_points(
-                collection_name=memory_client.vector_store.collection_name,
+            client = get_lazy_memory_client()
+            if not client:
+                return "Error: Memory client is not available"
+                
+            embeddings = client.embedding_model.embed(query, "search")
+            hits = client.vector_store.client.query_points(
+                collection_name=client.vector_store.collection_name,
                 query=embeddings,
                 query_filter=filters,
                 limit=10,
@@ -220,8 +236,12 @@ async def list_memories() -> str:
             # Get or create user and app
             user, app = get_user_and_app(db, user_id=uid, app_id=client_name)
 
+            client = get_lazy_memory_client()
+            if not client:
+                return "Error: Memory client is not available"
+                
             # Get all memories
-            memories = memory_client.get_all(user_id=uid)
+            memories = client.get_all(user_id=uid)
             filtered_memories = []
 
             # Filter memories based on permissions
@@ -285,9 +305,13 @@ async def delete_all_memories() -> str:
             user_memories = db.query(Memory).filter(Memory.user_id == user.id).all()
             accessible_memory_ids = [memory.id for memory in user_memories if check_memory_access_permissions(db, memory, app.id)]
 
+            client = get_lazy_memory_client()
+            if not client:
+                return "Error: Memory client is not available"
+                
             # delete the accessible memories only
             for memory_id in accessible_memory_ids:
-                memory_client.delete(memory_id)
+                client.delete(memory_id)
 
             # Update each memory's state and create history entries
             now = datetime.datetime.now(datetime.UTC)

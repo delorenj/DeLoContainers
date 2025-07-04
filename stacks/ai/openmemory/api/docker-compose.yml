@@ -13,8 +13,8 @@ services:
       - .env
     ports:
       - "${OPENMEMORY_API_PORT:-8765}:8765"
-    volumes:
-      - memories:/usr/src/openmemory
+    # volumes:
+    #   - memories:/usr/src/openmemory  # Commented out to use code from Docker image
     networks:
       - proxy
     labels:

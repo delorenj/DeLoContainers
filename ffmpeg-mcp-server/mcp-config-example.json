@@ -1,7 +1,0 @@
-{
-  "mcpServers": {
-    "ffmpeg-mcp-server": {
-      "url": "http://localhost:8765/mcp"
-    }
-  }
-}

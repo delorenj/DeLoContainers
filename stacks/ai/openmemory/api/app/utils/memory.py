@@ -29,12 +29,21 @@ def get_memory_client(custom_instructions: str = None):
         return memory_client
 
     try:
-        # Get host and port from environment variables with fallbacks
-        qdrant_host = os.getenv("QDRANT_HOST", "host.docker.internal")
-        qdrant_port = int(os.getenv("QDRANT_PORT", "6333"))
-
-        # Get LLM model from environment or use default
-        llm_model = os.getenv("MEM0_OPENROUTER_MODEL", "deepseek/deepseek-chat")
+        # Parse Qdrant host and port from QDRANT_HOST environment variable
+        qdrant_host_env = os.getenv("QDRANT_HOST", "http://qdrant:6333")
+        if qdrant_host_env.startswith("http://"):
+            # Extract host and port from URL format
+            qdrant_url_parts = qdrant_host_env.replace("http://", "").split(":")
+            qdrant_host = qdrant_url_parts[0]
+            qdrant_port = int(qdrant_url_parts[1]) if len(qdrant_url_parts) > 1 else 6333
+        elif qdrant_host_env.startswith("https://"):
+            # For HTTPS URLs, use the full URL as host and default port
+            qdrant_host = qdrant_host_env
+            qdrant_port = 443
+        else:
+            # Assume it's just a hostname
+            qdrant_host = qdrant_host_env
+            qdrant_port = int(os.getenv("QDRANT_PORT", "6333"))
 
         config = {
             "vector_store": {
@@ -43,17 +52,17 @@ def get_memory_client(custom_instructions: str = None):
                     "collection_name": "openmemory",
                     "host": qdrant_host,
                     "port": qdrant_port,
+                    "api_key": os.getenv("QDRANT_API_KEY"),
                     "embedding_model_dims": 768,
                 },
             },
             "llm": {
-                "provider": "openrouter",
+                "provider": "ollama",
                 "config": {
-                    "model": llm_model,
-                    "api_key": os.getenv("OPENROUTER_API_KEY"),
-                    "base_url": "https://openrouter.ai/api/v1",
-                    "temperature": 0.7,
-                    "max_tokens": 4096,
+                    "model": "deepseek-r1:70b",
+                    "ollama_base_url": "https://ollama.delo.sh",
+                    "temperature": 0.1,
+                    "max_tokens": 2000,
                 },
             },
             "embedder": {
