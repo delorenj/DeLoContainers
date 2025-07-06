@@ -21,7 +21,7 @@ http:
 
   routers:
     bolt-diy:
-      rule: "Host(`bolt.${DOMAIN}`)"
+      rule: "Host(`bolt.delo.sh`)"
       entryPoints:
         - websecure
       service: bolt-diy

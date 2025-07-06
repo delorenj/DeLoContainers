@@ -17,7 +17,7 @@ This directory contains documentation for the infrastructure and services.
 ### Ollama API
 The Ollama service is protected with API key authentication. To make requests:
 
-**Base URL:** `https://ollama.${DOMAIN}`
+**Base URL:** `https://ollama.delo.sh`
 
 **Authentication:** Include the `X-API-Key` header with your requests.
 
@@ -34,13 +34,13 @@ curl -H "X-API-Key: $OLLAMA_API_KEY" \
        "prompt": "Hello, how are you?",
        "stream": false
      }' \
-     https://ollama.${DOMAIN}/api/generate
+     https://ollama.delo.sh/api/generate
 ```
 
 **List available models:**
 ```bash
 curl -H "X-API-Key: $OLLAMA_API_KEY" \
-     https://ollama.${DOMAIN}/api/tags
+     https://ollama.delo.sh/api/tags
 ```
 
 **Chat completion:**
@@ -56,7 +56,7 @@ curl -H "X-API-Key: $OLLAMA_API_KEY" \
          }
        ]
      }' \
-     https://ollama.${DOMAIN}/api/chat
+     https://ollama.delo.sh/api/chat
 ```
 
 **Using with OpenAI-compatible clients:**
@@ -64,7 +64,7 @@ Many tools that support OpenAI's API can be configured to use Ollama:
 ```bash
 # Set environment variables
 export OPENAI_API_KEY="$OLLAMA_API_KEY"
-export OPENAI_BASE_URL="https://ollama.${DOMAIN}/v1"
+export OPENAI_BASE_URL="https://ollama.delo.sh/v1"
 ```
 
 ## Documentation Structure

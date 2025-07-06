@@ -8,7 +8,7 @@ http:
 
   routers:
     syncthing:
-      rule: "Host(`sync.${DOMAIN}`)"
+      rule: "Host(`sync.delo.sh`)"
       entryPoints:
         - websecure
       service: syncthing

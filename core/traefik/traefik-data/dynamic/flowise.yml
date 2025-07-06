@@ -8,7 +8,7 @@ http:
 
   routers:
     flowise:
-      rule: "Host(`flowise.${DOMAIN}`)"
+      rule: "Host(`flowise.delo.sh`)"
       entryPoints:
         - websecure
       service: flowise

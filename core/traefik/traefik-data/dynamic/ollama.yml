@@ -21,7 +21,7 @@ http:
 
   routers:
     ollama:
-      rule: "Host(`ollama.${DOMAIN}`) && HeadersRegexp(`X-API-Key`, `^sk-b09c0f28978b408bcd7fab6bf47279fad8c7ceda0cb08b5a$`)"
+      rule: "Host(`ollama.delo.sh`) && HeadersRegexp(`X-API-Key`, `^sk-b09c0f28978b408bcd7fab6bf47279fad8c7ceda0cb08b5a$`)"
       entryPoints:
         - websecure
       service: ollama
@@ -29,12 +29,6 @@ http:
         - ollama-headers
       tls:
         certResolver: letsencrypt
-
-  services:
-    ollama:
-      loadBalancer:
-        servers:
-          - url: "http://192.168.1.12:11434"
 
   services:
     ollama:

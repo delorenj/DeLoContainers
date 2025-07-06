@@ -9,6 +9,7 @@ DeLoContainers is a personal Docker infrastructure project that manages multiple
 ## Common Development Commands
 
 ### Stack Management
+
 ```bash
 # List all services with status indicators
 just list-services
@@ -28,6 +29,7 @@ sudo systemctl status docker-monitor
 ```
 
 ### Docker Operations
+
 ```bash
 # Start a stack
 docker compose -f stacks/<category>/<service>/compose.yml up -d
@@ -43,6 +45,7 @@ docker compose -f stacks/<category>/<service>/compose.yml pull
 ```
 
 ### Testing & Development
+
 ```bash
 # Validate a compose file
 docker compose -f <path-to-compose.yml> config
@@ -57,6 +60,7 @@ curl -H "Host: <service-name>.delo.sh" http://localhost
 ## Architecture & Structure
 
 ### Directory Layout
+
 - `/core/` - Critical infrastructure (Traefik reverse proxy, Portainer management)
 - `/stacks/` - Service categories:
   - `ai/` - AI/ML services (Flowise, LangFlow, n8n, etc.)
@@ -69,6 +73,7 @@ curl -H "Host: <service-name>.delo.sh" http://localhost
 - `/docs/` - Project documentation
 
 ### Key Architectural Decisions
+
 1. **Single .env file**: All environment variables are centralized in the root .env file
 2. **Traefik routing**: All services expose via `<service>.delo.sh` using Docker labels
 3. **Shared proxy network**: All services join the `proxy` network for inter-service communication
@@ -76,7 +81,9 @@ curl -H "Host: <service-name>.delo.sh" http://localhost
 5. **No version key**: Compose files use v3.8+ syntax without the deprecated `version:` key
 
 ### Service Integration Pattern
+
 When adding a new service:
+
 1. Clone the service repo to `~/code/` if needed
 2. Create directory: `stacks/<category>/<service-name>/`
 3. Create `compose.yml` with:
@@ -88,7 +95,9 @@ When adding a new service:
 5. Create humorous yet informative README.md
 
 ### Environment Configuration
+
 The root `.env` file contains:
+
 - Network settings (DOMAIN, TZ)
 - User/permission settings (PUID, PGID)
 - VPN configurations
@@ -98,7 +107,9 @@ The root `.env` file contains:
 Additional secrets may be found in `~/.config/zshyzsh/secrets.zsh`
 
 ### Monitoring System
+
 The project includes an automated monitoring system:
+
 - Configuration in `stack-config.yml`
 - Priority-based startup ordering
 - Automatic recovery attempts
@@ -125,6 +136,7 @@ The project includes an automated monitoring system:
 ## SPARC Development (from global CLAUDE.md)
 
 The project supports SPARC methodology for TDD with AI assistance:
+
 ```bash
 npx claude-flow sparc modes
 npx claude-flow sparc run <mode> "<task>"
@@ -137,3 +149,19 @@ npx claude-flow sparc tdd "<feature>"
 - Update Taskmaster tasks immediately after addressing them
 - Prefer editing existing files over creating new ones
 - Only create documentation when explicitly requested
+
+## Symlinked Dotfiles
+
+The following dotfiles are symlinked to `/home/delorenj/docker-dotfiles`:
+
+- `.env` → `/home/delorenj/docker-dotfiles/.env`
+
+Created: 2025-07-04 09:03:59
+
+## Symlinked Dotfiles
+
+The following dotfiles are symlinked to `/home/delorenj/docker/trunk-main-dotfiles`:
+
+- `.env` → `/home/delorenj/docker/trunk-main-dotfiles/.env`
+
+Created: 2025-07-04 09:18:41

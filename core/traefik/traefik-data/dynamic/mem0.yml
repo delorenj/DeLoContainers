@@ -25,7 +25,7 @@ http:
 
   routers:
     mem0-ui:
-      rule: "Host(`mem.${DOMAIN}`)"
+      rule: "Host(`mem.delo.sh`)"
       entryPoints:
         - websecure
       service: mem0-ui
@@ -36,7 +36,7 @@ http:
         certResolver: letsencrypt
 
     mem0-api:
-      rule: "Host(`api.mem.${DOMAIN}`)"
+      rule: "Host(`api.mem.delo.sh`)"
       entryPoints:
         - websecure
       service: mem0-api
@@ -46,7 +46,7 @@ http:
         certResolver: letsencrypt
 
     mem0-mcp:
-      rule: "Host(`mcp.${DOMAIN}`) && PathPrefix(`/mem0`)"
+      rule: "Host(`mcp.delo.sh`) && PathPrefix(`/mem0`)"
       service: mem0-api
       entryPoints:
         - websecure

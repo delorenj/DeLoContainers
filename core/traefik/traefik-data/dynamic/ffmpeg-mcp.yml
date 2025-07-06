@@ -1,7 +1,7 @@
 http:
   routers:
     ffmpeg-mcp:
-      rule: "Host(`ffmpeg-mcp.${DOMAIN}`)"
+      rule: "Host(`ffmpeg-mcp.delo.sh`)"
       entryPoints:
         - websecure
       service: ffmpeg-mcp
