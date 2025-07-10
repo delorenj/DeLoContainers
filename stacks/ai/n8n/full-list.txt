@@ -1,0 +1,19 @@
+# Community Nodes for n8n (excluding core n8n-nodes-base)
+# These are the community packages that need to be installed via npm
+
+# Web Automation & Scraping
+n8n-nodes-browserless
+n8n-nodes-puppeteer
+n8n-nodes-puppeteer-extended
+
+# AI & Machine Learning
+@n8n/n8n-nodes-langchain
+
+# Additional useful community nodes
+n8n-nodes-text-manipulation
+n8n-nodes-advanced-flow
+n8n-nodes-firecrawl
+n8n-nodes-playwright
+n8n-nodes-google-sheets-trigger
+n8n-nodes-openrouter
+n8n-nodes-better-ai-agent

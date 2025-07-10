@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.mem0api.rule=Host(`api.mem.delo.sh`)"
       - "traefik.http.routers.mem0api.entrypoints=websecure"
       - "traefik.http.routers.mem0api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.mem0api.loadbalancer.server.port=${OPENMEMORY_UI_PORT:-3000}"
+      - "traefik.http.services.mem0api.loadbalancer.server.port=${OPENMEMORY_API_PORT:-8765}"
 
 volumes:
   memories:

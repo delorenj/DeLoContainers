@@ -1,4 +1,7 @@
 # General ignores
+*.mem.json
+mem.json
+*rules.json
 *.pid
 *.session
 *.log

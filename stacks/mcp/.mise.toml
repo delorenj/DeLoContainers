@@ -1,0 +1,22 @@
+[tasks]
+
+[tasks.start-proxy]
+run = "docker compose -f pluggedin-mcp/compose.yml up -d"
+description = "Start the MCP proxy server"
+
+
+[tasks.start-app]
+run = "docker compose -f pluggedin-app/compose.yml up -d"
+description = "Start the MCP proxy app"
+
+[tasks.start]
+run = "mise run start-proxy && mise run start-app"
+description = "Start the MCP proxy and app"
+
+[tasks.stop]
+run = "docker compose -f pluggedin-mcp/compose.yml down && docker compose -f pluggedin-app/compose.yml down"
+description = "Stop the MCP proxy and app"
+
+[tasks.logs]
+run = "docker compose -f pluggedin-mcp/compose.yml logs -f && docker compose -f pluggedin-app/compose.yml logs -f"
+description = "Show logs for the MCP proxy and app"
