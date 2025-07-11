@@ -6,7 +6,26 @@ http:
           X-Forwarded-Proto: "https"
           X-Forwarded-Prefix: "/"
 
+    syncthing-internal-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+
   routers:
+    # External access via sync.delo.sh
     syncthing:
       rule: "Host(`sync.delo.sh`)"
       entryPoints:
@@ -17,8 +36,38 @@ http:
       tls:
         certResolver: letsencrypt
 
+    # Internal access via mommymac.local with SSL
+    syncthing-internal:
+      rule: "Host(`mommymac.local`)"
+      entryPoints:
+        - websecure
+      service: syncthing
+      middlewares:
+        - syncthing-internal-headers
+      tls:
+        # Use a self-signed certificate for internal access
+        options: internal
+
   services:
     syncthing:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.12:8384"
+          - url: "http://host.docker.internal:8384"
+        healthCheck:
+          path: "/rest/system/status"
+          interval: "30s"
+          timeout: "10s"
+
+# TLS configuration for internal certificates
+tls:
+  options:
+    internal:
+      minVersion: "VersionTLS12"
+      cipherSuites:
+        - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+        - "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305"
+        - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+
+  certificates:
+    - certFile: "/dynamic/certs/mommymac.local.crt"
+      keyFile: "/dynamic/certs/mommymac.local.key"
