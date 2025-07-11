@@ -1,0 +1,54 @@
+http:
+  middlewares:
+    metamcp-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "api-key"
+        accessControlMaxAge: 100
+
+  routers:
+    # Frontend router
+    metamcp:
+      rule: "Host(`mcp.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: metamcp
+      middlewares:
+        - metamcp-headers
+      tls:
+        certResolver: letsencrypt
+
+    # API/Backend router
+    metamcp-api:
+      rule: "Host(`mcp.delo.sh`) && (PathPrefix(`/api`) || PathPrefix(`/metamcp`) || PathPrefix(`/mcp-proxy`) || PathPrefix(`/trpc`) || PathPrefix(`/api-keys`))"
+      entryPoints:
+        - websecure
+      service: metamcp-api
+      middlewares:
+        - metamcp-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    metamcp:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:12008"
+
+    metamcp-api:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:12009"

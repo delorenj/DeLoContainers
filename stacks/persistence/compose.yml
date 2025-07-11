@@ -1,15 +1,16 @@
 services:
   redis:
+    container_name: redis
     image: redis:latest
     ports:
       # Internal: Always 6379
       # External: Configurable
       - "${REDIS_PORT:-6379}:6379"
     volumes:
-      - redis_bigchungus:/data
+      - redis_data:/data
       - ./redis:/usr/local/etc/redis
     environment:
-      - REDIS_PASSWORD=${defaultPassword}
+      - REDIS_PASSWORD=${DEFAULT_PASSWORD}
         # This gets propagated to the redis-server command
         # So NOT configurable
       - REDIS_PORT=6379
@@ -22,8 +23,10 @@ services:
       - "traefik.http.routers.redis.entrypoints=websecure"
       - "traefik.http.routers.redis.tls.certresolver=letsencrypt"
       - "traefik.http.services.redis.loadbalancer.server.port=6379"
+      - "traefik.docker.network=proxy"
 
   qdrant:
+    container_name: qdrant
     image: qdrant/qdrant
     ports:
       - "6333:6333" # REST API
@@ -34,10 +37,12 @@ services:
     networks:
       - proxy
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.qdrant.rule=Host(`qdrant.delo.sh`)"
       - "traefik.http.routers.qdrant.entrypoints=websecure"
       - "traefik.http.routers.qdrant.tls.certresolver=letsencrypt"
       - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+      - "traefik.docker.network=proxy"
     environment:
       - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
 
@@ -74,9 +79,7 @@ services:
 
 volumes:
   qdrant_data:
-    name: qdrant_data
-  redis_bigchungus:
-    name: redis_bigchungus
+  redis_data:
 #  neo4j_data:
 #    name: neo4j_data
 

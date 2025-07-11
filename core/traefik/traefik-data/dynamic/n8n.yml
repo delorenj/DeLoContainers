@@ -1,6 +1,6 @@
 http:
   middlewares:
-    ollama-headers:
+    n8n-headers:
       headers:
         customRequestHeaders:
           X-Forwarded-Proto: "https"
@@ -20,18 +20,24 @@ http:
         accessControlMaxAge: 100
 
   routers:
-    ollama:
-      rule: "Host(`ollama.delo.sh`)"
+    n8n:
+      rule: "Host(`n8n.delo.sh`)"
       entryPoints:
         - websecure
-      service: ollama
+      service: n8n
       middlewares:
-        - ollama-headers
+        - n8n-headers
       tls:
         certResolver: letsencrypt
 
   services:
-    ollama:
+    n8n:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.12:11434"
+          - url: "http://172.19.0.1:5678"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "n8n.delo.sh"

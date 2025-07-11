@@ -1,0 +1,64 @@
+http:
+  middlewares:
+    asciinema-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+        accessControlMaxAge: 100
+
+  routers:
+    asciinema:
+      rule: "Host(`tipsnips.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: asciinema
+      middlewares:
+        - asciinema-headers
+      tls:
+        certResolver: letsencrypt
+
+    asciinema-admin:
+      rule: "Host(`admin.tipsnips.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: asciinema-admin
+      middlewares:
+        - asciinema-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    asciinema:
+      loadBalancer:
+        servers:
+          - url: "http://172.19.0.1:4000"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "tipsnips.delo.sh"
+
+    asciinema-admin:
+      loadBalancer:
+        servers:
+          - url: "http://172.19.0.1:4002"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "admin.tipsnips.delo.sh"
