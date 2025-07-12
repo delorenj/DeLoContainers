@@ -1,0 +1,41 @@
+services:
+  app:
+    container_name: metamcp
+    image: ghcr.io/metatool-ai/metamcp:latest
+    pull_policy: always
+    env_file:
+      - .env
+    ports:
+      - "12008:12008"
+    environment:
+      POSTGRES_HOST: 192.168.1.12
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${DEFAULT_USERNAME}
+      POSTGRES_PASSWORD: ${DEFAULT_PASSWORD}
+      POSTGRES_DB: metamcp
+
+      # Database configuration (composed from above vars)
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/metamcp
+
+      # Application URL configuration
+      APP_URL: ${APP_URL}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+
+      # Auth configuration
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+
+      # Docker networking fix
+      TRANSFORM_LOCALHOST_TO_DOCKER_INTERNAL: false
+      
+      # Try to disable CORS checking
+      NODE_ENV: production
+      DISABLE_CORS_CHECK: true
+    restart: "always"
+    networks:
+      - proxy
+    volumes:
+      - ./metamcp/apps/frontend/next.config.js:/app/apps/frontend/next.config.js:ro
+
+networks:
+  proxy:
+    external: true

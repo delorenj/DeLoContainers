@@ -1,54 +1,79 @@
+# MetaMCP Traefik Dynamic Configuration
+# Save this to your traefik dynamic config directory
+
 http:
   middlewares:
-    metamcp-headers:
+    # CORS middleware for API requests
+    cors-headers:
       headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-          X-Forwarded-Prefix: "/"
-        accessControlAllowOriginList:
-          - "*"
         accessControlAllowMethods:
-          - "GET"
-          - "POST"
-          - "PUT"
-          - "DELETE"
-          - "OPTIONS"
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+          - PATCH
+        accessControlAllowOriginList:
+          - "http://localhost:12008"
+          - "http://localhost"
+          - "http://127.0.0.1"
+          - "http://192.168.1.12"
+          - "https://mcp.delo.sh"
         accessControlAllowHeaders:
           - "Content-Type"
           - "Authorization"
-          - "api-key"
-        accessControlMaxAge: 100
-
+          - "Accept"
+          - "Origin"
+          - "X-Requested-With"
+        accessControlMaxAge: 86400
+        accessControlAllowCredentials: true
   routers:
-    # Frontend router
-    metamcp:
-      rule: "Host(`mcp.delo.sh`)"
-      entryPoints:
-        - websecure
-      service: metamcp
+    # Backend API routes - highest priority
+    metamcp-backend:
+      rule: "Host(`mcp.delo.sh`) && (PathPrefix(`/api`) || PathPrefix(`/trpc`) || PathPrefix(`/mcp-proxy`) || PathPrefix(`/metamcp`) || PathPrefix(`/health`))"
       middlewares:
-        - metamcp-headers
+        - cors-headers
       tls:
         certResolver: letsencrypt
+      service: metamcp-backend-service
+      entryPoints:
+        - websecure
+      priority: 200
 
-    # API/Backend router
-    metamcp-api:
-      rule: "Host(`mcp.delo.sh`) && (PathPrefix(`/api`) || PathPrefix(`/metamcp`) || PathPrefix(`/mcp-proxy`) || PathPrefix(`/trpc`) || PathPrefix(`/api-keys`))"
-      entryPoints:
-        - websecure
-      service: metamcp-api
-      middlewares:
-        - metamcp-headers
+    # Static assets route - medium priority
+    metamcp-static:
+      rule: "Host(`mcp.delo.sh`) && (PathPrefix(`/_next`) || PathPrefix(`/static`) || PathPrefix(`/favicon`))"
+      service: metamcp-frontend-service
       tls:
         certResolver: letsencrypt
+      entryPoints:
+        - websecure
+      priority: 150
+
+    # Frontend routes - lower priority (catches everything else)
+    metamcp-frontend:
+      rule: "Host(`mcp.delo.sh`)"
+      service: metamcp-frontend-service
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - cors-headers
+      entryPoints:
+        - websecure
+      priority: 100
 
   services:
-    metamcp:
-      loadBalancer:
-        servers:
-          - url: "http://192.168.1.12:12008"
-
-    metamcp-api:
+    metamcp-backend-service:
       loadBalancer:
         servers:
           - url: "http://192.168.1.12:12009"
+
+    metamcp-frontend-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:12008"
+# TLS configuration (if needed)
+# tls:
+#   certificates:
+#     - certFile: /path/to/cert.pem
+#       keyFile: /path/to/key.pem

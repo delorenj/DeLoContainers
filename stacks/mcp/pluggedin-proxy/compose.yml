@@ -1,0 +1,42 @@
+services:
+  mcp-server:
+    container_name: pluggedin-proxy
+    build: .
+    env_file:
+      - .env
+    command:
+      [
+        "--transport",
+        "streamable-http",
+        "--port",
+        "12006",
+        "--require-api-auth",
+        "true",
+      ]
+    ports:
+      - "12006:12006"
+    environment:
+      - NODE_ENV=production
+      - PLUGGEDIN_API_KEY=${PLUGGEDIN_API_KEY}
+      - PLUGGEDIN_API_BASE_URL=${PLUGGEDIN_API_BASE_URL}
+    restart: always
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pluggedin-proxy.rule=Host(`mcp.delo.sh`)"
+      - "traefik.http.routers.pluggedin-proxy.entrypoints=websecure"
+      - "traefik.http.routers.pluggedin-proxy.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pluggedin-proxy.priority=100"
+      - "traefik.http.services.pluggedin-proxy.loadbalancer.server.port=12006"
+      - "traefik.docker.network=proxy"
+      # SSE-specific configuration
+      - "traefik.http.middlewares.mcp-sse.headers.customrequestheaders.Connection=keep-alive"
+      - "traefik.http.middlewares.mcp-sse.headers.customrequestheaders.Cache-Control=no-cache"
+      - "traefik.http.middlewares.mcp-sse.compress=false"
+      - "traefik.http.routers.pluggedin-proxy.middlewares=mcp-sse"
+
+networks:
+  proxy:
+    external: true
+  # Add any additional environment variables or command arguments here

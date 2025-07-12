@@ -21,6 +21,7 @@ services:
       - "traefik.http.routers.langflow.entrypoints=websecure"
       - "traefik.http.routers.langflow.tls.certresolver=letsencrypt"
       - "traefik.http.services.langflow.loadbalancer.server.port=7860"
+      - "traefik.docker.network=proxy"
 
 volumes:
   langflow_data:
