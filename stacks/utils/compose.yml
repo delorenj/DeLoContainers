@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+  adguard:
+    extends:
+      file: ./adguard/compose.yml
+      service: adguard
+  audiojangler:
+    extends:
+      file: ./audiojangler/compose.yml
+      service: audiojangler
+  marker:
+    extends:
+      file: ./marker/compose.yml
+      service: marker
+  rustdesk:
+    extends:
+      file: ./rustdesk/compose.yml
+      service: rustdesk
+  scripts:
+    extends:
+      file: ./scripts/compose.yml
+      service: scripts
+  syncthing:
+    extends:
+      file: ./syncthing/compose.yml
+      service: syncthing
+  nats:
+    extends:
+      file: ./nats/compose.yml
+      service: nats
