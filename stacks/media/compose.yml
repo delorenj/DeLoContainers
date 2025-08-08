@@ -66,10 +66,10 @@ services:
       - PGID=${PGID}
     volumes:
       - ./qbittorrent:/config
-      - ./downloads:/downloads
+      - /home/delorenj/Downloads/apps:/apps
       - /home/delorenj/Videos:/video
       - /home/delorenj/tonny:/tonny
-      - emma_video:/emma/video
+      - emma_video:/emma
 
     depends_on:
       - gluetun
@@ -82,9 +82,9 @@ services:
       - proxy
     ports:
       - "8096:8096"
-      - "8920:8920"  # HTTPS
-      - "7359:7359/udp"  # DLNA discovery
-      - "1900:1900/udp"  # UPnP discovery
+      - "8920:8920" # HTTPS
+      - "7359:7359/udp" # DLNA discovery
+      - "1900:1900/udp" # UPnP discovery
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
