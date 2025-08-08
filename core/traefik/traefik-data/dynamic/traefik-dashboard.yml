@@ -1,0 +1,17 @@
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "admin:$2y$05$g3/JYH3py0aTjaQ0dObvE.6H0WvI8p77jVjJMb4U0.xa1rfsAZcB6"
+
+  routers:
+    traefik-dashboard:
+      rule: "Host(`traefik.delo.sh`)"
+      service: api@internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - auth
+      tls:
+        certResolver: letsencrypt

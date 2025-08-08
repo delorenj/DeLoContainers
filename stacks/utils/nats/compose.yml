@@ -1,19 +1,21 @@
-version: "3.5"
 services:
   nats:
+    container_name: nats
     image: nats
     ports:
       - "8222:8222"
     command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222"
     networks:
-      - "default"
+      - "proxy"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nats.rule=Host(`nats.localhost`)"
-      - "traefik.http.routers.nats.entrypoints=web"
+      - "traefik.http.routers.nats.rule=Host(`nats.delo.sh`)"
+      - "traefik.http.routers.nats.tls=true"
+      - "traefik.http.routers.nats.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.nats.entrypoints=websecure"
       - "traefik.http.services.nats.loadbalancer.server.port=8222"
+      - "traefik.docker.network=proxy"
 
 networks:
-  default:
+  proxy:
     external: true
-    name: "proxy"
