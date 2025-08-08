@@ -1,167 +1,265 @@
-# CLAUDE.md
+# Claude Code Configuration - SPARC Development Environment
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## 🚨 CRITICAL: CONCURRENT EXECUTION & FILE MANAGEMENT
+
+**ABSOLUTE RULES**:
+1. ALL operations MUST be concurrent/parallel in a single message
+2. **NEVER save working files, text/mds and tests to the root folder**
+3. ALWAYS organize files in appropriate subdirectories
+
+### ⚡ GOLDEN RULE: "1 MESSAGE = ALL RELATED OPERATIONS"
+
+**MANDATORY PATTERNS:**
+- **TodoWrite**: ALWAYS batch ALL todos in ONE call (5-10+ todos minimum)
+- **Task tool**: ALWAYS spawn ALL agents in ONE message with full instructions
+- **File operations**: ALWAYS batch ALL reads/writes/edits in ONE message
+- **Bash commands**: ALWAYS batch ALL terminal operations in ONE message
+- **Memory operations**: ALWAYS batch ALL memory store/retrieve in ONE message
+
+### 📁 File Organization Rules
+
+**NEVER save to root folder. Use these directories:**
+- `/src` - Source code files
+- `/tests` - Test files
+- `/docs` - Documentation and markdown files
+- `/config` - Configuration files
+- `/scripts` - Utility scripts
+- `/examples` - Example code
 
 ## Project Overview
 
-DeLoContainers is a personal Docker infrastructure project that manages multiple service stacks using Docker Compose. Services are organized by category (ai, media, monitoring, persistence, utils, websites) with core infrastructure services in the core directory.
+This project uses SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) methodology with Claude-Flow orchestration for systematic Test-Driven Development.
 
-## Common Development Commands
+## SPARC Commands
 
-### Stack Management
+### Core Commands
+- `npx claude-flow sparc modes` - List available modes
+- `npx claude-flow sparc run <mode> "<task>"` - Execute specific mode
+- `npx claude-flow sparc tdd "<feature>"` - Run complete TDD workflow
+- `npx claude-flow sparc info <mode>` - Get mode details
 
-```bash
-# List all services with status indicators
-just list-services
+### Batchtools Commands
+- `npx claude-flow sparc batch <modes> "<task>"` - Parallel execution
+- `npx claude-flow sparc pipeline "<task>"` - Full pipeline processing
+- `npx claude-flow sparc concurrent <mode> "<tasks-file>"` - Multi-task processing
 
-# Check health of all compose files
-just health
+### Build Commands
+- `npm run build` - Build project
+- `npm run test` - Run tests
+- `npm run lint` - Linting
+- `npm run typecheck` - Type checking
 
-# Restart a specific service
-just restart <stack-name>
+## SPARC Workflow Phases
 
-# Build service documentation map
-just build-service-map
+1. **Specification** - Requirements analysis (`sparc run spec-pseudocode`)
+2. **Pseudocode** - Algorithm design (`sparc run spec-pseudocode`)
+3. **Architecture** - System design (`sparc run architect`)
+4. **Refinement** - TDD implementation (`sparc tdd`)
+5. **Completion** - Integration (`sparc run integration`)
 
-# Monitor stacks with automated system
-sudo systemctl start docker-monitor
-sudo systemctl status docker-monitor
-```
+## Code Style & Best Practices
 
-### Docker Operations
+- **Modular Design**: Files under 500 lines
+- **Environment Safety**: Never hardcode secrets
+- **Test-First**: Write tests before implementation
+- **Clean Architecture**: Separate concerns
+- **Documentation**: Keep updated
 
-```bash
-# Start a stack
-docker compose -f stacks/<category>/<service>/compose.yml up -d
+## 🚀 Available Agents (54 Total)
 
-# View logs for a service
-docker compose -f stacks/<category>/<service>/compose.yml logs -f
+### Core Development
+`coder`, `reviewer`, `tester`, `planner`, `researcher`
 
-# Stop and remove a stack
-docker compose -f stacks/<category>/<service>/compose.yml down
+### Swarm Coordination
+`hierarchical-coordinator`, `mesh-coordinator`, `adaptive-coordinator`, `collective-intelligence-coordinator`, `swarm-memory-manager`
 
-# Pull latest images for a stack
-docker compose -f stacks/<category>/<service>/compose.yml pull
-```
+### Consensus & Distributed
+`byzantine-coordinator`, `raft-manager`, `gossip-coordinator`, `consensus-builder`, `crdt-synchronizer`, `quorum-manager`, `security-manager`
 
-### Testing & Development
+### Performance & Optimization
+`perf-analyzer`, `performance-benchmarker`, `task-orchestrator`, `memory-coordinator`, `smart-agent`
 
-```bash
-# Validate a compose file
-docker compose -f <path-to-compose.yml> config
+### GitHub & Repository
+`github-modes`, `pr-manager`, `code-review-swarm`, `issue-tracker`, `release-manager`, `workflow-automation`, `project-board-sync`, `repo-architect`, `multi-repo-swarm`
 
-# Check compose file syntax
-docker compose -f <path-to-compose.yml> config --quiet
+### SPARC Methodology
+`sparc-coord`, `sparc-coder`, `specification`, `pseudocode`, `architecture`, `refinement`
 
-# Test service connectivity through Traefik
-curl -H "Host: <service-name>.delo.sh" http://localhost
-```
+### Specialized Development
+`backend-dev`, `mobile-dev`, `ml-developer`, `cicd-engineer`, `api-docs`, `system-architect`, `code-analyzer`, `base-template-generator`
 
-## Architecture & Structure
+### Testing & Validation
+`tdd-london-swarm`, `production-validator`
 
-### Directory Layout
+### Migration & Planning
+`migration-planner`, `swarm-init`
 
-- `/core/` - Critical infrastructure (Traefik reverse proxy, Portainer management)
-- `/stacks/` - Service categories:
-  - `ai/` - AI/ML services (Flowise, LangFlow, n8n, etc.)
-  - `media/` - Media servers and downloaders
-  - `monitoring/` - System monitoring stack
-  - `persistence/` - Databases and storage (PostgreSQL, Redis, Qdrant)
-  - `utils/` - Utility services (AdGuard, Syncthing, etc.)
-  - `websites/` - Web applications
-- `/scripts/` - Management and automation scripts
-- `/docs/` - Project documentation
+## 🎯 Claude Code vs MCP Tools
 
-### Key Architectural Decisions
+### Claude Code Handles ALL:
+- File operations (Read, Write, Edit, MultiEdit, Glob, Grep)
+- Code generation and programming
+- Bash commands and system operations
+- Implementation work
+- Project navigation and analysis
+- TodoWrite and task management
+- Git operations
+- Package management
+- Testing and debugging
 
-1. **Single .env file**: All environment variables are centralized in the root .env file
-2. **Traefik routing**: All services expose via `<service>.delo.sh` using Docker labels
-3. **Shared proxy network**: All services join the `proxy` network for inter-service communication
-4. **Stack monitoring**: Automated monitoring system (`stack-monitor.py`) manages service health
-5. **No version key**: Compose files use v3.8+ syntax without the deprecated `version:` key
+### MCP Tools ONLY:
+- Coordination and planning
+- Memory management
+- Neural features
+- Performance tracking
+- Swarm orchestration
+- GitHub integration
 
-### Service Integration Pattern
+**KEY**: MCP coordinates, Claude Code executes.
 
-When adding a new service:
-
-1. Clone the service repo to `~/code/` if needed
-2. Create directory: `stacks/<category>/<service-name>/`
-3. Create `compose.yml` with:
-   - Traefik labels for `<service>.delo.sh` routing
-   - Connection to `proxy` network
-   - Environment variables from root .env
-   - LinuxServer images when available
-4. Update `stack-config.yml` if monitoring is desired
-5. Create humorous yet informative README.md
-
-### Environment Configuration
-
-The root `.env` file contains:
-
-- Network settings (DOMAIN, TZ)
-- User/permission settings (PUID, PGID)
-- VPN configurations
-- Service-specific API keys and credentials
-- Path configurations for volumes
-
-Additional secrets may be found in `~/.config/zshyzsh/secrets.zsh`
-
-### Monitoring System
-
-The project includes an automated monitoring system:
-
-- Configuration in `stack-config.yml`
-- Priority-based startup ordering
-- Automatic recovery attempts
-- Configurable intervals and retries
-- Systemd service integration
-
-## Important Conventions
-
-1. **Compose files**: Always named `compose.yml` (not docker-compose.yml)
-2. **YAML style**: 2-space indentation
-3. **Service naming**: Use kebab-case for service names
-4. **Traefik labels**: Follow the pattern in existing services
-5. **Documentation**: Each service needs a snarky, humorous README.md
-6. **Task runner**: Use `just` commands where possible instead of raw scripts
-
-## Development Workflow
-
-1. **Research phase**: Check GitHub for existing containers and alternatives
-2. **Integration**: Clone repos to ~/code/, adapt for DeLoContainers standards
-3. **Configuration**: Customize compose.yml, link to root .env
-4. **Testing**: Validate compose file, test Traefik routing
-5. **Documentation**: Create entertaining README.md with setup instructions
-
-## SPARC Development (from global CLAUDE.md)
-
-The project supports SPARC methodology for TDD with AI assistance:
+## 🚀 Quick Setup
 
 ```bash
-npx claude-flow sparc modes
-npx claude-flow sparc run <mode> "<task>"
-npx claude-flow sparc tdd "<feature>"
+# Add Claude Flow MCP server
+claude mcp add claude-flow npx claude-flow@alpha mcp start
 ```
 
-## Notes
+## MCP Tool Categories
 
-- Never include time estimations in planning or architecture discussions
-- Update Taskmaster tasks immediately after addressing them
-- Prefer editing existing files over creating new ones
-- Only create documentation when explicitly requested
+### Coordination
+`swarm_init`, `agent_spawn`, `task_orchestrate`
 
-## Symlinked Dotfiles
+### Monitoring
+`swarm_status`, `agent_list`, `agent_metrics`, `task_status`, `task_results`
 
-The following dotfiles are symlinked to `/home/delorenj/docker-dotfiles`:
+### Memory & Neural
+`memory_usage`, `neural_status`, `neural_train`, `neural_patterns`
 
-- `.env` → `/home/delorenj/docker-dotfiles/.env`
+### GitHub Integration
+`github_swarm`, `repo_analyze`, `pr_enhance`, `issue_triage`, `code_review`
 
-Created: 2025-07-04 09:03:59
+### System
+`benchmark_run`, `features_detect`, `swarm_monitor`
 
-## Symlinked Dotfiles
+## 📋 Agent Coordination Protocol
 
-The following dotfiles are symlinked to `/home/delorenj/docker/trunk-main-dotfiles`:
+### Every Agent MUST:
 
-- `.env` → `/home/delorenj/docker/trunk-main-dotfiles/.env`
+**1️⃣ BEFORE Work:**
+```bash
+npx claude-flow@alpha hooks pre-task --description "[task]"
+npx claude-flow@alpha hooks session-restore --session-id "swarm-[id]"
+```
 
-Created: 2025-07-04 09:18:41
+**2️⃣ DURING Work:**
+```bash
+npx claude-flow@alpha hooks post-edit --file "[file]" --memory-key "swarm/[agent]/[step]"
+npx claude-flow@alpha hooks notify --message "[what was done]"
+```
+
+**3️⃣ AFTER Work:**
+```bash
+npx claude-flow@alpha hooks post-task --task-id "[task]"
+npx claude-flow@alpha hooks session-end --export-metrics true
+```
+
+## 🎯 Concurrent Execution Examples
+
+### ✅ CORRECT (Single Message):
+```javascript
+[BatchTool]:
+  // Initialize swarm
+  mcp__claude-flow__swarm_init { topology: "mesh", maxAgents: 6 }
+  mcp__claude-flow__agent_spawn { type: "researcher" }
+  mcp__claude-flow__agent_spawn { type: "coder" }
+  mcp__claude-flow__agent_spawn { type: "tester" }
+  
+  // Spawn agents with Task tool
+  Task("Research agent: Analyze requirements...")
+  Task("Coder agent: Implement features...")
+  Task("Tester agent: Create test suite...")
+  
+  // Batch todos
+  TodoWrite { todos: [
+    {id: "1", content: "Research", status: "in_progress", priority: "high"},
+    {id: "2", content: "Design", status: "pending", priority: "high"},
+    {id: "3", content: "Implement", status: "pending", priority: "high"},
+    {id: "4", content: "Test", status: "pending", priority: "medium"},
+    {id: "5", content: "Document", status: "pending", priority: "low"}
+  ]}
+  
+  // File operations
+  Bash "mkdir -p app/{src,tests,docs}"
+  Write "app/src/index.js"
+  Write "app/tests/index.test.js"
+  Write "app/docs/README.md"
+```
+
+### ❌ WRONG (Multiple Messages):
+```javascript
+Message 1: mcp__claude-flow__swarm_init
+Message 2: Task("agent 1")
+Message 3: TodoWrite { todos: [single todo] }
+Message 4: Write "file.js"
+// This breaks parallel coordination!
+```
+
+## Performance Benefits
+
+- **84.8% SWE-Bench solve rate**
+- **32.3% token reduction**
+- **2.8-4.4x speed improvement**
+- **27+ neural models**
+
+## Hooks Integration
+
+### Pre-Operation
+- Auto-assign agents by file type
+- Validate commands for safety
+- Prepare resources automatically
+- Optimize topology by complexity
+- Cache searches
+
+### Post-Operation
+- Auto-format code
+- Train neural patterns
+- Update memory
+- Analyze performance
+- Track token usage
+
+### Session Management
+- Generate summaries
+- Persist state
+- Track metrics
+- Restore context
+- Export workflows
+
+## Advanced Features (v2.0.0)
+
+- 🚀 Automatic Topology Selection
+- ⚡ Parallel Execution (2.8-4.4x speed)
+- 🧠 Neural Training
+- 📊 Bottleneck Analysis
+- 🤖 Smart Auto-Spawning
+- 🛡️ Self-Healing Workflows
+- 💾 Cross-Session Memory
+- 🔗 GitHub Integration
+
+## Integration Tips
+
+1. Start with basic swarm init
+2. Scale agents gradually
+3. Use memory for context
+4. Monitor progress regularly
+5. Train patterns from success
+6. Enable hooks automation
+7. Use GitHub tools first
+
+## Support
+
+- Documentation: https://github.com/ruvnet/claude-flow
+- Issues: https://github.com/ruvnet/claude-flow/issues
+
+---
+
+Remember: **Claude Flow coordinates, Claude Code creates!**

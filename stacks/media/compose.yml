@@ -11,6 +11,7 @@ services:
       - OPENVPN_PASSWORD=${VPNAC_PASSWORD}
       - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
       - FIREWALL_VPN_INPUT_PORTS=49152,49153,49154,49155,49156
+      - DNS_SERVERS=1.1.1.1,8.8.8.8,1.0.0.1
     volumes:
       - ./gluetun:/gluetun
     ports:
@@ -27,6 +28,14 @@ services:
       - 8091:8091
     networks:
       - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.rule=Host(`get.delo.sh`)"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8091"
+      - "traefik.docker.network=proxy"
 
   vpn-monitor:
     image: alpine:latest
@@ -57,18 +66,52 @@ services:
       - PGID=${PGID}
     volumes:
       - ./qbittorrent:/config
-      - ./downloads:/downloads:cached
-      - emma_video:/video:cached
+      - ./downloads:/downloads
+      - /home/delorenj/Videos:/video
+      - /home/delorenj/tonny:/tonny
+      - emma_video:/emma/video
 
     depends_on:
       - gluetun
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: ${PUID}:${PGID}
+    networks:
+      - proxy
+    ports:
+      - "8096:8096"
+      - "8920:8920"  # HTTPS
+      - "7359:7359/udp"  # DLNA discovery
+      - "1900:1900/udp"  # UPnP discovery
+    volumes:
+      - ./jellyfin/config:/config
+      - ./jellyfin/cache:/cache
+      - type: bind
+        source: /home/delorenj/Videos
+        target: /BigChungusVideos
+      - type: bind
+        source: ./downloads
+        target: /BigChungusDownloads
+      - type: bind
+        source: emma_video
+        target: /EmmaVideo
+    restart: "unless-stopped"
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://movies.delo.sh
+      - JELLYFIN_CAST_RECEIVER_APP_ID=F007D354
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(`get.delo.sh`)"
-      - "traefik.http.routers.qbittorrent.tls=true"
-      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8091"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.docker.network=proxy"
 
 volumes:
@@ -79,8 +122,6 @@ volumes:
       type: nfs
       o: addr=192.168.1.50,rw,nfsvers=4
       device: ":/volume1/video"
-  downloads_volume:
-    external: true
 
 networks:
   proxy:

@@ -1,12 +1,26 @@
 services:
   nats:
     container_name: nats
-    image: nats
+    image: nats:2.10-alpine
     ports:
-      - "8222:8222"
-    command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222"
+      - "4222:4222"   # Client connections
+      - "8222:8222"   # HTTP monitoring
+      - "6222:6222"   # Cluster port (for future clustering)
+    command: >
+      --config /etc/nats/nats.conf
+    volumes:
+      - nats_data:/data
+      - ./config:/etc/nats:ro
     networks:
       - "proxy"
+      - "nats-internal"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8222/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nats.rule=Host(`nats.delo.sh`)"
@@ -16,6 +30,25 @@ services:
       - "traefik.http.services.nats.loadbalancer.server.port=8222"
       - "traefik.docker.network=proxy"
 
+  # Optional: NATS CLI tool container for testing/management
+  nats-cli:
+    container_name: nats-cli
+    image: natsio/nats-box:latest
+    command: sleep infinity
+    networks:
+      - "nats-internal"
+    depends_on:
+      nats:
+        condition: service_healthy
+    profiles:
+      - tools
+
+volumes:
+  nats_data:
+    driver: local
+
 networks:
   proxy:
     external: true
+  nats-internal:
+    driver: bridge

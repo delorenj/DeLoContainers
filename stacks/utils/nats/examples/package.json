@@ -1,0 +1,13 @@
+{
+  "name": "nats-examples",
+  "version": "1.0.0",
+  "description": "NATS usage examples",
+  "type": "module",
+  "scripts": {
+    "simple": "node simple-pubsub.js",
+    "jetstream": "node jetstream-example.js"
+  },
+  "dependencies": {
+    "nats": "^2.19.0"
+  }
+}
