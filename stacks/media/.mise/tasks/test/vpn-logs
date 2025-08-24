@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#MISE description="Show Gluetun VPN logs for troubleshooting"
+
+set -euo pipefail
+
+echo "🔍 Gluetun VPN Logs:"
+echo "===================="
+
+if docker compose ps gluetun | grep -q "Up"; then
+    echo "📡 VPN Status: Running"
+    echo ""
+    echo "📋 Recent logs (last 50 lines):"
+    docker compose logs --tail=50 gluetun
+    echo ""
+    echo "🔄 Following live logs (Ctrl+C to stop):"
+    docker compose logs -f gluetun
+else
+    echo "❌ Gluetun container is not running"
+    echo "💡 Try: mise run dev:start"
+fi

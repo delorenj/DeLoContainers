@@ -1,0 +1,73 @@
+[env]
+COMPOSE_PROJECT_NAME = "media"
+COMPOSE_FILE = "compose.yml"
+
+[tasks]
+up = "docker compose up -d"
+down = "docker compose down"
+pull = "docker compose pull"
+build = "docker compose build"
+dev = "docker compose up -d && mise run status"
+prod = "docker compose -f compose.yml up -d"
+
+[tasks.web]
+run = "echo 'Opening qBittorrent Web UI...'; open http://localhost:8091 || xdg-open http://localhost:8091 || echo 'Web UI: http://localhost:8091'"
+
+[tasks.external]
+run = "echo 'Opening external qBittorrent...'; open https://get.delo.sh || xdg-open https://get.delo.sh || echo 'External UI: https://get.delo.sh'"
+
+[tasks."dev:start"]
+description = "Start all media services (Prowlarr, qBittorrent, Gluetun)"
+run = "docker compose up -d"
+
+[tasks."deploy:stop"]
+description = "Stop all media services"
+run = "docker compose down"
+
+[tasks."dev:restart"]
+description = "Restart all media services"
+run = "docker compose restart"
+
+[tasks."deploy:logs"]
+description = "Show logs for all media services"
+run = "docker compose logs -f"
+
+[tasks."deploy:update"]
+description = "Update all media service images"
+run = "docker compose pull && docker compose up -d"
+
+[tasks."dev:status"]
+description = "Check status of all media services"
+run = "docker compose ps"
+
+[tasks."dev:vpn-logs"]
+description = "Show Gluetun VPN logs for troubleshooting"
+run = "docker compose logs -f gluetun"
+
+[tasks."dev:backup"]
+description = "Backup media service configurations"
+run = """
+echo "Backing up media configurations..."
+mkdir -p backups/$(date +%Y%m%d_%H%M%S)
+cp -r prowlarr backups/$(date +%Y%m%d_%H%M%S)/
+cp -r qbittorrent backups/$(date +%Y%m%d_%H%M%S)/
+cp -r gluetun backups/$(date +%Y%m%d_%H%M%S)/
+echo "Backup completed in backups/$(date +%Y%m%d_%H%M%S)/"
+"""
+
+[tasks."dev:web-ui"]
+description = "Open web interfaces for media services"
+run = """
+echo "Opening media service web interfaces..."
+echo "Prowlarr: http://localhost:9696"
+echo "qBittorrent: http://localhost:8080 (admin/adminadmin)"
+if command -v xdg-open > /dev/null; then
+    xdg-open http://localhost:9696 &
+    xdg-open http://localhost:8080 &
+elif command -v open > /dev/null; then
+    open http://localhost:9696 &
+    open http://localhost:8080 &
+else
+    echo "Please open the URLs manually in your browser"
+fi
+"""

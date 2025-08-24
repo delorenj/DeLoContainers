@@ -1,0 +1,274 @@
+[tasks.clean]
+description = "Clean up qBittorrent: remove stale torrents, fix permissions, restart services"
+run = """
+#!/bin/bash
+set -euo pipefail
+
+echo "🧹 Starting qBittorrent cleanup process..."
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Step 1: Stop qBittorrent
+print_status "Stopping qBittorrent container..."
+docker compose stop qbittorrent || {
+    print_error "Failed to stop qBittorrent"
+    exit 1
+}
+print_success "qBittorrent stopped"
+
+# Step 2: Fix directory permissions
+print_status "Fixing directory permissions..."
+
+# Create missing directories if they don't exist
+mkdir -p /home/delorenj/Downloads/incomplete /home/delorenj/Downloads/inbox
+print_success "Created missing download directories"
+
+# Fix ownership of download directories
+sudo chown -R delorenj:delorenj /home/delorenj/Downloads/apps 2>/dev/null || print_warning "apps directory not found or already correct"
+sudo chown -R delorenj:delorenj /home/delorenj/Downloads/incomplete
+sudo chown -R delorenj:delorenj /home/delorenj/Downloads/inbox
+sudo chown -R delorenj:delorenj /home/delorenj/tonny 2>/dev/null || print_warning "tonny directory not found or already correct"
+sudo chown -R delorenj:delorenj ./downloads 2>/dev/null || print_warning "local downloads directory not found or already correct"
+print_success "Fixed directory permissions"
+
+# Step 3: Backup torrent session data
+print_status "Creating backup of torrent session data..."
+BACKUP_DIR="./qbittorrent/BT_backup.$(date +%Y%m%d_%H%M%S)"
+if [ -d "./qbittorrent/qBittorrent/BT_backup" ]; then
+    cp -r ./qbittorrent/qBittorrent/BT_backup "$BACKUP_DIR"
+    print_success "Backup created at $BACKUP_DIR"
+else
+    print_warning "BT_backup directory not found, skipping backup"
+fi
+
+# Step 4: Clean up problematic torrents
+print_status "Scanning for problematic torrents..."
+CLEANUP_COUNT=0
+
+if [ -d "./qbittorrent/qBittorrent/BT_backup" ]; then
+    cd ./qbittorrent/qBittorrent/BT_backup
+    
+    # Find torrents with permission-related issues (common problematic patterns)
+    PROBLEMATIC_PATTERNS=(
+        "Eternal.*Sunshine"
+        "Drive\.2011"
+        "Applied.*Acoustics"
+        "Transporter.*2002"
+        "Robin.*Hood"
+        "Tom.*Green"
+        "Truman.*Show"
+        "Arturia"
+        "iZotope"
+        "Bitwig"
+        "FabFilter"
+        "Pulsar.*Audio"
+        "Ableton"
+    )
+    
+    for pattern in "${PROBLEMATIC_PATTERNS[@]}"; do
+        for file in *.torrent 2>/dev/null; do
+            if [ -f "$file" ]; then
+                if strings "$file" | grep -iE "$pattern" >/dev/null 2>&1; then
+                    HASH=$(basename "$file" .torrent)
+                    print_warning "Removing problematic torrent: $file (pattern: $pattern)"
+                    rm -f "${HASH}.torrent" "${HASH}.fastresume" 2>/dev/null || true
+                    ((CLEANUP_COUNT++))
+                fi
+            fi
+        done
+    done
+    
+    cd - >/dev/null
+    print_success "Removed $CLEANUP_COUNT problematic torrents"
+else
+    print_warning "BT_backup directory not found, skipping torrent cleanup"
+fi
+
+# Step 5: Clean up orphaned files in downloads directory
+print_status "Cleaning up orphaned download files..."
+if [ -d "./downloads" ]; then
+    # Remove .!qB files (incomplete download markers) older than 1 day
+    find ./downloads -name "*.!qB" -mtime +1 -delete 2>/dev/null || true
+    print_success "Cleaned up orphaned download files"
+fi
+
+# Step 6: Restart qBittorrent
+print_status "Starting qBittorrent container..."
+docker compose start qbittorrent || {
+    print_error "Failed to start qBittorrent"
+    exit 1
+}
+
+# Wait for qBittorrent to fully start
+print_status "Waiting for qBittorrent to initialize..."
+sleep 15
+
+# Step 7: Verify qBittorrent is running
+if docker compose ps qbittorrent | grep -q "Up"; then
+    print_success "qBittorrent is running"
+    
+    # Test web UI accessibility
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:8091 | grep -q "200"; then
+        print_success "Web UI is accessible at http://localhost:8091"
+        print_success "External access: https://get.delo.sh"
+    else
+        print_warning "Web UI may not be fully ready yet"
+    fi
+else
+    print_error "qBittorrent failed to start properly"
+    exit 1
+fi
+
+# Step 8: Show final status
+print_status "Checking VPN connection..."
+if docker compose logs gluetun --tail=5 | grep -q "healthy"; then
+    VPN_IP=$(docker compose logs gluetun --tail=10 | grep "Public IP address" | tail -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || echo "Unknown")
+    print_success "VPN is connected (IP: $VPN_IP)"
+else
+    print_warning "VPN status unclear, check gluetun logs"
+fi
+
+echo ""
+echo "🎉 qBittorrent cleanup completed successfully!"
+echo ""
+echo "Summary:"
+echo "  ✅ Permissions fixed"
+echo "  ✅ $CLEANUP_COUNT problematic torrents removed"
+echo "  ✅ Services restarted"
+echo "  ✅ Web UI accessible"
+echo ""
+echo "Access your qBittorrent at:"
+echo "  🌐 Local: http://localhost:8091"
+echo "  🌍 External: https://get.delo.sh"
+echo ""
+if [ $CLEANUP_COUNT -gt 0 ]; then
+    echo "💡 Tip: You may need to re-add any torrents that were removed."
+    echo "    Backup available at: $BACKUP_DIR"
+fi
+"""
+
+[tasks.status]
+description = "Show qBittorrent and VPN status"
+run = """
+#!/bin/bash
+set -euo pipefail
+
+echo "📊 qBittorrent Media Stack Status"
+echo "================================="
+
+# Check container status
+echo ""
+echo "🐳 Container Status:"
+docker compose ps
+
+# Check VPN status
+echo ""
+echo "🔒 VPN Status:"
+if docker compose logs gluetun --tail=5 | grep -q "healthy"; then
+    VPN_IP=$(docker compose logs gluetun --tail=10 | grep "Public IP address" | tail -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || echo "Unknown")
+    echo "  ✅ VPN Connected (IP: $VPN_IP)"
+else
+    echo "  ❌ VPN Status Unknown"
+fi
+
+# Check web UI
+echo ""
+echo "🌐 Web UI Status:"
+if curl -s -o /dev/null -w "%{http_code}" http://localhost:8091 | grep -q "200"; then
+    echo "  ✅ Local UI: http://localhost:8091"
+    echo "  ✅ External UI: https://get.delo.sh"
+else
+    echo "  ❌ Web UI not accessible"
+fi
+
+# Check recent logs for errors
+echo ""
+echo "📋 Recent Issues:"
+ERROR_COUNT=$(docker compose logs qbittorrent --tail=20 | grep -c "Permission denied\|error\|Error" || echo "0")
+if [ "$ERROR_COUNT" -gt 0 ]; then
+    echo "  ⚠️  Found $ERROR_COUNT recent errors in logs"
+    echo "  💡 Run 'mise run clean' to fix common issues"
+else
+    echo "  ✅ No recent errors detected"
+fi
+
+# Show disk usage
+echo ""
+echo "💾 Storage Usage:"
+if [ -d "./downloads" ]; then
+    DOWNLOADS_SIZE=$(du -sh ./downloads 2>/dev/null | cut -f1 || echo "Unknown")
+    echo "  Downloads: $DOWNLOADS_SIZE"
+fi
+
+echo ""
+"""
+
+[tasks.logs]
+description = "Show recent qBittorrent and VPN logs"
+run = """
+#!/bin/bash
+set -euo pipefail
+
+echo "📋 Recent qBittorrent Logs (last 20 lines):"
+echo "============================================"
+docker compose logs qbittorrent --tail=20
+
+echo ""
+echo "🔒 Recent VPN Logs (last 10 lines):"
+echo "===================================="
+docker compose logs gluetun --tail=10
+
+echo ""
+echo "💡 To follow logs in real-time, use:"
+echo "   docker compose logs -f qbittorrent"
+echo "   docker compose logs -f gluetun"
+"""
+
+[tasks.restart]
+description = "Restart qBittorrent and related services"
+run = """
+#!/bin/bash
+set -euo pipefail
+
+echo "🔄 Restarting qBittorrent services..."
+
+# Restart in proper order (VPN first, then qBittorrent)
+echo "Restarting Gluetun VPN..."
+docker compose restart gluetun
+
+echo "Waiting for VPN to establish connection..."
+sleep 10
+
+echo "Restarting qBittorrent..."
+docker compose restart qbittorrent
+
+echo "Waiting for services to initialize..."
+sleep 15
+
+echo "✅ Services restarted successfully!"
+
+# Show status
+mise run status
+"""
