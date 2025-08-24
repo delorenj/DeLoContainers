@@ -67,9 +67,10 @@ services:
     volumes:
       - ./qbittorrent:/config
       - /home/delorenj/Downloads/apps:/apps
-      - /home/delorenj/Videos:/video
+      - /home/delorenj/Downloads/incomplete:/incomplete
+      - /home/delorenj/Downloads/inbox:/inbox
       - /home/delorenj/tonny:/tonny
-      - emma_video:/emma
+      - emma_video:/video
 
     depends_on:
       - gluetun
@@ -88,15 +89,9 @@ services:
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
-      - type: bind
-        source: /home/delorenj/Videos
-        target: /BigChungusVideos
-      - type: bind
-        source: ./downloads
-        target: /BigChungusDownloads
-      - type: bind
-        source: emma_video
-        target: /EmmaVideo
+      - /home/delorenj/tonny:/tonny
+      - emma_video:/EmmaVideo
+      - /home/delorenj/Videos:/BigChungusVideos
     restart: "unless-stopped"
     # Optional - alternative address used for autodiscovery
     environment:

@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+#MISE description="Run comprehensive troubleshooting for media stack"
+
+set -euo pipefail
+
+echo "🔧 Media Stack Troubleshooting"
+echo "==============================="
+
+echo ""
+echo "1. 📊 Service Status:"
+docker compose ps
+
+echo ""
+echo "2. 🔍 Environment Variables Check:"
+if [ -f ".env" ]; then
+    echo "✅ .env file exists"
+    if grep -q "VPN_SERVICE_PROVIDER" .env; then
+        echo "✅ VPN_SERVICE_PROVIDER is set"
+    else
+        echo "❌ VPN_SERVICE_PROVIDER not found in .env"
+    fi
+    if grep -q "OPENVPN_USER" .env; then
+        echo "✅ OPENVPN_USER is set"
+    else
+        echo "❌ OPENVPN_USER not found in .env"
+    fi
+else
+    echo "❌ .env file not found"
+fi
+
+echo ""
+echo "3. 📁 Configuration Directories:"
+for dir in prowlarr qbittorrent gluetun; do
+    if [ -d "$dir" ]; then
+        echo "✅ $dir/ directory exists"
+    else
+        echo "❌ $dir/ directory missing"
+    fi
+done
+
+echo ""
+echo "4. 🌐 Network Connectivity:"
+if docker compose ps gluetun | grep -q "Up"; then
+    echo "✅ Gluetun VPN container is running"
+    echo "🔍 Checking VPN connection..."
+    docker compose exec gluetun wget -qO- ifconfig.me || echo "❌ VPN connectivity test failed"
+else
+    echo "❌ Gluetun VPN container is not running"
+fi
+
+echo ""
+echo "5. 🔗 Service URLs:"
+echo "- Prowlarr: http://localhost:9696"
+echo "- qBittorrent: http://localhost:8080 (admin/adminadmin)"
+
+echo ""
+echo "6. 📋 Recent Error Logs:"
+echo "Gluetun errors:"
+docker compose logs gluetun | grep -i error | tail -5 || echo "No recent errors"
+echo ""
+echo "qBittorrent errors:"
+docker compose logs qbittorrent | grep -i error | tail -5 || echo "No recent errors"
+
+echo ""
+echo "💡 Common Solutions:"
+echo "- VPN issues: Check credentials in .env, try different server"
+echo "- qBittorrent issues: Ensure Gluetun is running first"
+echo "- Port conflicts: Check if ports 8080, 9696 are available"
+echo "- Permission issues: Check volume mount permissions"

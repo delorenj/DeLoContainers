@@ -1,0 +1,161 @@
+http:
+  middlewares:
+    # SSE-optimized middleware for MCP streaming (development)
+    metamcp-dev-sse:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "${host}"
+          X-Real-IP: "${clientIP}"
+          Connection: ""  # Clear connection header for HTTP/1.1
+        customResponseHeaders:
+          # Critical SSE headers - no buffering for development
+          X-Accel-Buffering: "no"
+          Cache-Control: "no-cache, no-transform"
+          Connection: "keep-alive"
+          # CORS for MCP protocol - relaxed for development
+          Access-Control-Allow-Origin: "*"
+          Access-Control-Allow-Methods: "GET, POST, PUT, DELETE, OPTIONS"
+          Access-Control-Allow-Headers: "mcp-protocol-version, mcp-session-id, content-type, cache-control, authorization, x-api-key, last-event-id, accept, origin, user-agent"
+          Access-Control-Max-Age: "86400"
+          Access-Control-Allow-Credentials: "true"
+    
+    # Standard headers for UI/API routes (development)
+    metamcp-dev-standard:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "${host}"
+          X-Real-IP: "${clientIP}"
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+          X-Content-Type-Options: "nosniff"
+          X-XSS-Protection: "1; mode=block"
+          # CORS for general API - relaxed for development
+          Access-Control-Allow-Origin: "*"
+          Access-Control-Allow-Methods: "GET, POST, PUT, DELETE, OPTIONS"
+          Access-Control-Allow-Headers: "content-type, authorization, x-api-key, accept, origin, user-agent"
+          Access-Control-Allow-Credentials: "true"
+    
+    # Relaxed rate limiting for development
+    metamcp-dev-ratelimit:
+      rateLimit:
+        average: 500
+        burst: 1000
+        period: 1m
+    
+    # Compression for non-streaming routes
+    metamcp-dev-compress:
+      compress:
+        excludedContentTypes:
+          - text/event-stream
+          - application/stream+json
+
+  routers:
+    # Main frontend UI (highest priority)
+    metamcp-dev-ui:
+      rule: "Host(`metamcp-dev.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-service
+      priority: 200
+      middlewares:
+        - metamcp-dev-standard
+        - metamcp-dev-compress
+      tls:
+        certResolver: letsencrypt
+    
+    # SSE/MCP proxy routes (high priority for streaming)
+    metamcp-dev-mcp-proxy:
+      rule: "Host(`metamcp-dev.delo.sh`) && PathPrefix(`/mcp-proxy/`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-sse-service
+      priority: 150
+      middlewares:
+        - metamcp-dev-sse
+      tls:
+        certResolver: letsencrypt
+    
+    # Public MetaMCP endpoints with SSE support
+    metamcp-dev-public:
+      rule: "Host(`metamcp-dev.delo.sh`) && PathPrefix(`/metamcp/`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-sse-service
+      priority: 140
+      middlewares:
+        - metamcp-dev-sse
+      tls:
+        certResolver: letsencrypt
+    
+    # API routes with relaxed rate limiting for development
+    metamcp-dev-api:
+      rule: "Host(`metamcp-dev.delo.sh`) && PathPrefix(`/api/`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-service
+      priority: 100
+      middlewares:
+        - metamcp-dev-standard
+        - metamcp-dev-ratelimit
+        - metamcp-dev-compress
+      tls:
+        certResolver: letsencrypt
+    
+    # tRPC routes
+    metamcp-dev-trpc:
+      rule: "Host(`metamcp-dev.delo.sh`) && PathPrefix(`/trpc/`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-service
+      priority: 90
+      middlewares:
+        - metamcp-dev-standard
+        - metamcp-dev-compress
+      tls:
+        certResolver: letsencrypt
+    
+    # Health check endpoint
+    metamcp-dev-health:
+      rule: "Host(`metamcp-dev.delo.sh`) && Path(`/health`)"
+      entryPoints:
+        - websecure
+      service: metamcp-dev-service
+      priority: 80
+      middlewares:
+        - metamcp-dev-standard
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Standard service for UI/API with development backend
+    metamcp-dev-service:
+      loadBalancer:
+        servers:
+          # Connect to development container
+          - url: "http://metamcp-dev:12008"
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 10s
+    
+    # SSE-optimized service with extended timeouts for development
+    metamcp-dev-sse-service:
+      loadBalancer:
+        servers:
+          - url: "http://metamcp-dev:12008"
+        responseForwarding:
+          flushInterval: "1ms"  # Critical for SSE - immediate flush
+        healthCheck:
+          path: /health
+          interval: 30s
+          timeout: 10s
+
+  # Server transport for extended timeouts (SSE connections)
+  serversTransports:
+    metamcp-dev-transport:
+      forwardingTimeouts:
+        dialTimeout: "10s"
+        responseHeaderTimeout: "86400s"  # 24 hours for SSE
+        idleConnTimeout: "86400s"        # 24 hours
