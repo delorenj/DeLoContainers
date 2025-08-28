@@ -1,0 +1,154 @@
+services:
+  simstudio:
+    container_name: simstudio
+    image: ghcr.io/simstudioai/simstudio:latest
+    restart: unless-stopped
+    ports:
+      - "${SIM_EXTERNAL_PORT:-15143}:3000"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      # Use the new SSL configuration with security middleware
+      - "traefik.http.routers.sim.rule=Host(`sim.delo.sh`)"
+      - "traefik.http.routers.sim.entrypoints=websecure"
+      - "traefik.http.routers.sim.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sim.tls.options=sim-tls-config@file"
+      - "traefik.http.routers.sim.middlewares=sim-security-chain@file"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.sim-http.rule=Host(`sim.delo.sh`)"
+      - "traefik.http.routers.sim-http.entrypoints=web"
+      - "traefik.http.routers.sim-http.middlewares=sim-ssl-redirect@file"
+      # Service configuration with health checks
+      - "traefik.http.services.sim.loadbalancer.server.port=3000"
+      - "traefik.http.services.sim.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.sim.loadbalancer.healthcheck.interval=30s"
+      - "traefik.docker.network=proxy"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    environment:
+      # Database Configuration
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-simstudio}?sslmode=prefer
+      
+      # SSL/HTTPS Configuration - The void demands secure connections!
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-https://sim.delo.sh}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-https://sim.delo.sh}
+      - FORCE_HTTPS=${FORCE_HTTPS:-true}
+      - HTTPS_ONLY=${HTTPS_ONLY:-true}
+      
+      # Authentication Configuration
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-your_auth_secret_here}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-your_encryption_key_here}
+      
+      # OAuth Provider Configuration - Flexible domain handling!
+      - OAUTH_BASE_URL=${OAUTH_BASE_URL:-https://sim.delo.sh}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-placeholder}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-placeholder}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-placeholder}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-placeholder}
+      
+      # CORS Configuration
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://sim.delo.sh,https://*.sim.delo.sh}
+      - CORS_ALLOWED_METHODS=${CORS_ALLOWED_METHODS:-GET,POST,PUT,DELETE,OPTIONS,PATCH}
+      - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-true}
+      
+      # External Services
+      - RESEND_API_KEY=${RESEND_API_KEY:-placeholder}
+      - OLLAMA_URL=${OLLAMA_URL:-http://localhost:11434}
+      
+      # WebSocket Configuration (SSL-ready)
+      - SOCKET_SERVER_URL=${SOCKET_SERVER_URL:-https://sim.delo.sh:3002}
+      - NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL:-wss://sim.delo.sh:3002}
+      
+      # Security Headers Configuration
+      - CSP_REPORT_URI=${CSP_REPORT_URI:-https://sim.delo.sh/api/csp-report}
+      - HSTS_MAX_AGE=${HSTS_MAX_AGE:-63072000}
+      - X_FRAME_OPTIONS=${X_FRAME_OPTIONS:-DENY}
+      
+      # Debugging (disable in production)
+      - SSL_DEBUG=${SSL_DEBUG:-false}
+      - OAUTH_DEBUG=${OAUTH_DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+      realtime:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:3000"]
+      interval: 90s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  realtime:
+    container_name: simstudio-realtime
+    image: ghcr.io/simstudioai/realtime:latest
+    restart: unless-stopped
+    ports:
+      - "${SIM_REALTIME_EXTERNAL_PORT:-15144}:3002"
+    networks:
+      - proxy
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-simstudio}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-https://sim.delo.sh}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-https://sim.delo.sh}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-your_auth_secret_here}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -tln | grep ':3002' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  migrations:
+    container_name: simstudio-migrations
+    image: ghcr.io/simstudioai/migrations:latest
+    networks:
+      - proxy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-simstudio}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["bun", "run", "db:migrate"]
+    restart: "no"
+
+  db:
+    container_name: simstudio-db
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    ports:
+      - "${SIM_DB_EXTERNAL_PORT:-15145}:5432"
+    networks:
+      - proxy
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-simstudio}
+    volumes:
+      - pgvector_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgvector_data:
+    name: simstudio-data
+
+networks:
+  proxy:
+    external: true
