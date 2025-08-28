@@ -13,12 +13,11 @@ services:
       - "traefik.http.routers.sim.rule=Host(`sim.delo.sh`)"
       - "traefik.http.routers.sim.entrypoints=websecure"
       - "traefik.http.routers.sim.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.sim.tls.options=sim-tls-config@file"
-      - "traefik.http.routers.sim.middlewares=sim-security-chain@file"
       # HTTP to HTTPS redirect
       - "traefik.http.routers.sim-http.rule=Host(`sim.delo.sh`)"
       - "traefik.http.routers.sim-http.entrypoints=web"
-      - "traefik.http.routers.sim-http.middlewares=sim-ssl-redirect@file"
+      - "traefik.http.routers.sim-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       # Service configuration with health checks
       - "traefik.http.services.sim.loadbalancer.server.port=3000"
       - "traefik.http.services.sim.loadbalancer.healthcheck.path=/"
