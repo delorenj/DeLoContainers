@@ -8,6 +8,9 @@ services:
       - "8099:8080"
     networks:
       - proxy
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     volumes:
       - type: bind
         source: /var/run/docker.sock
