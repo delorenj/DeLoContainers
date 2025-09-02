@@ -1,0 +1,45 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    environment:
+      VERSION: "11"
+      RAM_SIZE: "32G"
+      CPU_CORES: "8"
+      ARGUMENTS: "-device usb-host,vendorid=0x1235,productid=0x821a -device usb-host,vendorid=0x1c75,productid=0x02cb"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+      - /dev/focusrite_4i4  # Focusrite Scarlett 4i4 4th Gen (persistent symlink)
+      - /dev/arturia_keylab  # Arturia KeyLab mkII 88 (persistent symlink)
+      - /dev/snd:/dev/snd  # ALSA audio devices
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 18006:8006
+      - 13389:3389/tcp
+      - 13389:3389/udp
+    volumes:
+      - windows-data:/storage
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro  # X11 socket for audio
+      - /home/delorenj/vst:/vst  # VST plugins directory
+    restart: unless-stopped
+    stop_grace_period: 2m
+    networks:
+      - proxy
+    privileged: true  # Required for USB passthrough
+    group_add:
+      - audio  # Add to audio group for better audio device access
+    deploy:
+      resources:
+        limits:
+          memory: 32G
+        reservations:
+          memory: 16G
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  windows-data:

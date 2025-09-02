@@ -66,6 +66,7 @@ services:
       - PGID=${PGID}
     volumes:
       - ./qbittorrent:/config
+      - /home/delorenj/Downloads:/downloads
       - /home/delorenj/Downloads/apps:/apps
       - /home/delorenj/Downloads/incomplete:/incomplete
       - /home/delorenj/Downloads/inbox:/inbox

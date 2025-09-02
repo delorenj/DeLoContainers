@@ -1,0 +1,15 @@
+http:
+  routers:
+    assets-router:
+      rule: "Host(`assets.delo.sh`)"
+      service: assets-service
+      entrypoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    assets-service:
+      loadBalancer:
+        servers:
+          - url: "http://assets-nginx:80"

@@ -6,22 +6,62 @@ services:
     volumes:
       - ./conf:/opt/adguardhome/conf
       - ./work:/opt/adguardhome/work
+      - ./filters:/opt/adguardhome/filters
     ports:
-      # DNS (UDP & TCP)
+      # DNS on standard port 53 (systemd-resolved disabled)
       - "53:53/udp"
       - "53:53/tcp"
-      # Map container's port 80 to host's port 8000 (avoiding conflict with Traefik)
-      - "8000:80/tcp"
+      # Web interface on port 3000
+      - "3000:3000/tcp"
     networks:
       - proxy
+    environment:
+      - AGH_CONFIG=/opt/adguardhome/conf/AdGuardHome.yaml
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adguard.entrypoints=websecure"
       - "traefik.http.routers.adguard.rule=Host(`adguard.delo.sh`)"
       - "traefik.http.routers.adguard.tls=true"
       - "traefik.http.routers.adguard.tls.certresolver=letsencrypt"
-      - "traefik.http.services.adguard.loadbalancer.server.port=80"
+      - "traefik.http.services.adguard.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  adguard-redirect:
+    build:
+      context: ./redirect-service
+      dockerfile: Dockerfile
+    container_name: adguard-redirect
+    hostname: adguard-redirect
+    ports:
+      - "8888:80"
+    networks:
+      - proxy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguard-blocked.entrypoints=websecure"
+      - "traefik.http.routers.adguard-blocked.rule=Host(`blocked.delo.sh`)"
+      - "traefik.http.routers.adguard-blocked.tls=true"
+      - "traefik.http.routers.adguard-blocked.tls.certresolver=letsencrypt"
+      - "traefik.http.services.adguard-blocked.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   proxy:

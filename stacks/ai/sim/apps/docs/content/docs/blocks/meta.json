@@ -1,0 +1,15 @@
+{
+  "title": "Blocks",
+  "pages": [
+    "agent",
+    "api",
+    "condition",
+    "evaluator",
+    "function",
+    "loop",
+    "parallel",
+    "response",
+    "router",
+    "workflow"
+  ]
+}

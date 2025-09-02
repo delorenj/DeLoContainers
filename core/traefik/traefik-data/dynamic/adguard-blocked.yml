@@ -1,0 +1,71 @@
+http:
+  middlewares:
+    adguard-blocked-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+          X-Blocked-By: "AdGuard-Traefik"
+        customResponseHeaders:
+          X-Content-Type-Options: "nosniff"
+          Cache-Control: "no-cache, no-store, must-revalidate"
+          Pragma: "no-cache"
+          Expires: "0"
+
+  routers:
+    # Catch-all router for ANY domain that doesn't match existing services
+    # This will catch all AdGuard filtered domains that resolve to 192.168.1.12
+    adguard-blocked-catchall:
+      rule: "!Host(`traefik.delo.sh`) && !Host(`adguard.delo.sh`) && !Host(`n8n.delo.sh`) && !Host(`qdrant.delo.sh`) && !Host(`ollama.delo.sh`) && !Host(`gptme.delo.sh`) && !Host(`bolt.delo.sh`) && !Host(`cf.delo.sh`) && !Host(`tipsnips.delo.sh`) && !Host(`admin.tipsnips.delo.sh`) && !Host(`chorescore.delo.sh`) && !Host(`concierge.delo.sh`) && !Host(`flowise.delo.sh`) && !Host(`sunshine.delo.sh`) && !Host(`sync.delo.sh`) && !Host(`dev.delo.sh`) && !Host(`hook.delo.sh`) && !Host(`metamcp-dev.delo.sh`) && !Host(`blocked.delo.sh`) && !Host(`nope.delo.sh`) && !Host(`sim.delo.sh`)"
+      entryPoints:
+        - web
+        - websecure
+      service: adguard-redirect-service
+      priority: 1
+      middlewares:
+        - adguard-blocked-headers
+      tls:
+        # Use Traefik's default cert for any blocked domains
+        options: default
+
+    # Specific high-priority router for known blocked domains
+    adguard-blocked-specific:
+      rule: "Host(`roblox.com`) || Host(`www.roblox.com`) || HostRegexp(`^.*\\.roblox\\.com$`) || Host(`facebook.com`) || Host(`www.facebook.com`) || Host(`instagram.com`) || Host(`www.instagram.com`) || Host(`tiktok.com`) || Host(`www.tiktok.com`)"
+      entryPoints:
+        - web
+        - websecure
+      service: adguard-redirect-service
+      priority: 1000
+      middlewares:
+        - adguard-blocked-headers
+      tls:
+        options: default
+
+  services:
+    adguard-redirect-service:
+      loadBalancer:
+        servers:
+          - url: "http://adguard-redirect:80"
+        healthCheck:
+          path: "/health"
+          interval: "30s"
+          timeout: "5s"
+          headers:
+            Host: "blocked.domain"
+
+# TCP routing for direct IP access (when DNS rewrite points to 192.168.1.12)
+tcp:
+  routers:
+    # Route direct IP access to redirect service for non-HTTPS traffic
+    adguard-blocked-ip:
+      rule: "HostSNI(`*`)"
+      service: adguard-redirect-tcp-service
+      entryPoints:
+        - web
+      priority: 1
+
+  services:
+    adguard-redirect-tcp-service:
+      loadBalancer:
+        servers:
+          - address: "adguard-redirect:80"
