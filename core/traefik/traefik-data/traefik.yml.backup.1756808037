@@ -24,9 +24,7 @@ certificatesResolvers:
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
-        delayBeforeCheck: 60s
-      # Use Let's Encrypt production server
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+        delayBeforeCheck: 60
 
 providers:
   docker:
@@ -39,13 +37,3 @@ providers:
   file:
     directory: "/dynamic"
 
-# Enable metrics for monitoring
-metrics:
-  prometheus: true
-
-# Configure logging
-log:
-  level: INFO
-
-# Access logs for debugging
-accessLog: {}

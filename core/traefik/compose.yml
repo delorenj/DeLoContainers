@@ -11,8 +11,10 @@ services:
     env_file:
       - .env
     environment:
+      # ONLY THE WORKING CLOUDFLARE ENVIRONMENT VARIABLES
       - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
+      - CLOUDFLARE_ZONE_ID=${CLOUDFLARE_ZONE_ID}
     volumes:
       - type: bind
         source: /var/run/docker.sock
@@ -27,10 +29,13 @@ services:
       - "traefik.http.routers.traefik-secure.entrypoints=websecure"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.delo.sh`)"
       - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=letsencrypt"
     command:
       - "--api.dashboard=true"
       - "--metrics.prometheus=true"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      - "--log.level=DEBUG"
     restart: unless-stopped
 
   whoami:
