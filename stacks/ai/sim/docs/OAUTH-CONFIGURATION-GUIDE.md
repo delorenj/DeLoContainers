@@ -20,8 +20,8 @@ The 403 POST errors to `/api/auth/sign-in/social` are caused by **OAuth provider
 ```env
 GOOGLE_CLIENT_ID=<your-google-client-id>
 GOOGLE_CLIENT_SECRET=<your-google-client-secret>
-GITHUB_CLIENT_ID=Ov23li2L9DXE3OCuH2b9
-GITHUB_CLIENT_SECRET=e4e4b837acb9ef970dcb651c7a225eac3ad9e155
+GITHUB_CLIENT_ID=<your-github-client-id>
+GITHUB_CLIENT_SECRET=<your-github-client-secret>
 ```
 
 ---
