@@ -22,7 +22,8 @@ services:
     volumes:
       - windows-data:/storage
       - /tmp/.X11-unix:/tmp/.X11-unix:ro  # X11 socket for audio
-      - /home/delorenj/vst:/vst  # VST plugins directory
+      - /home/delorenj/vst:/data/vst  # VST plugins directory
+      - ./diagnostics:/data/diagnostics  # All diagnostic scripts and tools
     restart: unless-stopped
     stop_grace_period: 2m
     networks:
