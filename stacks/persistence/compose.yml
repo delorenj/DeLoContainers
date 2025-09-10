@@ -1,29 +1,10 @@
 services:
-  redis:
-    container_name: redis
-    image: redis:latest
-    ports:
-      # Internal: Always 6379
-      # External: Configurable
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redis_data:/data
-      - ./redis:/usr/local/etc/redis
-    environment:
-      - REDIS_PASSWORD=${DEFAULT_PASSWORD}
-        # This gets propagated to the redis-server command
-        # So NOT configurable
-      - REDIS_PORT=6379
-    restart: always
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.redis.rule=Host(`redis.delo.sh`)"
-      - "traefik.http.routers.redis.entrypoints=websecure"
-      - "traefik.http.routers.redis.tls.certresolver=letsencrypt"
-      - "traefik.http.services.redis.loadbalancer.server.port=6379"
-      - "traefik.docker.network=proxy"
+  # Redis service removed - using external Redis container on network 'proxy'
+  # Connection details:
+  # - Host: redis (container name on proxy network)
+  # - Port: 6379 (standard Redis port)
+  # - Password: ${REDIS_PASSWORD} (from .env)
+  # - Network: proxy
 
   qdrant:
     container_name: qdrant
@@ -60,26 +41,22 @@ services:
 #      - NEO4J_apoc_import_file_use__neo4j__config=true
 #    restart: unless-stopped
 
-#  postgres:
-#    image: postgres:latest
-#    restart: unless-stopped
-#    ports:
-#      - "${POSTGRES_PORT:-5432}:5432"
-#    volumes:
-#      - ./postgres:/var/lib/postgresql/data
-#    environment:
-#      POSTGRES_USER: ${defaultUsername}
-#     POSTGRES_PASSWORD: ${defaultPassword}
-#     POSTGRES_DB: db
-#   healthcheck:
-#     test: ["CMD-SHELL", "pg_isready -d db -U ${defaultUsername}"]
-#     interval: 1s
-#     timeout: 5s
-#     retries: 10
+  # PostgreSQL service removed - using native PostgreSQL installation
+  # Connection details:
+  # - Host: host.docker.internal (to access host machine from containers)
+  # - Port: ${POSTGRES_PORT:-5432} (from .env, defaults to 5432)
+  # - Database: ${POSTGRES_DB} (from .env)
+  # - Username: ${POSTGRES_USER} (from .env)
+  # - Password: ${POSTGRES_PASSWORD} (from .env)
+  #
+  # Note: Services needing PostgreSQL should use:
+  # extra_hosts:
+  #   - "host.docker.internal:host-gateway"
+  # And connect to: host.docker.internal:${POSTGRES_PORT:-5432}
 
 volumes:
   qdrant_data:
-  redis_data:
+  # redis_data: removed - using external Redis
 #  neo4j_data:
 #    name: neo4j_data
 

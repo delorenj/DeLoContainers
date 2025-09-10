@@ -1,0 +1,96 @@
+Cron and Scheduled Task Analysis - Mon Sep  8 03:39:44 PM EDT 2025
+=================================================
+
+
+[SYSTEM CRON JOBS] - 2025-09-08 15:39:44
+----------------------------------------
+System-wide cron jobs (/etc/crontab):
+SHELL=/bin/sh
+17 *	* * *	root	cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
+47 6	* * 7	root	test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.weekly; }
+52 6	1 * *	root	test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.monthly; }
+
+System cron directories:
+Contents of /etc/cron.d:
+total 32
+drwxr-xr-x   2 root root  4096 Jun  2 05:37 .
+drwxr-xr-x 171 root root 12288 Sep  8 11:18 ..
+-rw-r--r--   1 root root   219 Oct  9  2021 anacron
+-rw-r--r--   1 root root   188 Jun 25  2024 e2scrub_all
+-rw-r--r--   1 root root   102 Mar 23  2022 .placeholder
+-rw-r--r--   1 root root   400 Aug 15  2024 sysstat
+
+Contents of /etc/cron.daily:
+total 68
+drwxr-xr-x   2 root root  4096 Aug 28 06:50 .
+drwxr-xr-x 171 root root 12288 Sep  8 11:18 ..
+-rwxr-xr-x   1 root root   311 Oct  9  2021 0anacron
+-rwxr-xr-x   1 root root   376 Jul 24  2023 apport
+-rwxr-xr-x   1 root root  1478 Apr  8  2022 apt-compat
+lrwxrwxrwx   1 root root    39 Aug 26 20:59 brave-browser -> /opt/brave.com/brave/cron/brave-browser
+-rwxr-xr-x   1 root root   123 Dec  5  2021 dpkg
+-rwxr-xr-x   1 root root  2455 Jun  8  2024 locate
+-rwxr-xr-x   1 root root   377 Jan 24  2022 logrotate
+-rwxr-xr-x   1 root root  1395 Mar 29  2024 man-db
+-rw-r--r--   1 root root   102 Mar 23  2022 .placeholder
+-rwxr-xr-x   1 root root 14715 Aug 19 11:41 slack
+-rwxr-xr-x   1 root root   526 Aug 15  2024 sysstat
+
+Contents of /etc/cron.hourly:
+total 20
+drwxr-xr-x   2 root root  4096 Jun  2 05:37 .
+drwxr-xr-x 171 root root 12288 Sep  8 11:18 ..
+-rw-r--r--   1 root root   102 Mar 23  2022 .placeholder
+
+Contents of /etc/cron.monthly:
+total 24
+drwxr-xr-x   2 root root  4096 Jun  2 05:37 .
+drwxr-xr-x 171 root root 12288 Sep  8 11:18 ..
+-rwxr-xr-x   1 root root   313 Oct  9  2021 0anacron
+-rw-r--r--   1 root root   102 Mar 23  2022 .placeholder
+
+Contents of /etc/cron.weekly:
+total 28
+drwxr-xr-x   2 root root  4096 Jun  2 05:37 .
+drwxr-xr-x 171 root root 12288 Sep  8 11:18 ..
+-rwxr-xr-x   1 root root   312 Oct  9  2021 0anacron
+-rwxr-xr-x   1 root root  1055 Mar 29  2024 man-db
+-rw-r--r--   1 root root   102 Mar 23  2022 .placeholder
+
+
+[USER CRON JOBS] - 2025-09-08 15:39:44
+----------------------------------------
+Current user cron jobs:
+
+# System Cleanup Jobs
+# Light cleanup every hour at minute 15
+15 * * * * /home/delorenj/system-cleanup-working.sh light >/dev/null 2>&1
+
+# Normal cleanup daily at 2:30 AM
+30 2 * * * /home/delorenj/system-cleanup-working.sh normal >/dev/null 2>&1
+
+# Deep cleanup weekly on Sunday at 3:00 AM
+0 3 * * 0 /home/delorenj/system-cleanup-working.sh deep >/dev/null 2>&1
+
+# Backup cleanup - run normal cleanup if system load is high (every 6 hours)
+0 */6 * * * [ $(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//' | cut -d. -f1) -gt 8 ] && /home/delorenj/system-cleanup-working.sh normal >/dev/null 2>&1
+
+
+Root user cron jobs:
+Failed to read camera specified in your 'device_path', aborting
+No cron jobs for root user (or no sudo access)
+
+Cron jobs for other users:
+All frames were too dark, please check dark_threshold in config
+Average darkness: 0.0, Threshold: 50.0
+Failed to read camera specified in your 'device_path', aborting
+All frames were too dark, please check dark_threshold in config
+Average darkness: 0.0, Threshold: 50.0
+Failed to read camera specified in your 'device_path', aborting
+All frames were too dark, please check dark_threshold in config
+Average darkness: 0.0, Threshold: 50.0
+Failed to read camera specified in your 'device_path', aborting
+All frames were too dark, please check dark_threshold in config
+Average darkness: 0.0, Threshold: 50.0
+Failed to read camera specified in your 'device_path', aborting

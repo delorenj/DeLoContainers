@@ -1,0 +1,216 @@
+🔍 Docker Memory Leak Detection Report
+Generated: Mon Sep  8 03:48:35 PM EDT 2025
+=======================================
+[2025-09-08 15:48:35] 🚨 CRITICAL MEMORY CONSUMERS DETECTED
+[2025-09-08 15:48:35] \n📊 CONTAINER MEMORY USAGE (Current)
+CONTAINER_NAME  IMAGE  MEMORY_USAGE  MEMORY_LIMIT  MEMORY_PERCENT  STATUS
+[2025-09-08 15:48:38] \n🚨 HIGH MEMORY CONSUMERS (>1GB)
+[2025-09-08 15:48:40] \n💾 DOCKER SYSTEM RESOURCE USAGE
+Images space usage:
+
+REPOSITORY                         TAG           IMAGE ID       CREATED         SIZE      SHARED SIZE   UNIQUE SIZE   CONTAINERS
+firecrawl-api                      latest        8cccdb8fa6d0   10 hours ago    1.14GB    338.3MB       804.6MB       1
+<none>                             <none>        588dc3629b9f   10 hours ago    1.14GB    338.3MB       804.3MB       0
+<none>                             <none>        289df9fbde4b   10 hours ago    1.14GB    338.3MB       804.3MB       0
+<none>                             <none>        34985ad4b4c5   12 hours ago    1.14GB    338.3MB       803.8MB       0
+<none>                             <none>        93c571b0d2bc   12 hours ago    2.55GB    2.55GB        0B            0
+firecrawl-playwright-service       latest        2cbf69abc32e   12 hours ago    2.55GB    2.55GB        0B            1
+<none>                             <none>        b41d9a3e8b56   12 hours ago    2.55GB    2.55GB        0B            0
+<none>                             <none>        3314df263a27   12 hours ago    2.55GB    2.55GB        0B            0
+<none>                             <none>        543434d732bd   12 hours ago    2.55GB    2.55GB        0B            0
+<none>                             <none>        439c8507b53d   12 hours ago    2.55GB    2.55GB        0B            0
+<none>                             <none>        159e843f15f8   12 hours ago    2.55GB    2.55GB        0B            0
+firecrawl-nuq-postgres             latest        8d29ed649fdd   12 hours ago    457MB     78.61MB       378.1MB       1
+castagram                          latest        2beca4876d7a   18 hours ago    2.58GB    119.2MB       2.462GB       1
+zenika/alpine-chrome               latest        528013c10171   4 days ago      669MB     0B            669.2MB       0
+langgenius/dify-web                1.8.1         ea22921125a2   5 days ago      529MB     7.824MB       520.9MB       1
+langgenius/dify-api                1.8.1         a474a79701d0   5 days ago      2.25GB    74.81MB       2.179GB       3
+ssbnk-backend-ssbnk-watcher        latest        902bc10e9c5d   7 days ago      164MB     8.309MB       156MB         1
+[2025-09-08 15:48:40] \n🗂️  LARGE VOLUME ANALYSIS
+[2025-09-08 15:48:40] 🔴 LARGE VOLUME: monitoring_prometheus_data - 1.465GB
+[2025-09-08 15:48:40] \n🧹 ORPHANED RESOURCES
+[2025-09-08 15:48:40] Dangling Images:
+[2025-09-08 15:48:40]   🔴 Found 10 dangling images
+REPOSITORY   TAG       SIZE      CREATED AT
+<none>       <none>    1.14GB    2025-09-08 06:07:16 -0400 EDT
+<none>       <none>    1.14GB    2025-09-08 06:05:44 -0400 EDT
+<none>       <none>    1.14GB    2025-09-08 04:02:24 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+<none>       <none>    2.55GB    2025-09-08 04:01:50 -0400 EDT
+[2025-09-08 15:48:40] \nUnused Volumes:
+[2025-09-08 15:48:40]   🔴 Found 106 unused volumes
+DRIVER    VOLUME NAME
+local     0e33abe751d7bfacc1604c7c23093c11b4baced585495f26ebb085dc30e05e23
+local     0e564ff441ef74e9fe16fe36f62366e367f4e1e2e744513a4d4a2a63a01bf8f6
+local     3ea332c47db68c49e83725c8aaf187ce3e8e283242a4252a768c46dcba4baa69
+local     4dee32fe8b28d7c438dfaf1e4eb7e86838d0fc900cfa73315a72824cc474e5ac
+local     5db4f95ebf88c09dc2eea6c9bc97d13354e0a71d3f71b4886a74056d2205265b
+local     9c77e3386b14d98590f4fea9dfc0d89637e23cc32333ecbda0aae953503acaf0
+local     9ebbb73262cdd3587f27781621930e4eddec67a3a63a94bd06c67dc9b1cb0046
+local     9f86953b3c16ead9d4b6bbcd0d1a715eb19628607d89ef9637749768ed884839
+local     20d83e0847512b2a0ddd67dd41d9971c21a730eba1dd96d787f6ba21061ea612
+local     092f00db4010722eb4dda339bbfd793854dbd7bd52767f2aa784c94ab7c3c111
+local     95b744b18133a8ed532f95a786b8848562cd964c82d483aa16d4c2863eab7179
+local     155d743f0344d8a534cb65c57ab7ee81c664c4ab51809bc23270c163ecce489f
+local     311ab7dba2d77c89364d8ea4db7cba9143c0ab2259e2d1a5ef3eb2bb01a51b56
+local     381cd81a7fffe6106d9b9eee8e2381f38b5dd3def08c8f0151fea93200b7af99
+local     386ff11873fe0b83f79ae9e27c3395805f9b99e912af69c47675c85c3cb54c51
+local     447b3cb9679e2260abf85987357f54a7676cacd578d775fa7e4ef144326491c8
+local     583b74710d32104b60f413e614d6d96174bb07458d8057f1d7d2e2eddee8cea9
+local     058717fa3f120f26fe4d605fcc6315c30b5cdae1d744abe6c9f97ce800991996
+local     67901e550c0cf36271677928c148c542f4dab37d14776ca4a5bfd0342627fb0d
+local     8298550030e82de94764fac9b11c8c49d343dc01772782661890debc8c52a7ae
+local     53642988408aec94b8d70f2dc3fad83ab5f462611ac0750cfcb2a81d883f8e24
+local     ab0b17bbda672a8c5ad5bc5a20d356d25208a8de4339bd9be25fa97cdd46b86c
+local     act-Build-and-Test-build-and-test-b5655228a671f1227580a5f8630dc9a5332554649bbf493fdd6dc64dab52fd2d-env
+local     act-Deploy-to-Production-deploy-9260eface449edec81cbd12d37f514ac5a41bbd4530a638c6f4e22ef9030766b-env
+local     act-toolcache
+local     aee58c4451b178bcbd4135f618b13c7a723c762300ac34489b0ca7dc23c3b2ec
+local     agent-zero_agent-zero-instruments-data
+local     agent-zero_agent-zero-knowledge-data
+local     agent-zero_agent-zero-logs-data
+local     agent-zero_agent-zero-memory-data
+local     agent-zero_agent-zero-prompts-data
+local     anythingllm_storage
+local     api_memories
+local     appflowy-cloud_minio_data
+local     appflowy-cloud_postgres_data
+local     asciinema_asciinema_db_data
+local     asciinema_asciinema_server_data
+local     asciinema_db_data
+local     asciinema_server_data
+local     b2a3bfe3aa378a9f6eb0fa0733106fa25a94ee6d766cdcb8930492ad6688410d
+local     bloodbank_data
+local     c5d8d22041e9bc29a6ad7e6e1f74414af377b2b202c79b46cbbeae44642782bb
+local     ce2446f6d928e415a10ef0f9c3339dac83ee128f5f4779184e82047f4ad39b86
+local     d4a559ea7ba4d17691ad11136800802210ef1f8654a00041ee7292eff2080879
+local     d6c144a39e1940b63d9a2c884a03981c687eac9031508ee4b1d2f03d3736f012
+local     devops-deploy-staging_pgdata
+local     devops-deploy-staging_postgres_data_staging
+local     downloads_volume
+local     e061d80396c1cbaf55aa6cf5e674558c2a2f2b6c5c0af544f9056ecac3b337ea
+local     eaf45b285ae4c25e138ec27734945280632030ea40c5e27bf7f21c0d2ca9b127
+local     emma_media
+local     f9b1f7bd259c67007af241cc2cd722eeb8f8705fdf5e5c22200613b04e958bb9
+local     fc57be119be802dd808125da75b5ce8ec3ced85163d6bf64c07bf4afa5fd5bfd
+local     fd08cd71bd3fa359ed21b8854090037c053779ef9ba9bcc19c3d08811913e752
+local     fix-client-list-design-20250717_postgres_data
+local     flowise_flowise-data
+local     graphiti_neo4j_data
+local     langflow_data
+local     langfuse_langfuse_clickhouse_data
+local     langfuse_langfuse_clickhouse_logs
+local     langfuse_langfuse_minio_data
+local     langfuse_langfuse_postgres_data
+local     launch_one-mcp-data
+local     letta_letta_postgres_data
+local     mcp_circleci_data
+local     mcp_claude_code_data
+local     mcp_context7_data
+local     mcp_datetime_data
+local     mcp_github_data
+local     mcp_ideogram_data
+local     mcp_magic_ui_data
+local     mcp_mcp_admin_data
+local     mcp_mcp_proxy_data
+local     mcp_memory_bank_data
+local     mcp_puppeteer_data
+local     mcp_taskmaster_data
+local     mcp_trello_data
+local     media_emma_media
+local     mem0_mem0_storage
+local     mem0_neo4j_data
+local     metamcp_empty_volume
+local     metamcp_postgres_data_dev
+local     metamcp_postgres_data_production
+local     monitoring_grafana_data
+local     monitoring_prometheus_data
+local     neo4j_data
+local     one-mcp_one-mcp-data
+local     opencode_opencode_data
+local     opencut_postgres_data
+local     pluggedin-app_pluggedin-postgres
+local     pluggedin-mcp_pluggedin-postgres
+local     portainer_data
+local     portainer_portainer_data
+local     qdrant_data
+local     sim_pgvector_data
+local     ssbnk_data
+local     toWers-data
+local     trinote20_postgres_data
+local     trinote_mssql_data
+local     trinote_postgres_data
+local     trinote_postgres_data_dev
+local     trinote_postgres_data_staging
+local     trinote_postgres_staging_data
+local     trinote_staging_postgres_data_staging
+local     windows_windows-data
+local     zshyzsh-ssl-certs
+[2025-09-08 15:48:40] \n🔄 CONTAINER RESTART ANALYSIS
+[2025-09-08 15:48:40] 🔴 docker-plugin_daemon-1: 95 restarts - Status: Restarting
+[2025-09-08 15:48:40] 🔴 livekit-ingress: 95 restarts - Status: Restarting
+[2025-09-08 15:48:40] \n🐳 DOCKER DAEMON MEMORY USAGE
+[2025-09-08 15:48:41] Docker Daemon Memory: 128MB
+[2025-09-08 15:48:41] \n🗂️  MEMORY-MAPPED FILES IN CONTAINERS
+[2025-09-08 15:48:41] Checking docker-plugin_daemon-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-nginx-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-api-1 for memory-mapped files:
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/llvmlite/binding/libllvmlite.so
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/tcvdb_text/data/bm25_en_default.json
+[2025-09-08 15:48:41] Checking docker-worker_beat-1 for memory-mapped files:
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/llvmlite/binding/libllvmlite.so
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/tcvdb_text/data/bm25_en_default.json
+[2025-09-08 15:48:41] Checking docker-worker-1 for memory-mapped files:
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/llvmlite/binding/libllvmlite.so
+[2025-09-08 15:48:41]   🔍 Large file found: /app/api/.venv/lib/python3.12/site-packages/tcvdb_text/data/bm25_en_default.json
+[2025-09-08 15:48:41] Checking docker-db-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-sandbox-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-web-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-redis-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-ssrf_proxy-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking docker-weaviate-1 for memory-mapped files:
+[2025-09-08 15:48:41] Checking assets-nginx for memory-mapped files:
+[2025-09-08 15:48:42] Checking traefik for memory-mapped files:
+[2025-09-08 15:48:42] Checking castagram for memory-mapped files:
+[2025-09-08 15:48:42] Checking chrome-debug for memory-mapped files:
+[2025-09-08 15:48:42] Checking livekit-egress for memory-mapped files:
+[2025-09-08 15:48:42] Checking livekit-ingress for memory-mapped files:
+[2025-09-08 15:48:42] Checking livekit-server for memory-mapped files:
+[2025-09-08 15:48:42] Checking livekit-coturn for memory-mapped files:
+[2025-09-08 15:48:42] Checking ssbnk-watcher for memory-mapped files:
+[2025-09-08 15:48:42] Checking ssbnk-web for memory-mapped files:
+[2025-09-08 15:48:42] Checking ssbnk-cleanup for memory-mapped files:
+[2025-09-08 15:48:42] Checking qbittorrent for memory-mapped files:
+[2025-09-08 15:48:42] Checking gluetun for memory-mapped files:
+[2025-09-08 15:48:42] Checking vpn-monitor for memory-mapped files:
+[2025-09-08 15:48:42] Checking adguard-redirect for memory-mapped files:
+[2025-09-08 15:48:42] Checking adguard for memory-mapped files:
+[2025-09-08 15:48:42] Checking metamcp for memory-mapped files:
+[2025-09-08 15:48:42] Checking postgres_db for memory-mapped files:
+[2025-09-08 15:48:42] Checking nats for memory-mapped files:
+[2025-09-08 15:48:42] Checking qdrant for memory-mapped files:
+[2025-09-08 15:48:42] Checking redis for memory-mapped files:
+[2025-09-08 15:48:42] \n💡 RECOMMENDATIONS
+[2025-09-08 15:48:44] 🚨 METAMCP CRITICAL ISSUE:
+[2025-09-08 15:48:44]   - Container consuming 99.14GB+ memory
+[2025-09-08 15:48:44]   - No memory limit set - can consume unlimited host memory
+[2025-09-08 15:48:44]   - Consider adding memory limit: deploy.resources.limits.memory: 4G
+[2025-09-08 15:48:44]   - Check for memory leaks in claude-flow or MCP processes
+[2025-09-08 15:48:44]   - Consider restarting: docker restart metamcp
+[2025-09-08 15:48:44] 🚨 QDRANT STORAGE ISSUE:
+[2025-09-08 15:48:44]   - Multiple Qdrant volumes consuming significant space
+[2025-09-08 15:48:44]   - Consider cleaning up unused collections
+[2025-09-08 15:48:44]   - Review data retention policies
+[2025-09-08 15:48:44] \n🔧 IMMEDIATE ACTIONS:
+[2025-09-08 15:48:44] 1. Add memory limits to containers without limits
+[2025-09-08 15:48:44] 2. Clean up dangling images and unused volumes
+[2025-09-08 15:48:44] 3. Consider stopping Windows VM if not in use
+[2025-09-08 15:48:44] 4. Restart metamcp to clear potential memory leaks
+[2025-09-08 15:48:44] 5. Review and optimize Qdrant data storage
+[2025-09-08 15:48:44] \n📊 Run this script regularly to monitor memory trends
+[2025-09-08 15:48:44] Report saved to: /home/delorenj/docker/trunk-main/scripts/docker-diagnostics/memory-leak-report-20250908-154835.txt
+[2025-09-08 15:48:44] Monitoring log: /home/delorenj/docker/trunk-main/scripts/docker-diagnostics/memory-monitoring.log

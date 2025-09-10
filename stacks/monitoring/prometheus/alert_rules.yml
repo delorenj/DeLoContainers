@@ -1,0 +1,38 @@
+groups:
+- name: docker_alerts
+  rules:
+  - alert: ContainerHighMemoryUsage
+    expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) > 0.8
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Container {{ $labels.name }} high memory usage"
+      description: "Container {{ $labels.name }} memory usage is above 80%"
+
+  - alert: ContainerHighCPU
+    expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Container {{ $labels.name }} high CPU usage"
+      description: "Container {{ $labels.name }} CPU usage is above 80%"
+
+  - alert: MetaMCPHighProcessCount
+    expr: count by (name) (container_processes{name=~".*metamcp.*"}) > 15
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "MetaMCP container has too many processes"
+      description: "MetaMCP container has {{ $value }} processes (>15)"
+
+  - alert: ContainerDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container is down"
+      description: "Container has been down for more than 1 minute"

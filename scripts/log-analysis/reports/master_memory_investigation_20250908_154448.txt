@@ -1,0 +1,64 @@
+COMPREHENSIVE MEMORY LEAK INVESTIGATION REPORT
+==============================================
+Investigation Date: Mon Sep  8 03:44:48 PM EDT 2025
+System: big-chungus
+Kernel: 6.14.0-29-generic
+Uptime:  15:44:48 up  1:22,  2 users,  load average: 1.46, 2.21, 2.10
+
+EXECUTIVE SUMMARY
+================
+This report investigates memory growth patterns on the system, particularly focusing on
+"doing nothing" scenarios where memory usage increases without active user intervention.
+
+KEY FINDINGS OVERVIEW:
+IMMEDIATE SYSTEM ANALYSIS
+========================
+Current Memory Status:
+               total        used        free      shared  buff/cache   available
+Mem:           121Gi       104Gi       2.3Gi       164Mi        15Gi        16Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+Top Memory Consuming Processes:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       16425  0.7  2.1 22506980 2772108 ?    Sl   14:22   0:36 ./qdrant
+delorenj  354197  1.6  0.4 6710972 553328 ?      Sl   15:32   0:13 /usr/bin/python /app/bin/zapzap
+delorenj  361975  3.6  0.3 75929604 450608 ?     Sl   15:33   0:24 /home/delorenj/.cargo/bin/zellij --server /run/user/1000/zellij/0.42.2/Workspace
+delorenj    8740 10.2  0.3 10160408 403136 ?     SLsl 14:22   8:25 /usr/bin/gnome-shell
+delorenj  366218  7.4  0.3 27156204 386436 pts/10 Sl+ 15:34   0:48 claude
+delorenj  354427  1.8  0.2 1193816056 356892 ?   Sl   15:32   0:14 /app/lib/libexec/QtWebEngineProcess --type=renderer --webengine-schemes=qrc:sV --disable-speech-api --disable-blink-features=EyeDropperAPI,WebOTP --lang=en --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=8 --time-ticks-at-unix-epoch=-1757355726611050 --launch-time-ticks=4196861160 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,5962114361302132899,17538843472293002620,262144 --enable-features=NetworkServiceInProcess2,TracingServiceInProcess --disable-features=BackgroundFetch,EyeDropper,FFmpegAllowLists,InstalledApp,WebOTP,WebPayments,WebUSB --variations-seed-version
+root        9832  0.2  0.2 1925360 333608 ?      Ssl  14:22   0:09 /app/api/.venv/bin/python /app/api/.venv/bin/celery -A app.celery worker -P gevent -c 1 --max-tasks-per-child 50 --loglevel INFO -Q dataset,mail,ops_trace,app_deletion,plugin,workflow_storage,conversation
+delorenj    3932  0.1  0.2 19320104 329176 ?     Ssl  14:22   0:05 /home/delorenj/.local/share/mise/installs/node/24.3.0/bin/node /home/delorenj/.local/share/mise/installs/node/24.3.0/bin/n8n start
+root        9848  0.0  0.2 1849000 318208 ?      Ssl  14:22   0:03 /app/api/.venv/bin/python /app/api/.venv/bin/celery -A app.celery beat --loglevel INFO
+
+Container Status Summary:
+docker-plugin_daemon-1   Restarting (2) 13 seconds ago   langgenius/dify-plugin-daemon:0.2.0-local
+livekit-ingress          Restarting (0) 10 seconds ago   livekit/ingress:latest
+adguard-redirect         Up About an hour (unhealthy)    adguard-adguard-redirect
+
+System Load:
+ 15:44:49 up  1:22,  2 users,  load average: 1.46, 2.21, 2.10
+1.46 2.21 2.10 1/55561 410880
+
+Disk Usage (potential swap/temp issues):
+/dev/nvme0n1p2               3.6T  782G  2.7T  23% /
+tmpfs                         61G  5.7M   61G   1% /tmp
+
+
+CRITICAL ISSUES IDENTIFIED
+=========================
+CRITICAL: 2 containers are in restart loop
+docker-plugin_daemon-1   Restarting (2) 13 seconds ago   langgenius/dify-plugin-daemon:0.2.0-local
+livekit-ingress          Restarting (0) 11 seconds ago   livekit/ingress:latest
+
+CRITICAL: High memory usage - 86%
+WARNING: 7 failed system services
+  UNIT                                                  LOAD   ACTIVE SUB    DESCRIPTION
+● claude-flow.service                                   loaded failed failed Claude Flow AI Orchestration Platform Service
+● snap.canonical-livepatch.canonical-livepatchd.service loaded failed failed Service for snap application canonical-livepatch.canonical-livepatchd
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+2 loaded units listed.
+

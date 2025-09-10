@@ -1,0 +1,77 @@
+Memory Leak Analysis Report - Mon Sep  8 03:37:38 PM EDT 2025
+=================================================
+
+
+[OOM KILLER EVENTS] - 2025-09-08 15:37:38
+----------------------------------------
+Checking for OOM killer events in system logs...
+Sep 03 17:30:19 big-chungus kernel: code invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=300
+Sep 03 17:30:19 big-chungus kernel: Out of memory: Killed process 3069165 (code) total-vm:1478588056kB, anon-rss:184252kB, file-rss:2916kB, shmem-rss:3208kB, UID:1000 pgtables:2840kB oom_score_adj:300
+Sep 03 17:32:19 big-chungus kernel: bun invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+Sep 03 17:40:05 big-chungus kernel: Out of memory: Killed process 16976 (gcr-ssh-agent) total-vm:97720kB, anon-rss:256kB, file-rss:3916kB, shmem-rss:0kB, UID:1000 pgtables:76kB oom_score_adj:200
+Sep 03 17:40:05 big-chungus kernel: postgres invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+Sep 03 17:40:05 big-chungus kernel: Out of memory: Killed process 3832777 (dbus-daemon) total-vm:8736kB, anon-rss:256kB, file-rss:4136kB, shmem-rss:0kB, UID:128 pgtables:60kB oom_score_adj:200
+Sep 03 17:52:08 big-chungus kernel: Out of memory: Killed process 3838689 (pipewire) total-vm:12264kB, anon-rss:256kB, file-rss:1580kB, shmem-rss:0kB, UID:1000 pgtables:68kB oom_score_adj:200
+Sep 03 17:52:08 big-chungus kernel: livekit-server invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+Sep 03 17:52:08 big-chungus kernel: Out of memory: Killed process 3820441 (node (vitest 2)) total-vm:13925992kB, anon-rss:4194384kB, file-rss:4228kB, shmem-rss:0kB, UID:1000 pgtables:119984kB oom_score_adj:100
+Sep 08 11:55:57 big-chungus kernel: Out of memory: Killed process 3811577 (slack) total-vm:1476897624kB, anon-rss:324144kB, file-rss:2904kB, shmem-rss:3004kB, UID:1000 pgtables:4492kB oom_score_adj:300
+Sep 08 14:09:23 big-chungus kernel: Out of memory: Killed process 165100 (gnome-software) total-vm:3136976kB, anon-rss:162424kB, file-rss:4460kB, shmem-rss:0kB, UID:1000 pgtables:1364kB oom_score_adj:200
+OOM events found above
+
+[MEMORY ALLOCATION FAILURES] - 2025-09-08 15:38:40
+----------------------------------------
+Checking for memory allocation failures...
+Sep 04 05:50:40 big-chungus gnome-shell[1030475]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card2: Failed to create dumb drm buffer: Cannot allocate memory
+Sep 04 09:06:35 big-chungus gnome-shell[1399515]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card2: Failed to create dumb drm buffer: Cannot allocate memory
+Sep 08 12:12:31 big-chungus gnome-shell[8695]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card2: Failed to create dumb drm buffer: Cannot allocate memory
+Sep 08 12:19:42 big-chungus gnome-shell[79429]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card2: Failed to create dumb drm buffer: Cannot allocate memory
+Sep 08 12:21:11 big-chungus gnome-shell[8695]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card2: Failed to create dumb drm buffer: Cannot allocate memory
+Sep 08 14:22:30 big-chungus gnome-shell[8740]: Failed to create view for LG Electronics LG TV SSCR2 on HDMI-2: Failed to allocate onscreen framebuffer for /dev/dri/card1: Failed to create dumb drm buffer: Cannot allocate memory
+Memory allocation failures found above
+
+[DOCKER DAEMON MEMORY ISSUES] - 2025-09-08 15:39:38
+----------------------------------------
+Analyzing Docker daemon logs for memory issues...
+Sep 07 21:23:11 big-chungus dockerd[1415488]: time="2025-09-07T21:23:11.517583380-04:00" level=warning msg="failed to read oom_kill event" error="open /sys/fs/cgroup/system.slice:docker:g3dc12tp5k63b8a3i5464r5hj/memory.events: no such file or directory" span="[builder 5/6] RUN uv install --system" spanID=bd6cb6b101c6ced0 traceID=6156fb6e59507c3d49eb4601ec90e4fc
+Sep 07 21:23:21 big-chungus dockerd[1415488]: time="2025-09-07T21:23:21.374882976-04:00" level=warning msg="failed to read oom_kill event" error="open /sys/fs/cgroup/system.slice:docker:sm90oksi1aplvilropikpnl12/memory.events: no such file or directory" span="[builder 5/6] RUN uv sync --system" spanID=2fc26eb6f0f53973 traceID=421f32c10e0e2fc7ed0ae1f75a924c0a
+Docker memory issues found above
+
+[CONTAINER RESTART PATTERNS] - 2025-09-08 15:39:38
+----------------------------------------
+Analyzing container restart patterns...
+Recent container restarts:
+docker-plugin_daemon-1           Restarting (2) 4 seconds ago   langgenius/dify-plugin-daemon:0.2.0-local
+livekit-ingress                  Restarting (0) 1 second ago    livekit/ingress:latest
+
+Docker daemon container restart logs:
+Sep 08 14:02:42 big-chungus dockerd[4887]: time="2025-09-08T14:02:42.495051570-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=35cb498c0f2de79989e10db569389748510b8bfc48324e22bd30d5a0edaed099 daemonShuttingDown=false error="restart canceled" execDuration=1h50m9.95154019s exitStatus="{2 2025-09-08 18:02:42.484314547 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:42 big-chungus dockerd[4887]: time="2025-09-08T14:02:42.503823869-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=bcee5d3d1834a7b399ed2c0307b094f21bafc9d195dc16db4c20762314162f41 daemonShuttingDown=false error="restart canceled" execDuration=1h50m10.141160269s exitStatus="{0 2025-09-08 18:02:42.493847803 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:43 big-chungus dockerd[4887]: time="2025-09-08T14:02:43.309283383-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=902078768e5055cc320bcccfd4f22a52f334dfa019e9570b21c9d01f11071597 daemonShuttingDown=false error="restart canceled" execDuration=1h50m10.752839473s exitStatus="{0 2025-09-08 18:02:43.295398527 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:53 big-chungus dockerd[4887]: time="2025-09-08T14:02:52.514578564-04:00" level=info msg="Container failed to exit within 10s of signal 15 - using the force" container=9eea835fc56c483f8951d8573383b30326ea5f343013a768ad8b44dcef0df972 spanID=1d78db82e2112e61 traceID=af263054fafc8ef90d612edc34193e1a
+Sep 08 14:02:53 big-chungus dockerd[4887]: time="2025-09-08T14:02:52.513756933-04:00" level=info msg="Container failed to exit within 10s of signal 15 - using the force" container=da9fd8973871e76f0cf529d9f5af2edd726e8fbf318b098c752b03085b611ef3 spanID=70a05066fdcd2706 traceID=af263054fafc8ef90d612edc34193e1a
+Sep 08 14:02:53 big-chungus dockerd[4887]: time="2025-09-08T14:02:52.515045640-04:00" level=info msg="Container failed to exit within 10s of signal 15 - using the force" container=2f619cbfc3f05910371dbe57e7d288e7d11634cede1148e97807dd817903387d spanID=2cbd521c4ba4420e traceID=af263054fafc8ef90d612edc34193e1a
+Sep 08 14:02:53 big-chungus dockerd[4887]: time="2025-09-08T14:02:52.611838490-04:00" level=info msg="Container failed to exit within 10s of signal 3 - using the force" container=617a426e07b96a9545852833be8aa87b8d4fbed9a4950da4a1edf91278e662e8 spanID=e9134627a32379ce traceID=af263054fafc8ef90d612edc34193e1a
+Sep 08 14:02:57 big-chungus dockerd[4887]: time="2025-09-08T14:02:57.675585855-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=617a426e07b96a9545852833be8aa87b8d4fbed9a4950da4a1edf91278e662e8 daemonShuttingDown=false error="restart canceled" execDuration=1h50m25.221313126s exitStatus="{137 2025-09-08 18:02:57.622558411 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:57 big-chungus dockerd[4887]: time="2025-09-08T14:02:57.699288501-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=2f619cbfc3f05910371dbe57e7d288e7d11634cede1148e97807dd817903387d daemonShuttingDown=false error="restart canceled" execDuration=3m43.031168325s exitStatus="{137 2025-09-08 18:02:57.67131163 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:57 big-chungus dockerd[4887]: time="2025-09-08T14:02:57.699328536-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=9eea835fc56c483f8951d8573383b30326ea5f343013a768ad8b44dcef0df972 daemonShuttingDown=false error="restart canceled" execDuration=1h50m25.149852427s exitStatus="{137 2025-09-08 18:02:57.677415095 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:57 big-chungus dockerd[4887]: time="2025-09-08T14:02:57.700134717-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=da9fd8973871e76f0cf529d9f5af2edd726e8fbf318b098c752b03085b611ef3 daemonShuttingDown=false error="restart canceled" execDuration=1h50m25.235542461s exitStatus="{137 2025-09-08 18:02:57.666098214 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:59 big-chungus dockerd[4887]: time="2025-09-08T14:02:59.155006449-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=d88a83649a503567e786ff166f7817eeb65976f6f58ed350be29276668e65ec3 daemonShuttingDown=false error="restart canceled" execDuration=1h50m26.623545985s exitStatus="{0 2025-09-08 18:02:59.137974422 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:59 big-chungus dockerd[4887]: time="2025-09-08T14:02:59.563752439-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=599accfcaeae3a9207d881e871eb3abf4d327c7125376987a898c7122d9c5d60 daemonShuttingDown=false error="restart canceled" execDuration=1h50m27.004992605s exitStatus="{0 2025-09-08 18:02:59.548579929 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:02:59 big-chungus dockerd[4887]: time="2025-09-08T14:02:59.668645740-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=eb8dfe56ee8fd567aafc3deadf760084ba9a9bf5a4e8c043fece4ca875e08b18 daemonShuttingDown=false error="restart canceled" execDuration=1h50m27.272005674s exitStatus="{0 2025-09-08 18:02:59.627565118 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:03:07 big-chungus dockerd[4887]: time="2025-09-08T14:03:07.993799841-04:00" level=info msg="Container failed to exit within 10s of signal 15 - using the force" container=deee8958c18b79e245a78d66460856298b8aa7c89769d7854440aca287afdcf9 spanID=a5350ea047c46c89 traceID=af263054fafc8ef90d612edc34193e1a
+Sep 08 14:03:08 big-chungus dockerd[4887]: time="2025-09-08T14:03:08.029053587-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=deee8958c18b79e245a78d66460856298b8aa7c89769d7854440aca287afdcf9 daemonShuttingDown=false error="restart canceled" execDuration=1h50m35.527142565s exitStatus="{137 2025-09-08 18:03:08.018557916 +0000 UTC}" hasBeenManuallyStopped=true restartCount=0
+Sep 08 14:03:26 big-chungus dockerd[4887]: time="2025-09-08T14:03:26.507410200-04:00" level=warning msg="ShouldRestart failed, container will not be restarted" container=a74eadc2876828426e786035875dc7064a3c051a916254731a6810ba8a12a957 daemonShuttingDown=false error="restart canceled" execDuration=397.88196ms exitStatus="{2 2025-09-08 18:03:26.486615927 +0000 UTC}" hasBeenManuallyStopped=true restartCount=7
+Sep 08 14:10:28 big-chungus dockerd[4887]: time="2025-09-08T14:10:28.995648316-04:00" level=error msg="restartmanger wait error: resource temporarily unavailable"
+Sep 08 15:29:32 big-chungus dockerd[4905]: time="2025-09-08T15:29:32.940704691-04:00" level=error msg="Error setting up exec command in container a8af02f7893e: Container a8af02f7893e9c731e8dfa607388c1a16f2eb5b47b3892a53180503c12ed8294 is restarting, wait until the container is running"
+Sep 08 15:29:34 big-chungus dockerd[4905]: time="2025-09-08T15:29:34.951411280-04:00" level=error msg="Error setting up exec command in container 8c9846be8f43: Container 8c9846be8f437e1988fec30475cd6f0baf83d8f18628e10800873dfd667ae9f1 is restarting, wait until the container is running"
+
+[SYSTEM MEMORY PRESSURE] - 2025-09-08 15:39:38
+----------------------------------------
+Current memory usage:
+               total        used        free      shared  buff/cache   available
+Mem:           121Gi        98Gi       8.2Gi       198Mi        15Gi        22Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+Memory usage trends (if available):
+Memory utilization over last 24 hours:
+Linux 6.14.0-29-generic (big-chungus) 	09/08/2025 	_x86_64_	(32 CPU)

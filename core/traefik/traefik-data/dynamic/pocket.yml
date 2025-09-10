@@ -1,0 +1,42 @@
+http:
+  routers:
+    pocket-server:
+      rule: "Host(`pocket.delo.sh`)"
+      service: pocket-server-service
+      entrypoints:
+        - websecure
+      middlewares:
+        - pocket-cors
+        - pocket-security
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    pocket-server-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:8342"
+
+  middlewares:
+    pocket-cors:
+      headers:
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - "*"
+        accessControlMaxAge: 86400
+
+    pocket-security:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          X-Content-Type-Options: "nosniff"
+          X-Frame-Options: "SAMEORIGIN"
+          Referrer-Policy: "strict-origin-when-cross-origin"

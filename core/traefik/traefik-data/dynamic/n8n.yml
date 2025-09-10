@@ -34,7 +34,7 @@ http:
     n8n:
       loadBalancer:
         servers:
-          - url: "http://172.19.0.1:5678"
+          - url: "http://192.168.1.12:5678"
         healthCheck:
           path: "/"
           interval: "30s"

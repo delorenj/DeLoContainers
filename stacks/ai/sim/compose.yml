@@ -27,9 +27,14 @@ services:
       resources:
         limits:
           memory: 8G
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      # Database Configuration
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-simstudio}?sslmode=prefer
+      # Database Configuration (using native PostgreSQL)
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=prefer
+
+      # Redis Configuration (using external Redis container)
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}
       
       # SSL/HTTPS Configuration - The void demands secure connections!
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-https://sim.delo.sh}

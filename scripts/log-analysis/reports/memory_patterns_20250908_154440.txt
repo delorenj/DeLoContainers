@@ -1,0 +1,102 @@
+Memory Pattern Detection Analysis - Mon Sep  8 03:44:40 PM EDT 2025
+=================================================
+
+BACKGROUND PROCESS ANALYSIS
+----------------------------------------
+Processes consuming most memory:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       16425  0.7  2.1 22506980 2772108 ?    Sl   14:22   0:36 ./qdrant
+delorenj  354197  1.7  0.4 6710972 553328 ?      Sl   15:32   0:13 /usr/bin/python /app/bin/zapzap
+delorenj  361975  3.7  0.3 75929604 450608 ?     Sl   15:33   0:24 /home/delorenj/.cargo/bin/zellij --server /run/user/1000/zellij/0.42.2/Workspace
+delorenj    8740 10.2  0.3 10160408 403136 ?     SLsl 14:22   8:25 /usr/bin/gnome-shell
+delorenj  366218  7.4  0.2 27156512 379464 pts/10 Sl+ 15:34   0:47 claude
+delorenj  354427  1.8  0.2 1193816056 356892 ?   Sl   15:32   0:14 /app/lib/libexec/QtWebEngineProcess --type=renderer --webengine-schemes=qrc:sV --disable-speech-api --disable-blink-features=EyeDropperAPI,WebOTP --lang=en --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=8 --time-ticks-at-unix-epoch=-1757355726611050 --launch-time-ticks=4196861160 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,5962114361302132899,17538843472293002620,262144 --enable-features=NetworkServiceInProcess2,TracingServiceInProcess --disable-features=BackgroundFetch,EyeDropper,FFmpegAllowLists,InstalledApp,WebOTP,WebPayments,WebUSB --variations-seed-version
+root        9832  0.2  0.2 1925360 333608 ?      Ssl  14:22   0:09 /app/api/.venv/bin/python /app/api/.venv/bin/celery -A app.celery worker -P gevent -c 1 --max-tasks-per-child 50 --loglevel INFO -Q dataset,mail,ops_trace,app_deletion,plugin,workflow_storage,conversation
+delorenj    3932  0.1  0.2 19320104 329176 ?     Ssl  14:22   0:05 /home/delorenj/.local/share/mise/installs/node/24.3.0/bin/node /home/delorenj/.local/share/mise/installs/node/24.3.0/bin/n8n start
+root        9848  0.0  0.2 1849000 318208 ?      Ssl  14:22   0:03 /app/api/.venv/bin/python /app/api/.venv/bin/celery -A app.celery beat --loglevel INFO
+root       33520  0.0  0.2 1773444 307152 ?      Sl   14:22   0:04 /app/api/.venv/bin/python /app/api/.venv/bin/gunicorn --bind 0.0.0.0:5001 --workers 1 --worker-class gevent --worker-connections 10 --timeout 360 app:app
+1001       12836  2.2  0.2 11410316 276164 ?     Sl   14:22   1:50 node dist/index.js
+delorenj  354403  1.0  0.1 1191394252 224912 ?   Sl   15:32   0:07 /app/lib/libexec/QtWebEngineProcess --type=renderer --webengine-schemes=qrc:sV --disable-speech-api --disable-blink-features=EyeDropperAPI,WebOTP --lang=en --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=7 --time-ticks-at-unix-epoch=-1757355726611050 --launch-time-ticks=4196807956 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,5962114361302132899,17538843472293002620,262144 --enable-features=NetworkServiceInProcess2,TracingServiceInProcess --disable-features=BackgroundFetch,EyeDropper,FFmpegAllowLists,InstalledApp,WebOTP,WebPayments,WebUSB --variations-seed-version
+delorenj  354401  1.0  0.1 1191395452 222776 ?   Sl   15:32   0:08 /app/lib/libexec/QtWebEngineProcess --type=renderer --webengine-schemes=qrc:sV --disable-speech-api --disable-blink-features=EyeDropperAPI,WebOTP --lang=en --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=6 --time-ticks-at-unix-epoch=-1757355726611050 --launch-time-ticks=4196805032 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,5962114361302132899,17538843472293002620,262144 --enable-features=NetworkServiceInProcess2,TracingServiceInProcess --disable-features=BackgroundFetch,EyeDropper,FFmpegAllowLists,InstalledApp,WebOTP,WebPayments,WebUSB --variations-seed-version
+delorenj    4710  2.5  0.1 6413324 183060 ?      Ssl  14:22   2:07 /home/delorenj/.local/share/mise/installs/erlang/26.2.5.7/erts-14.2.5.6/bin/beam.smp -- -root /home/delorenj/.local/share/mise/installs/erlang/26.2.5.7 -bindir /home/delorenj/.local/share/mise/installs/erlang/26.2.5.7/erts-14.2.5.6/bin -progname erl -- -home /home/delorenj -- -noshell -elixir_root /home/delorenj/.local/share/mise/installs/elixir/1.18.2-otp-26/bin/../lib -pa /home/delorenj/.local/share/mise/installs/elixir/1.18.2-otp-26/bin/../lib/elixir/ebin -s elixir start_cli -extra /home/delorenj/.local/share/mise/installs/elixir/1.18.2-otp-26/bin/mix phx.server
+1001       14198  0.1  0.1 11315676 176608 ?     Sl   14:22   0:06 next-server (v15.5.0)
+1001       14153  0.1  0.1 11315688 174796 ?     Sl   14:22   0:06 next-server (v15.5.0)
+delorenj  368057  0.2  0.1 1781936 144940 pts/10 Sl+  15:34   0:01 npm exec flow-nexus@latest mcp start
+delorenj  366251  0.3  0.1 1781548 142116 pts/10 Sl+  15:34   0:02 npm exec claude-flow@alpha mcp start
+delorenj  366250  0.3  0.1 1781212 142100 pts/10 Sl+  15:34   0:01 npm exec kapture-mcp@latest bridge
+
+Processes with high CPU but low user activity (potential memory leaks):
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+delorenj    8740 10.2  0.3 10160408 403136 ?     SLsl 14:22   8:25 /usr/bin/gnome-shell
+delorenj  366218  7.4  0.2 27156512 379464 pts/10 Sl+ 15:34   0:47 claude
+1001      408043  4.5  0.0 718264 78048 ?        Ssl  15:44   0:00 npm exec claude-flow@alpha mcp start
+1001      408057  4.3  0.0 717984 76068 ?        Ssl  15:44   0:00 npm exec @delorenj/mcp-server-trello@1.3.1
+1001      408021  4.3  0.0 717312 75732 ?        Ssl  15:44   0:00 npm exec figma-mcp
+1001      408008  4.3  0.0 717936 76500 ?        Ssl  15:44   0:00 npm exec @wonderwhy-er/desktop-commander@latest
+1001      408015  4.3  0.0 718040 77396 ?        Ssl  15:44   0:00 npm exec @executeautomation/playwright-mcp-server
+1001      408009  4.3  0.0 717332 74632 ?        Ssl  15:44   0:00 npm exec @delorenj/mcp-adguard-home
+1001      408071  4.2  0.0 717704 75936 ?        Ssl  15:44   0:00 npm exec @21st-dev/magic@latest API_KEY="b7030746f64d96c9f4db4ab2cd5422ccb90256ae861ecdffec4236601a3eba09"
+
+Long-running processes (potential memory leak candidates):
+    PID    PPID CMD                             ELAPSED %MEM %CPU
+      1       0 /sbin/init splash              01:22:33  0.0  0.1
+      2       0 [kthreadd]                     01:22:33  0.0  0.0
+      3       2 [pool_workqueue_release]       01:22:33  0.0  0.0
+      4       2 [kworker/R-rcu_gp]             01:22:33  0.0  0.0
+      5       2 [kworker/R-sync_wq]            01:22:33  0.0  0.0
+      6       2 [kworker/R-kvfree_rcu_recla    01:22:33  0.0  0.0
+      7       2 [kworker/R-slub_flushwq]       01:22:33  0.0  0.0
+      8       2 [kworker/R-netns]              01:22:33  0.0  0.0
+     11       2 [kworker/0:0H-events_highpr    01:22:33  0.0  0.0
+     13       2 [kworker/R-mm_percpu_wq]       01:22:33  0.0  0.0
+     14       2 [rcu_tasks_kthread]            01:22:33  0.0  0.0
+     15       2 [rcu_tasks_rude_kthread]       01:22:33  0.0  0.0
+     16       2 [rcu_tasks_trace_kthread]      01:22:33  0.0  0.0
+     17       2 [ksoftirqd/0]                  01:22:33  0.0  0.0
+
+SYSTEM SERVICE ANALYSIS
+----------------------------------------
+Memory usage by systemd services:
+MemoryCurrent=9618178048
+MemoryCurrent=9580544
+MemoryCurrent=941801472
+MemoryCurrent=9244672
+MemoryCurrent=9048064
+MemoryCurrent=90054656
+MemoryCurrent=8933376
+MemoryCurrent=8814592
+MemoryCurrent=8740864
+MemoryCurrent=7802880
+
+Services with restart issues:
+  UNIT                                                  LOAD   ACTIVE SUB    DESCRIPTION
+● claude-flow.service                                   loaded failed failed Claude Flow AI Orchestration Platform Service
+● snap.canonical-livepatch.canonical-livepatchd.service loaded failed failed Service for snap application canonical-livepatch.canonical-livepatchd
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+2 loaded units listed.
+
+MEMORY FRAGMENTATION ANALYSIS
+----------------------------------------
+Current memory layout:
+MemTotal:       127099064 kB
+MemFree:         3290972 kB
+MemAvailable:   18272488 kB
+Buffers:         1506200 kB
+Cached:         13208136 kB
+SwapCached:            0 kB
+Slab:            3835592 kB
+PageTables:      4603600 kB
+SecPageTables:      5904 kB
+VmallocUsed:     1073640 kB
+
+Memory fragmentation indicators:
+Buddy info (free page blocks):
+Node 0, zone      DMA      1      1      1      1      1      1      1      1      0      1      2 
+Node 0, zone    DMA32      8      8      7      7      7      6     10      9      8      9    334 
+Node 0, zone   Normal  34534  15513   7579   2084    663    199     47     21      1      7    322 
+
+Page type info:
