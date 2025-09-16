@@ -21,4 +21,9 @@ http:
     sunshine:
       loadBalancer:
         servers:
-          - url: "https://localhost:47990"
+          - url: "https://127.0.0.1:47990"
+        serversTransport: sunshine-transport
+
+  serversTransports:
+    sunshine-transport:
+      insecureSkipVerify: true

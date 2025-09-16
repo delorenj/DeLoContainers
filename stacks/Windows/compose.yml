@@ -10,6 +10,7 @@ services:
     devices:
       - /dev/kvm
       - /dev/net/tun
+      - /dev/dri:/dev/dri  # GPU passthrough
       - /dev/focusrite_4i4  # Focusrite Scarlett 4i4 4th Gen (persistent symlink)
       - /dev/arturia_keylab  # Arturia KeyLab mkII 88 (persistent symlink)
       - /dev/snd:/dev/snd  # ALSA audio devices
@@ -24,7 +25,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:ro  # X11 socket for audio
       - /home/delorenj/vst:/data/vst  # VST plugins directory
       - ./diagnostics:/data/diagnostics  # All diagnostic scripts and tools
-    restart: unless-stopped
+    # restart: unless-stopped
     stop_grace_period: 2m
     networks:
       - proxy

@@ -1,0 +1,15 @@
+http:
+  routers:
+    mathflash-dev:
+      rule: "Host(`dev.mathflash.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: mathflash-dev
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    mathflash-dev:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:8081"
