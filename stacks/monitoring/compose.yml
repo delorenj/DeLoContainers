@@ -112,11 +112,81 @@ services:
       - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
       - "traefik.docker.network=proxy"
 
+  # Dockge - Docker Compose Management UI
+  dockge:
+    image: louislam/dockge:1
+    container_name: dockge
+    restart: unless-stopped
+    ports:
+      - "14654:5001"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dockge_data:/app/data
+      - ./stacks:/opt/stacks
+      - ./core:/opt/core
+
+    environment:
+      - DOCKGE_STACKS_DIR=/opt/stacks
+      - DOCKGE_CORE_STACKS_DIR=/opt/core
+    networks:
+      - proxy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:14654",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dockge.entrypoints=websecure"
+      - "traefik.http.routers.dockge.rule=Host(`dockge.delo.sh`)"
+      - "traefik.http.routers.dockge.tls=true"
+      - "traefik.http.routers.dockge.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dockge.loadbalancer.server.port=5001"
+      - "traefik.docker.network=proxy"
+
+  # Uptime Kuma - Service Health Monitoring
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "13556:3001"
+    volumes:
+      - uptime_kuma_data:/app/data
+      # Mount docker socket for container monitoring
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:13556"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.delo.sh`)"
+      - "traefik.http.routers.uptime-kuma.tls=true"
+      - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+      - "traefik.docker.network=proxy"
+
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  dockge_data: {}
+  uptime_kuma_data: {}
 
 networks:
   proxy:
     external: true
-
