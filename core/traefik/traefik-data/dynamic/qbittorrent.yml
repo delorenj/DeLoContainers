@@ -1,6 +1,6 @@
 http:
   middlewares:
-    chorescore-headers:
+    qbittorrent-headers:
       headers:
         customRequestHeaders:
           X-Forwarded-Proto: "https"
@@ -20,22 +20,24 @@ http:
         accessControlMaxAge: 100
 
   routers:
-    chorescore:
-      rule: "Host(`chorescore.delo.sh`)"
+    qbittorrent:
+      rule: "Host(`get.delo.sh`)"
       entryPoints:
         - websecure
-      service: chorescore
+      service: qbittorrent
       middlewares:
-        - chorescore-headers
+        - qbittorrent-headers
       tls:
         certResolver: letsencrypt
 
   services:
-    chorescore:
+    qbittorrent:
       loadBalancer:
         servers:
-          - url: "http://chorescore-web:80"
+          - url: "http://gluetun:8091"
         healthCheck:
-          path: "/health"
+          path: "/"
           interval: "30s"
           timeout: "10s"
+          headers:
+            Host: "get.delo.sh"

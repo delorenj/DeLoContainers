@@ -1,0 +1,175 @@
+# Docker Health Check Definitions
+# Add these to your docker-compose files or use with docker run
+
+version: '3.8'
+
+# Health check templates for common services
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+
+# Service-specific health checks
+services:
+
+  # Web services
+  nginx:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+
+  traefik:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+
+  # Database services
+  postgres:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+
+  mysql:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+
+  redis:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "redis-cli", "ping"]
+
+  # Message queues
+  rabbitmq:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+
+  nats:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8222/healthz"]
+
+  # Monitoring services
+  prometheus:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+
+  grafana:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+
+  cadvisor:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/healthz"]
+      timeout: 5s
+
+  # Application services
+  node-app:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "node", "/app/health-check.js"]
+
+  python-app:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+
+  # Vector databases
+  qdrant:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
+
+  weaviate:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/.well-known/ready"]
+
+  # VPN services
+  gluetun:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8000/v1/publicip"]
+
+  # DNS services
+  adguard:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "nslookup", "google.com", "127.0.0.1"]
+
+  # Media services
+  jellyfin:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8096/health"]
+
+  # AI services
+  letta:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8283/health"]
+
+  # MCP services
+  metamcp:
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:12008/health"]
+
+# Restart policies
+x-restart-policies:
+  always: &restart-always
+    restart: always
+
+  unless-stopped: &restart-unless-stopped
+    restart: unless-stopped
+
+  on-failure: &restart-on-failure
+    restart: on-failure
+    restart_policy:
+      max_attempts: 3
+      window: 120s
+
+# Resource limits
+x-resource-limits:
+  small: &resources-small
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  medium: &resources-medium
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  large: &resources-large
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+# Logging configuration
+x-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"

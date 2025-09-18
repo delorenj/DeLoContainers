@@ -1,0 +1,44 @@
+[Unit]
+Description=Docker Container Health Monitor and Self-Healing Service
+After=docker.service
+Requires=docker.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User=root
+Group=docker
+
+# Environment variables
+Environment="CHECK_INTERVAL=30"
+Environment="MAX_RESTART_ATTEMPTS=3"
+Environment="COOLDOWN_PERIOD=300"
+Environment="LOG_DIR=/var/log/docker-health"
+
+# Optional: Set webhook for alerts
+#Environment="ALERT_WEBHOOK=https://your-webhook-url.com/alerts"
+
+# Main service
+ExecStartPre=/bin/mkdir -p /var/log/docker-health
+ExecStart=/home/delorenj/docker/trunk-main/scripts/docker-health-monitor.sh
+ExecReload=/bin/kill -HUP $MAINPID
+StandardOutput=journal
+StandardError=journal
+
+# Resource limits
+CPUQuota=50%
+MemoryLimit=512M
+
+# Security hardening
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/docker-health
+ReadOnlyPaths=/home/delorenj/docker/trunk-main/scripts
+
+[Install]
+WantedBy=multi-user.target

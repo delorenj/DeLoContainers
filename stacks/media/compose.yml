@@ -12,6 +12,9 @@ services:
       - OPENVPN_CUSTOM_CONFIG=/gluetun/netherlands.ovpn
       - FIREWALL_VPN_INPUT_PORTS=49152,49153,49154,49155,49156
       - DNS_SERVERS=1.1.1.1,8.8.8.8,1.0.0.1
+      - HEALTH_VPN_DURATION_INITIAL=30s
+      - HEALTH_SUCCESS_WAIT_DURATION=10s
+      - HEALTH_TARGET_ADDRESS=1.1.1.1:53
     volumes:
       - ./gluetun:/gluetun
     ports:
@@ -28,14 +31,12 @@ services:
       - 8091:8091
     networks:
       - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.rule=Host(`get.delo.sh`)"
-      - "traefik.http.routers.qbittorrent.tls=true"
-      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8091"
-      - "traefik.docker.network=proxy"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://1.1.1.1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   vpn-monitor:
     image: alpine:latest
@@ -72,9 +73,33 @@ services:
       - /home/delorenj/Downloads/inbox:/inbox
       - /home/delorenj/tonny:/tonny
       - emma_video:/video
-
     depends_on:
-      - gluetun
+      gluetun:
+        condition: service_healthy
+        restart: true
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ:-America/New_York}
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.rule=Host(`index.delo.sh`)"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.docker.network=proxy"
 
   jellyfin:
     image: jellyfin/jellyfin

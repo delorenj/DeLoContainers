@@ -1,0 +1,203 @@
+version: '3.8'
+
+# Docker Health Monitoring Stack
+# Integrates with existing monitoring infrastructure
+
+services:
+  # Health Monitor Service
+  health-monitor:
+    image: alpine:latest
+    container_name: docker-health-monitor
+    hostname: health-monitor
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./scripts:/scripts:ro
+      - health-logs:/var/log/docker-health
+      - health-state:/var/lib/docker-health
+    environment:
+      CHECK_INTERVAL: 30
+      MAX_RESTART_ATTEMPTS: 3
+      COOLDOWN_PERIOD: 300
+      ALERT_WEBHOOK: ${ALERT_WEBHOOK:-}
+    command: sh -c "apk add --no-cache bash curl jq docker-cli && /scripts/docker-health-monitor.sh"
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "docker-health-monitor.sh"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=9091"
+      - "prometheus.io/path=/metrics"
+
+  # Health Metrics Exporter
+  health-exporter:
+    image: prom/node-exporter:latest
+    container_name: docker-health-exporter
+    restart: unless-stopped
+    volumes:
+      - health-logs:/logs:ro
+      - health-state:/state:ro
+    command:
+      - '--path.rootfs=/host'
+      - '--path.textfile.directory=/state'
+      - '--collector.textfile'
+      - '--collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)'
+    networks:
+      - monitoring
+    ports:
+      - "9192:9100"
+    labels:
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=9100"
+
+  # Alert Rules Configuration
+  prometheus-rules:
+    image: alpine:latest
+    container_name: prometheus-rules-updater
+    volumes:
+      - prometheus-rules:/rules
+    command: |
+      sh -c "cat > /rules/docker-health.yml << 'EOF'
+      groups:
+        - name: docker_health
+          interval: 30s
+          rules:
+            - alert: ContainerDown
+              expr: container_state_status{status=\"exited\"} == 1
+              for: 2m
+              labels:
+                severity: warning
+              annotations:
+                summary: \"Container {{ \$labels.container_name }} is down\"
+                description: \"Container {{ \$labels.container_name }} has been down for more than 2 minutes\"
+
+            - alert: ContainerHighCpu
+              expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: \"Container {{ \$labels.container_name }} high CPU usage\"
+                description: \"Container {{ \$labels.container_name }} CPU usage is above 80% (current: {{ \$value }})\"
+
+            - alert: ContainerHighMemory
+              expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.9
+              for: 5m
+              labels:
+                severity: warning
+              annotations:
+                summary: \"Container {{ \$labels.container_name }} high memory usage\"
+                description: \"Container {{ \$labels.container_name }} memory usage is above 90%\"
+
+            - alert: ContainerUnhealthy
+              expr: container_health_status{health=\"unhealthy\"} == 1
+              for: 2m
+              labels:
+                severity: critical
+              annotations:
+                summary: \"Container {{ \$labels.container_name }} is unhealthy\"
+                description: \"Container {{ \$labels.container_name }} health check failing\"
+
+            - alert: ContainerRestartingTooOften
+              expr: rate(container_restart_count[15m]) > 0.25
+              for: 5m
+              labels:
+                severity: critical
+              annotations:
+                summary: \"Container {{ \$labels.container_name }} restarting frequently\"
+                description: \"Container {{ \$labels.container_name }} has restarted {{ \$value }} times in 15 minutes\"
+      EOF"
+    restart: "no"
+
+  # Grafana Dashboard Configuration
+  grafana-dashboards:
+    image: alpine:latest
+    container_name: grafana-dashboards-updater
+    volumes:
+      - grafana-dashboards:/dashboards
+    command: |
+      sh -c "cat > /dashboards/docker-health.json << 'EOF'
+      {
+        \"dashboard\": {
+          \"title\": \"Docker Container Health\",
+          \"uid\": \"docker-health\",
+          \"panels\": [
+            {
+              \"title\": \"Container Status Overview\",
+              \"gridPos\": {\"h\": 8, \"w\": 12, \"x\": 0, \"y\": 0},
+              \"type\": \"stat\",
+              \"targets\": [
+                {
+                  \"expr\": \"count(container_state_status{status=\\\"running\\\"})\",
+                  \"legendFormat\": \"Running\"
+                },
+                {
+                  \"expr\": \"count(container_state_status{status=\\\"exited\\\"})\",
+                  \"legendFormat\": \"Exited\"
+                },
+                {
+                  \"expr\": \"count(container_health_status{health=\\\"unhealthy\\\"})\",
+                  \"legendFormat\": \"Unhealthy\"
+                }
+              ]
+            },
+            {
+              \"title\": \"Container Restart Frequency\",
+              \"gridPos\": {\"h\": 8, \"w\": 12, \"x\": 12, \"y\": 0},
+              \"type\": \"graph\",
+              \"targets\": [
+                {
+                  \"expr\": \"rate(container_restart_count[5m])\",
+                  \"legendFormat\": \"{{ container_name }}\"
+                }
+              ]
+            },
+            {
+              \"title\": \"Health Check Status\",
+              \"gridPos\": {\"h\": 8, \"w\": 24, \"x\": 0, \"y\": 8},
+              \"type\": \"table\",
+              \"targets\": [
+                {
+                  \"expr\": \"container_health_status\",
+                  \"format\": \"table\"
+                }
+              ]
+            },
+            {
+              \"title\": \"Recovery Actions\",
+              \"gridPos\": {\"h\": 8, \"w\": 24, \"x\": 0, \"y\": 16},
+              \"type\": \"logs\",
+              \"targets\": [
+                {
+                  \"expr\": \"{job=\\\"docker-health-monitor\\\"}\",
+                  \"refId\": \"A\"
+                }
+              ]
+            }
+          ]
+        },
+        \"overwrite\": true
+      }
+      EOF"
+    restart: "no"
+
+networks:
+  monitoring:
+    external: true
+    name: monitoring_default
+
+volumes:
+  health-logs:
+    driver: local
+  health-state:
+    driver: local
+  prometheus-rules:
+    external: true
+    name: prometheus_rules
+  grafana-dashboards:
+    external: true
+    name: grafana_dashboards
