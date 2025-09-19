@@ -3,7 +3,7 @@ services:
   playwright-service:
     build: apps/playwright-service
     environment:
-      - PORT=3000
+      - PORT=${PORT:-3002}
       - PROXY_SERVER=${PROXY_SERVER}
       - PROXY_USERNAME=${PROXY_USERNAME}
       - PROXY_PASSWORD=${PROXY_PASSWORD}
@@ -15,8 +15,9 @@ services:
       - "traefik.http.routers.playwright.rule=Host(`playwright.delo.sh`)"
       - "traefik.http.routers.playwright.entrypoints=websecure"
       - "traefik.http.routers.playwright.tls.certresolver=letsencrypt"
-      - "traefik.http.services.playwright.loadbalancer.server.port=3002"
-  
+      - "traefik.http.services.playwright.loadbalancer.server.port=${PORT:-3002}"
+      - "traefik.docker.network=proxy"
+
   api:
     build: apps/api
     environment:
@@ -44,11 +45,10 @@ services:
       - SCRAPING_BEE_API_KEY=${SCRAPING_BEE_API_KEY}
       - HOST=${HOST:-0.0.0.0}
     depends_on:
-      - redis
       - playwright-service
     ports:
       - "3002:3002"
-    command: [ "pnpm", "run", "start:production" ]
+    command: ["pnpm", "run", "start:production"]
     networks:
       - proxy
     labels:
@@ -56,8 +56,8 @@ services:
       - "traefik.http.routers.firecrawl.rule=Host(`firecrawl.delo.sh`)"
       - "traefik.http.routers.firecrawl.entrypoints=websecure"
       - "traefik.http.routers.firecrawl.tls.certresolver=letsencrypt"
-      - "traefik.http.services.firecrawl.loadbalancer.server.port=3002"
-
+      - "traefik.http.services.firecrawl.loadbalancer.server.port=${PORT:-3002}"
+      - "traefik.docker.network=proxy"
 
   worker:
     build: apps/api
@@ -86,16 +86,10 @@ services:
       - SCRAPING_BEE_API_KEY=${SCRAPING_BEE_API_KEY}
       - HOST=${HOST:-0.0.0.0}
     depends_on:
-      - redis
       - playwright-service
       - api
     networks:
       - proxy
-  redis:
-    image: redis:alpine
-    networks:
-      - proxy
-    command: redis-server --bind 0.0.0.0
 
 networks:
   proxy:
