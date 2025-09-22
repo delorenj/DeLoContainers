@@ -72,7 +72,8 @@ services:
       - /home/delorenj/Downloads/incomplete:/incomplete
       - /home/delorenj/Downloads/inbox:/inbox
       - /home/delorenj/tonny:/tonny
-      - emma_video:/video
+      - emma_video:/emma
+      - /home/delorenj/emma_downloads:/video
     depends_on:
       gluetun:
         condition: service_healthy

@@ -1,0 +1,18 @@
+[Unit]
+Description=Vibe Kanban service
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=delorenj
+Group=delorenj
+WorkingDirectory=/home/delorenj/docker/trunk-main
+Environment=PATH=/home/delorenj/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=PORT=45035
+ExecStart=/home/delorenj/docker/trunk-main/scripts/vibe-kanban.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

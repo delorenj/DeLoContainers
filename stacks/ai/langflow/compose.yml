@@ -6,7 +6,7 @@ services:
     ports:
       - "7860:7860"
     environment:
-      - LANGFLOW_DATABASE_URL=${POSTGRES_URL}/langflow
+      - LANGFLOW_DATABASE_URL=postgresql://delorenj:Ittr5eesol@host.docker.internal:5432/langflow
       - LANGFLOW_CONFIG_DIR=app/langflow
     extra_hosts:
       - "host.docker.internal:host-gateway"

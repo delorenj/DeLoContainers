@@ -271,7 +271,7 @@ monitor_containers() {
 
     while true; do
         # Get all containers
-        containers=$(docker ps -a --format "{{.Names}}:{{.Status}}:{{.Health}}" 2>/dev/null || echo "")
+        containers=$(docker ps -a --format "{{.Names}}:{{.Status}}" || echo "")
 
         if [[ -z "$containers" ]]; then
             log_error "Failed to get container list"
@@ -280,9 +280,15 @@ monitor_containers() {
         fi
 
         # Check each container
-        while IFS=: read -r name status health; do
+        while IFS=: read -r name status; do
             # Skip if empty
             [[ -z "$name" ]] && continue
+
+            # Extract health from status
+            health=""
+            if [[ "$status" == *"(unhealthy)"* ]]; then
+                health="unhealthy"
+            fi
 
             # Clean up status
             status=$(echo "$status" | awk '{print $1}')
@@ -296,7 +302,7 @@ monitor_containers() {
                     ;;
                 "Up")
                     # Check health status
-                    if [[ "$health" == *"unhealthy"* ]]; then
+                    if [[ "$health" == "unhealthy" ]]; then
                         needs_recovery=true
                     fi
                     ;;

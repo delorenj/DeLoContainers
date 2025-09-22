@@ -1,0 +1,16 @@
+{
+  "title": "Simple Test Dashboard",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Test Panel",
+      "type": "text",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "options": {
+        "content": "# Dashboard Working!\n\nIf you see this, dashboards are loading properly."
+      }
+    }
+  ],
+  "time": {"from": "now-1h", "to": "now"},
+  "refresh": "30s"
+}

@@ -1,0 +1,48 @@
+groups:
+  - name: docker_health
+    interval: 30s
+    rules:
+      - alert: ContainerDown
+        expr: container_state_status{status="exited"} == 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.container_name }} is down"
+          description: "Container {{ $labels.container_name }} has been down for more than 2 minutes"
+
+      - alert: ContainerHighCpu
+        expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.container_name }} high CPU usage"
+          description: "Container {{ $labels.container_name }} CPU usage is above 80% (current: {{ $value }})"
+
+      - alert: ContainerHighMemory
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.container_name }} high memory usage"
+          description: "Container {{ $labels.container_name }} memory usage is above 90%"
+
+      - alert: ContainerUnhealthy
+        expr: container_health_status{health="unhealthy"} == 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.container_name }} is unhealthy"
+          description: "Container {{ $labels.container_name }} health check failing"
+
+      - alert: ContainerRestartingTooOften
+        expr: rate(container_restart_count[15m]) > 0.25
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.container_name }} restarting frequently"
+          description: "Container {{ $labels.container_name }} has restarted {{ $value }} times in 15 minutes"

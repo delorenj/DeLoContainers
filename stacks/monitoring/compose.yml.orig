@@ -173,44 +173,11 @@ services:
       - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
       - "traefik.docker.network=proxy"
 
-  health-monitor:
-    image: alpine:latest
-    container_name: docker-health-monitor
-    hostname: health-monitor
-
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ../../scripts:/scripts:ro
-      - health-logs:/var/log/docker-health
-      - health-state:/var/lib/docker-health
-    environment:
-      CHECK_INTERVAL: 30
-      MAX_RESTART_ATTEMPTS: 3
-      COOLDOWN_PERIOD: 300
-      ALERT_WEBHOOK: ${ALERT_WEBHOOK:-}
-    command: sh -c "apk add --no-cache bash curl jq docker-cli && /scripts/docker-health-monitor.sh"
-    networks:
-      - proxy
-    healthcheck:
-      test: ["CMD", "pgrep", "-f", "docker-health-monitor.sh"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-    labels:
-      - "prometheus.io/scrape=true"
-      - "prometheus.io/port=9091"
-      - "prometheus.io/path=/metrics"
-
 volumes:
   prometheus_data: {}
   grafana_data: {}
   dockge_data: {}
   uptime_kuma_data: {}
-  health-logs:
-    driver: local
-  health-state:
-    driver: local
 
 networks:
   proxy:

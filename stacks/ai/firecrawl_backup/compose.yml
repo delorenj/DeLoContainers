@@ -1,9 +1,17 @@
 name: firecrawl
 services:
+  redis:
+    image: redis:alpine
+    container_name: firecrawl-redis
+    networks:
+      - proxy
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
   playwright-service:
     build: apps/playwright-service
     environment:
-      - PORT=${PORT:-3002}
       - PROXY_SERVER=${PROXY_SERVER}
       - PROXY_USERNAME=${PROXY_USERNAME}
       - PROXY_PASSWORD=${PROXY_PASSWORD}
@@ -15,7 +23,7 @@ services:
       - "traefik.http.routers.playwright.rule=Host(`playwright.delo.sh`)"
       - "traefik.http.routers.playwright.entrypoints=websecure"
       - "traefik.http.routers.playwright.tls.certresolver=letsencrypt"
-      - "traefik.http.services.playwright.loadbalancer.server.port=${PORT:-3002}"
+      - "traefik.http.services.playwright.loadbalancer.server.port=3000"
       - "traefik.docker.network=proxy"
 
   api:
@@ -94,3 +102,6 @@ services:
 networks:
   proxy:
     external: true
+
+volumes:
+  redis_data:

@@ -1,0 +1,70 @@
+{
+  "id": null,
+  "title": "MetaMCP Detailed Monitoring",
+  "tags": ["metamcp", "mcp"],
+  "style": "dark",
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "MetaMCP Container Status",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+      "targets": [
+        {
+          "expr": "container_last_seen{container_label_com_docker_compose_service=\"metamcp\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {"options": {"match": "null", "result": {"text": "DOWN", "color": "red"}}, "type": "special"},
+            {"options": {"from": 1, "to": 999999999999, "result": {"text": "UP", "color": "green"}}, "type": "range"}
+          ],
+          "noValue": "DOWN"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "CPU Usage %",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=\"metamcp\"}[5m]) * 100",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "noValue": "0"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Memory Usage GB",
+      "type": "stat",
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0},
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{container_label_com_docker_compose_service=\"metamcp\"} / 1024 / 1024 / 1024",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decgbytes",
+          "decimals": 2,
+          "noValue": "0"
+        }
+      }
+    }
+  ],
+  "time": {"from": "now-1h", "to": "now"},
+  "refresh": "30s"
+}

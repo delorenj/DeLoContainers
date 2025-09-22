@@ -4,6 +4,7 @@ global:
 
 rule_files:
   - "alert_rules.yml"
+  - "rules/docker-health.yml"
 
 alerting:
   alertmanagers:
@@ -30,3 +31,8 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:2375']
     metrics_path: /metrics
+
+  - job_name: 'metamcp'
+    static_configs:
+      - targets: ['host.docker.internal:3000']  # Adjust port if different
+    scrape_interval: 30s
