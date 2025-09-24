@@ -184,7 +184,9 @@ services:
       AUTHORIZATION_ADMINLIST_ENABLED: ${WEAVIATE_AUTHORIZATION_ADMINLIST_ENABLED:-true}
       AUTHORIZATION_ADMINLIST_USERS: ${WEAVIATE_AUTHORIZATION_ADMINLIST_USERS:-hello@dify.ai}
     ports:
-      - "${EXPOSE_WEAVIATE_PORT:-8080}:8080"
+      - "${EXPOSE_WEAVIATE_PORT:-8081}:8080"
+    # IMPORTANT: Port 8080 is reserved for Traefik dashboard
+    # This service uses 8081 externally to avoid conflicts
 
 networks:
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.

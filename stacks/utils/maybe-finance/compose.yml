@@ -1,76 +1,20 @@
-
-version: '3.8'
-
 services:
   web:
-    image: ghcr.io/maybe-finance/maybe:stable
-    container_name: maybe-web
-    restart: unless-stopped
-    environment:
-      - RAILS_ENV=production
-      - RAILS_SERVE_STATIC_FILES=true
-      - RAILS_LOG_TO_STDOUT=true
-      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      - DB_HOST=postgres
-      - DB_USER=maybe
-      - DB_PASS=${POSTGRES_PASSWORD}
-      - DB_NAME=maybe_production
+    image: ghcr.io/maybe-finance/maybe:latest
+    ports:
+      - "3000:3000"
     depends_on:
       - postgres
-      - redis
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.maybe.rule=Host(`maybe.delo.sh`)"
-      - "traefik.http.routers.maybe.entrypoints=websecure"
-      - "traefik.http.routers.maybe.tls.certresolver=myresolver"
-      - "traefik.http.services.maybe.loadbalancer.server.port=3000"
-
-  worker:
-    image: ghcr.io/maybe-finance/maybe:stable
-    container_name: maybe-worker
-    restart: unless-stopped
     environment:
-      - RAILS_ENV=production
+      - DATABASE_URL=postgresql://maybe:password@postgres:5432/maybe_production
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      - DB_HOST=postgres
-      - DB_USER=maybe
-      - DB_PASS=${POSTGRES_PASSWORD}
-      - DB_NAME=maybe_production
-    depends_on:
-      - postgres
-      - redis
-    command: bundle exec sidekiq -C config/sidekiq.yml
-    networks:
-      - proxy
-
   postgres:
     image: postgres:15
-    container_name: maybe-postgres
-    restart: unless-stopped
     environment:
       - POSTGRES_USER=maybe
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=maybe_production
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - proxy
-
-  redis:
-    image: redis:7
-    container_name: maybe-redis
-    restart: unless-stopped
-    volumes:
-      - redis-data:/data
-    networks:
-      - proxy
-
 volumes:
   postgres-data:
-  redis-data:
-
-networks:
-  proxy:
-    external: true

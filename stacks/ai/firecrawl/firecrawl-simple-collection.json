@@ -1,0 +1,72 @@
+{
+  "name": "Firecrawl API",
+  "requests": [
+    {
+      "name": "Scrape URL",
+      "method": "POST",
+      "url": "https://api.firecrawl.dev/v2/scrape",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer fc-YOUR_API_KEY"
+      },
+      "body": {
+        "url": "https://firecrawl.dev",
+        "formats": ["markdown", "html"]
+      }
+    },
+    {
+      "name": "Crawl Website", 
+      "method": "POST",
+      "url": "https://api.firecrawl.dev/v2/crawl",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer fc-YOUR_API_KEY"
+      },
+      "body": {
+        "url": "https://docs.firecrawl.dev",
+        "limit": 10,
+        "scrapeOptions": {
+          "formats": ["markdown", "html"]
+        }
+      }
+    },
+    {
+      "name": "Map Website",
+      "method": "POST", 
+      "url": "https://api.firecrawl.dev/v2/map",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer fc-YOUR_API_KEY"
+      },
+      "body": {
+        "url": "https://firecrawl.dev"
+      }
+    },
+    {
+      "name": "Search Web",
+      "method": "POST",
+      "url": "https://api.firecrawl.dev/v2/search", 
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer fc-YOUR_API_KEY"
+      },
+      "body": {
+        "query": "what is firecrawl?",
+        "limit": 5
+      }
+    },
+    {
+      "name": "Extract Data",
+      "method": "POST",
+      "url": "https://api.firecrawl.dev/v2/extract",
+      "headers": {
+        "Content-Type": "application/json", 
+        "Authorization": "Bearer fc-YOUR_API_KEY"
+      },
+      "body": {
+        "urls": ["https://firecrawl.dev/*"],
+        "prompt": "Extract the company mission from the page."
+      }
+    }
+  ]
+}

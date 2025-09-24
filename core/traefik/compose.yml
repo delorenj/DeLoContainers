@@ -4,8 +4,8 @@ services:
     container_name: traefik
     ports:
       - "80:80"
-      - "443:443"
-      - "8099:8080"
+      - "8443:443"
+      - "8080:8080"
     networks:
       - proxy
     env_file:
@@ -36,6 +36,7 @@ services:
       - "--metrics.prometheus=true"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
       - "--log.level=DEBUG"
+      - "--accesslog=true"
     restart: unless-stopped
 
   whoami:
@@ -48,6 +49,7 @@ services:
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
       - "traefik.http.routers.whoami.tls=true"
+      - "traefik.docker.network=proxy"
 
   assets-nginx:
     image: nginx:alpine
@@ -63,9 +65,10 @@ services:
       - "traefik.http.routers.assets.rule=Host(`assets.delo.sh`)"
       - "traefik.http.routers.assets.tls=true"
       - "traefik.http.routers.assets.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=proxy"
     restart: unless-stopped
 
 networks:
   proxy:
-    name: proxy
     external: true
+

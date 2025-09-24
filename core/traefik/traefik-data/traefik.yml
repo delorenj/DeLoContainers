@@ -24,7 +24,7 @@ certificatesResolvers:
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
-        delayBeforeCheck: 60s
+        delayBeforeCheck: 15s
       # Use Let's Encrypt production server
       caServer: "https://acme-v02.api.letsencrypt.org/directory"
 

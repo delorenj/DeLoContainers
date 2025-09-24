@@ -114,7 +114,7 @@ services:
 
   # Dockge - Docker Compose Management UI
   dockge:
-    image: louislam/dockge:1
+    image: louislam/dockge:latest
     container_name: dockge
     restart: unless-stopped
     ports:
@@ -122,8 +122,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - dockge_data:/app/data
-      - ./stacks:/opt/stacks
-      - ./core:/opt/core
+      - ./../../stacks:/opt/stacks
+      - ./../../core:/opt/core
 
     environment:
       - DOCKGE_STACKS_DIR=/opt/stacks

@@ -1,0 +1,308 @@
+{
+  "name": "Firecrawl API Collection",
+  "description": "Complete Firecrawl API collection for web scraping, crawling, and data extraction",
+  "version": "1.0.0",
+  "folders": [
+    {
+      "name": "Core Endpoints",
+      "description": "Main Firecrawl API endpoints",
+      "requests": [
+        {
+          "name": "Scrape URL",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/scrape",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://firecrawl.dev",
+              "formats": ["markdown", "html"]
+            }
+          },
+          "description": "Scrape a single URL and get content in LLM-ready formats"
+        },
+        {
+          "name": "Crawl Website",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/crawl",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://docs.firecrawl.dev",
+              "limit": 10,
+              "scrapeOptions": {
+                "formats": ["markdown", "html"]
+              }
+            }
+          },
+          "description": "Crawl a website and all accessible subpages"
+        },
+        {
+          "name": "Check Crawl Status",
+          "method": "GET",
+          "url": "https://api.firecrawl.dev/v2/crawl/{crawlId}",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "params": [
+            {
+              "key": "crawlId",
+              "value": "123-456-789",
+              "description": "The crawl job ID to check"
+            }
+          ],
+          "description": "Check the status of a crawl job and get results"
+        },
+        {
+          "name": "Map Website",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/map",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://firecrawl.dev"
+            }
+          },
+          "description": "Get all URLs from a website"
+        },
+        {
+          "name": "Map Website with Search",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/map",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://firecrawl.dev",
+              "search": "docs"
+            }
+          },
+          "description": "Search for specific URLs within a website"
+        }
+      ]
+    },
+    {
+      "name": "Search & Extract",
+      "description": "Web search and data extraction endpoints",
+      "requests": [
+        {
+          "name": "Search Web",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/search",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "query": "what is firecrawl?",
+              "limit": 5
+            }
+          },
+          "description": "Search the web and get results"
+        },
+        {
+          "name": "Search Web with Content",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/search",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "query": "what is firecrawl?",
+              "limit": 5,
+              "scrapeOptions": {
+                "formats": ["markdown", "links"]
+              }
+            }
+          },
+          "description": "Search the web and scrape content from results"
+        },
+        {
+          "name": "Extract Structured Data",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/extract",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "urls": [
+                "https://firecrawl.dev/*"
+              ],
+              "prompt": "Extract the company mission, whether it is open source, and whether it is in Y Combinator from the page.",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "company_mission": {
+                    "type": "string"
+                  },
+                  "is_open_source": {
+                    "type": "boolean"
+                  },
+                  "is_in_yc": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "company_mission",
+                  "is_open_source",
+                  "is_in_yc"
+                ]
+              }
+            }
+          },
+          "description": "Extract structured data from websites using AI"
+        }
+      ]
+    },
+    {
+      "name": "Advanced Features",
+      "description": "Advanced scraping and batch operations",
+      "requests": [
+        {
+          "name": "LLM Extraction",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/scrape",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://www.mendable.ai/",
+              "formats": [
+                {
+                  "type": "json",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "company_mission": { "type": "string" },
+                      "supports_sso": { "type": "boolean" },
+                      "is_open_source": { "type": "boolean" },
+                      "is_in_yc": { "type": "boolean" }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "Extract structured data using LLM with schema"
+        },
+        {
+          "name": "Extract without Schema",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/scrape",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "https://docs.firecrawl.dev/",
+              "formats": [
+                {
+                  "type": "json",
+                  "prompt": "Extract the company mission from the page."
+                }
+              ]
+            }
+          },
+          "description": "Extract data using AI without predefined schema"
+        },
+        {
+          "name": "Scrape with Actions",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/scrape",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "url": "google.com",
+              "formats": ["markdown"],
+              "actions": [
+                {"type": "wait", "milliseconds": 2000},
+                {"type": "click", "selector": "textarea[title=\"Search\"]"},
+                {"type": "wait", "milliseconds": 2000},
+                {"type": "write", "text": "firecrawl"},
+                {"type": "wait", "milliseconds": 2000},
+                {"type": "press", "key": "ENTER"},
+                {"type": "wait", "milliseconds": 3000},
+                {"type": "click", "selector": "h3"},
+                {"type": "wait", "milliseconds": 3000},
+                {"type": "screenshot"}
+              ]
+            }
+          },
+          "description": "Interact with web pages using actions before scraping"
+        },
+        {
+          "name": "Batch Scrape",
+          "method": "POST",
+          "url": "https://api.firecrawl.dev/v2/batch/scrape",
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer fc-YOUR_API_KEY"
+          },
+          "body": {
+            "mode": "json",
+            "json": {
+              "urls": [
+                "https://docs.firecrawl.dev",
+                "https://docs.firecrawl.dev/sdks/overview"
+              ],
+              "formats": ["markdown", "html"]
+            }
+          },
+          "description": "Scrape multiple URLs simultaneously"
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "name": "Production",
+      "variables": {
+        "baseUrl": "https://api.firecrawl.dev",
+        "apiKey": "fc-YOUR_API_KEY"
+      }
+    },
+    {
+      "name": "Local",
+      "variables": {
+        "baseUrl": "http://localhost:3002",
+        "apiKey": "fc-YOUR_API_KEY"
+      }
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": "fc-YOUR_API_KEY"
+  }
+}

@@ -1,0 +1,422 @@
+{
+  "collections": [
+    {
+      "id": "firecrawl-api",
+      "name": "Firecrawl API Collection",
+      "description": "Complete Firecrawl API collection for web scraping, crawling, and data extraction",
+      "environments": [
+        {
+          "id": "production",
+          "name": "Production",
+          "variables": {
+            "baseUrl": "https://api.firecrawl.dev",
+            "apiKey": "fc-YOUR_API_KEY"
+          }
+        },
+        {
+          "id": "local",
+          "name": "Local",
+          "variables": {
+            "baseUrl": "http://localhost:3002",
+            "apiKey": "fc-YOUR_API_KEY"
+          }
+        }
+      ],
+      "folders": [
+        {
+          "id": "core-endpoints",
+          "name": "Core Endpoints",
+          "description": "Main Firecrawl API endpoints",
+          "requests": [
+            {
+              "id": "scrape-url",
+              "name": "Scrape URL",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/scrape",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://firecrawl.dev",
+                  "formats": ["markdown", "html"]
+                }
+              },
+              "description": "Scrape a single URL and get content in LLM-ready formats"
+            },
+            {
+              "id": "crawl-website",
+              "name": "Crawl Website",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/crawl",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://docs.firecrawl.dev",
+                  "limit": 10,
+                  "scrapeOptions": {
+                    "formats": ["markdown", "html"]
+                  }
+                }
+              },
+              "description": "Crawl a website and all accessible subpages"
+            },
+            {
+              "id": "check-crawl-status",
+              "name": "Check Crawl Status",
+              "method": "GET",
+              "url": "{{baseUrl}}/v2/crawl/123-456-789",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "params": [
+                {
+                  "name": "crawlId",
+                  "value": "123-456-789",
+                  "description": "The crawl job ID to check",
+                  "enabled": true
+                }
+              ],
+              "description": "Check the status of a crawl job and get results"
+            },
+            {
+              "id": "map-website",
+              "name": "Map Website",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/map",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://firecrawl.dev"
+                }
+              },
+              "description": "Get all URLs from a website"
+            },
+            {
+              "id": "map-website-search",
+              "name": "Map Website with Search",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/map",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://firecrawl.dev",
+                  "search": "docs"
+                }
+              },
+              "description": "Search for specific URLs within a website"
+            }
+          ]
+        },
+        {
+          "id": "search-extract",
+          "name": "Search & Extract",
+          "description": "Web search and data extraction endpoints",
+          "requests": [
+            {
+              "id": "search-web",
+              "name": "Search Web",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/search",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "query": "what is firecrawl?",
+                  "limit": 5
+                }
+              },
+              "description": "Search the web and get results"
+            },
+            {
+              "id": "search-web-content",
+              "name": "Search Web with Content",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/search",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "query": "what is firecrawl?",
+                  "limit": 5,
+                  "scrapeOptions": {
+                    "formats": ["markdown", "links"]
+                  }
+                }
+              },
+              "description": "Search the web and scrape content from results"
+            },
+            {
+              "id": "extract-structured-data",
+              "name": "Extract Structured Data",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/extract",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "urls": [
+                    "https://firecrawl.dev/*"
+                  ],
+                  "prompt": "Extract the company mission, whether it is open source, and whether it is in Y Combinator from the page.",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "company_mission": {
+                        "type": "string"
+                      },
+                      "is_open_source": {
+                        "type": "boolean"
+                      },
+                      "is_in_yc": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "company_mission",
+                      "is_open_source",
+                      "is_in_yc"
+                    ]
+                  }
+                }
+              },
+              "description": "Extract structured data from websites using AI"
+            }
+          ]
+        },
+        {
+          "id": "advanced-features",
+          "name": "Advanced Features",
+          "description": "Advanced scraping and batch operations",
+          "requests": [
+            {
+              "id": "llm-extraction",
+              "name": "LLM Extraction",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/scrape",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://www.mendable.ai/",
+                  "formats": [
+                    {
+                      "type": "json",
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "company_mission": { "type": "string" },
+                          "supports_sso": { "type": "boolean" },
+                          "is_open_source": { "type": "boolean" },
+                          "is_in_yc": { "type": "boolean" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "description": "Extract structured data using LLM with schema"
+            },
+            {
+              "id": "extract-without-schema",
+              "name": "Extract without Schema",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/scrape",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "https://docs.firecrawl.dev/",
+                  "formats": [
+                    {
+                      "type": "json",
+                      "prompt": "Extract the company mission from the page."
+                    }
+                  ]
+                }
+              },
+              "description": "Extract data using AI without predefined schema"
+            },
+            {
+              "id": "scrape-with-actions",
+              "name": "Scrape with Actions",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/scrape",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "url": "google.com",
+                  "formats": ["markdown"],
+                  "actions": [
+                    {"type": "wait", "milliseconds": 2000},
+                    {"type": "click", "selector": "textarea[title=\"Search\"]"},
+                    {"type": "wait", "milliseconds": 2000},
+                    {"type": "write", "text": "firecrawl"},
+                    {"type": "wait", "milliseconds": 2000},
+                    {"type": "press", "key": "ENTER"},
+                    {"type": "wait", "milliseconds": 3000},
+                    {"type": "click", "selector": "h3"},
+                    {"type": "wait", "milliseconds": 3000},
+                    {"type": "screenshot"}
+                  ]
+                }
+              },
+              "description": "Interact with web pages using actions before scraping"
+            },
+            {
+              "id": "batch-scrape",
+              "name": "Batch Scrape",
+              "method": "POST",
+              "url": "{{baseUrl}}/v2/batch/scrape",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                },
+                {
+                  "name": "Authorization",
+                  "value": "Bearer {{apiKey}}",
+                  "enabled": true
+                }
+              ],
+              "body": {
+                "mode": "json",
+                "json": {
+                  "urls": [
+                    "https://docs.firecrawl.dev",
+                    "https://docs.firecrawl.dev/sdks/overview"
+                  ],
+                  "formats": ["markdown", "html"]
+                }
+              },
+              "description": "Scrape multiple URLs simultaneously"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

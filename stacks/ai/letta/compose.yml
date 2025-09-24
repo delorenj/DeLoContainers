@@ -2,10 +2,6 @@ services:
   letta:
     image: letta/letta:latest
     container_name: letta
-    ports:
-      - "8283:8283"
-    expose:
-      - "8283"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.letta.rule=Host(`letta.delo.sh`)"
