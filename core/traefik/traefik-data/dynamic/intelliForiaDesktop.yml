@@ -1,0 +1,15 @@
+http:
+  routers:
+    intelliforia-router:
+      rule: "Host(`getIntelliForia.delo.sh`) || Host(`app.intelliforia.delo.sh`)"
+      service: intelliforia-service
+      entrypoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    intelliforia-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:3333"

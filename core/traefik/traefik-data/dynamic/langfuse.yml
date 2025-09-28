@@ -1,0 +1,24 @@
+http:
+  middlewares:
+    langfuse-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+
+  routers:
+    langfuse:
+      rule: "Host(`langfuse.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: langfuse
+      middlewares:
+        - langfuse-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    langfuse:
+      loadBalancer:
+        servers:
+          - url: "http://10.43.126.119:3000"

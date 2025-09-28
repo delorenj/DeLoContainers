@@ -32,12 +32,17 @@ services:
     networks:
       - proxy
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://1.1.1.1"]
+      test:
+        - CMD
+        - wget
+        - --quiet
+        - --tries=1
+        - --spider
+        - http://1.1.1.1
       interval: 60s
       timeout: 10s
       retries: 3
       start_period: 30s
-
   vpn-monitor:
     image: alpine:latest
     container_name: vpn-monitor
@@ -55,12 +60,11 @@ services:
       done'
     volumes:
       - /sys/class/net:/sys/class/net:ro
-
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
-    network_mode: "service:gluetun"
+    network_mode: service:gluetun
     environment:
       - WEBUI_PORT=8091
       - PUID=${PUID}
@@ -78,7 +82,6 @@ services:
       gluetun:
         condition: service_healthy
         restart: true
-
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -94,14 +97,13 @@ services:
     networks:
       - proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr.entrypoints=websecure"
-      - "traefik.http.routers.prowlarr.rule=Host(`index.delo.sh`)"
-      - "traefik.http.routers.prowlarr.tls=true"
-      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-      - "traefik.docker.network=proxy"
-
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.entrypoints=websecure
+      - traefik.http.routers.prowlarr.rule=Host(`index.delo.sh`)
+      - traefik.http.routers.prowlarr.tls=true
+      - traefik.http.routers.prowlarr.tls.certresolver=letsencrypt
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+      - traefik.docker.network=proxy
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
@@ -109,33 +111,30 @@ services:
     networks:
       - proxy
     ports:
-      - "8096:8096"
-      - "8920:8920" # HTTPS
-      - "7359:7359/udp" # DLNA discovery
-      - "1900:1900/udp" # UPnP discovery
+      - 8096:8096
+      - 8920:8920
+      - 7359:7359/udp
+      - 1900:1900/udp
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
       - /home/delorenj/tonny:/tonny
       - emma_video:/EmmaVideo
       - /home/delorenj/Videos:/BigChungusVideos
-    restart: "unless-stopped"
-    # Optional - alternative address used for autodiscovery
+    restart: on-failure
     environment:
       - JELLYFIN_PublishedServerUrl=https://movies.delo.sh
       - JELLYFIN_CAST_RECEIVER_APP_ID=F007D354
-    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.entrypoints=websecure"
-      - "traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)"
-      - "traefik.http.routers.jellyfin.tls=true"
-      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
-      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-      - "traefik.docker.network=proxy"
-
+      - traefik.enable=true
+      - traefik.http.routers.jellyfin.entrypoints=websecure
+      - traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)
+      - traefik.http.routers.jellyfin.tls=true
+      - traefik.http.routers.jellyfin.tls.certresolver=letsencrypt
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+      - traefik.docker.network=proxy
 volumes:
   emma_video:
     name: emma_video
@@ -143,8 +142,7 @@ volumes:
     driver_opts:
       type: nfs
       o: addr=192.168.1.50,rw,nfsvers=4
-      device: ":/volume1/video"
-
+      device: :/volume1/video
 networks:
   proxy:
     external: true

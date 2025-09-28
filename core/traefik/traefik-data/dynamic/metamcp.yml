@@ -1,0 +1,52 @@
+http:
+  middlewares:
+    metamcp-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          Access-Control-Allow-Origin: "*"
+          Access-Control-Allow-Methods: "GET,POST,PUT,DELETE,OPTIONS"
+          Access-Control-Allow-Headers: "content-type,authorization,x-api-key,mcp-protocol-version,mcp-session-id"
+
+  routers:
+    # High priority router for SSE
+    metamcp-sse-router:
+      rule: "Host(`mcp.delo.sh`) && (PathPrefix(`/mcp-proxy`) || PathPrefix(`/metamcp`))"
+      entryPoints:
+        - websecure
+      service: metamcp-sse-service
+      priority: 150
+      middlewares:
+        - metamcp-headers
+      tls:
+        certResolver: letsencrypt
+
+    # Standard router for the rest
+    metamcp-router:
+      rule: "Host(`mcp.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: metamcp-service
+      priority: 100
+      middlewares:
+        - metamcp-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    # Service for SSE with flushInterval
+    metamcp-sse-service:
+      loadBalancer:
+        servers:
+          # This URL points to the ClusterIP and port of the 'metamcp-sse' K8s service
+          - url: "http://10.43.60.73:80"
+        responseForwarding:
+          flushInterval: "1ms"
+
+    # Standard service
+    metamcp-service:
+      loadBalancer:
+        servers:
+          # This URL points to the ClusterIP and port of the 'metamcp' K8s service
+          - url: "http://10.43.200.89:80"
