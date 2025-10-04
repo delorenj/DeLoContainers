@@ -1,0 +1,54 @@
+http:
+  middlewares:
+    whisper-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "whisper.delo.sh"
+          X-Forwarded-Port: "443"
+          X-Forwarded-For: "{remote_addr}"
+          X-Real-IP: "{remote_addr}"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex, nofollow"
+        sslRedirect: true
+        sslHost: "whisper.delo.sh"
+        stsSeconds: 315360000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "OPTIONS"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-Requested-With"
+        accessControlMaxAge: 100
+
+  routers:
+    whisper:
+      rule: "Host(`whisper.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: whisper
+      middlewares:
+        - whisper-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    whisper:
+      loadBalancer:
+        servers:
+          - url: "http://whisper-server:58080"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "whisper.delo.sh"

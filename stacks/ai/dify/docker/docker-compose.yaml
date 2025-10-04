@@ -737,6 +737,9 @@ services:
           "CMD-SHELL",
           "redis-cli -a ${REDIS_PASSWORD:-difyai123456} ping | grep -q PONG",
         ]
+    networks:
+      - proxy
+      - default
 
   # The DifySandbox
   sandbox:

@@ -12,7 +12,7 @@ This stack provides media management services including torrent management and i
 
 ### qBittorrent
 - **Purpose**: Torrent client
-- **Web UI**: http://localhost:8080
+- **Web UI**: http://localhost:8091
 - **Configuration**: Located in `qbittorrent/` directory
 - **Dependencies**: Gluetun (VPN)
 - **Default Login**: 
@@ -50,6 +50,13 @@ Required environment variables (defined in root `.env`):
 ## Network
 
 All services are on the same Docker network. qBittorrent traffic is routed through Gluetun VPN container.
+
+## Permissions & NFS
+
+- Verify the host user ID matches the expected compose values: `id delorenj` should report `uid=1000 gid=1000`.
+- Run `./scripts/fix-qbittorrent-permissions.sh` to align ownership for the downloads directories and the qBittorrent config using the values in `.env`.
+- Mount the NAS share with: `192.168.1.50:/volume1/video /mnt/video nfs4 rw,vers=4.1,rsize=131072,wsize=131072,hard,proto=tcp,timeo=600,retrans=2,sec=sys,_netdev 0 0` in `/etc/fstab` (adjust host paths if needed).
+- Validate the NFS share and container permissions end-to-end with `./scripts/test-nfs-permissions.sh qbittorrent`; the script reports mismatched UID/GID values or read/write failures with remediation hints.
 
 ## Maintenance
 

@@ -119,3 +119,4 @@ claude-flow.ps1
 hive-mind-prompt-*.txt
 
 stacks/Windows/diagnostics/
+.credentials

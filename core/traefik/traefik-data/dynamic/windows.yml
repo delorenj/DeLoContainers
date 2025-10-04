@@ -1,0 +1,24 @@
+http:
+  middlewares:
+    windows-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Prefix: "/"
+
+  routers:
+    windows:
+      rule: "Host(`windows.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: windows
+      middlewares:
+        - windows-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    windows:
+      loadBalancer:
+        servers:
+          - url: "http://windows:8006"

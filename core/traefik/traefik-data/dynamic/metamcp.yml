@@ -3,7 +3,9 @@ http:
     metamcp-headers:
       headers:
         customRequestHeaders:
+          X-Forwarded-Host: "mcp.delo.sh"
           X-Forwarded-Proto: "https"
+          X-Forwarded-Port: "443"
         customResponseHeaders:
           Access-Control-Allow-Origin: "*"
           Access-Control-Allow-Methods: "GET,POST,PUT,DELETE,OPTIONS"

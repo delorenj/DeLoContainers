@@ -1,0 +1,86 @@
+🚨 IMMEDIATE ACTION REQUIRED - SYNOLOGY NAS RECOVERY 🚨
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 1: PHYSICAL RESET (DO THIS NOW)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to your Synology NAS (physical device)
+2. Locate the RESET button (usually on back panel, might need paperclip)
+3. With NAS powered ON and running:
+   - Press and HOLD reset button
+   - Count: "One Mississippi, Two Mississippi, Three Mississippi, Four Mississippi"
+   - Release when you hear ONE BEEP (about 4 seconds)
+   - If no beep, release at 4 seconds anyway
+
+4. WAIT 2-3 minutes for reset to complete
+   - Power LED will blink during process
+   - Network activity will resume when ready
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2: FIND YOUR NAS IP ADDRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After reset completes, find your NAS:
+
+Option A: Try default addresses
+- http://diskstation:5000
+- http://diskstation.local:5000
+- http://192.168.1.X:5000 (check your subnet)
+
+Option B: Use discovery tools
+- Run: ./scripts/synology-recovery-helper.sh
+- Or visit: https://find.synology.com
+- Or check router's DHCP client list
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3: LOGIN TO DSM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Username: admin
+Password: [LEAVE BLANK - just press Enter]
+
+You'll be forced to set a new password immediately.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4: RECREATE YOUR USER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Control Panel → User & Group
+2. Click "Create" button
+3. Username: delorenj
+4. Password: [set strong password]
+5. Join group: administrators
+6. Next → Next → Apply
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 5: FIX NFS PERMISSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In DSM:
+1. Control Panel → Shared Folder
+2. Select "video" → Edit
+3. NFS Permissions tab
+4. Edit the rule:
+   - Squash: Map all users to admin
+   - Privilege: Read/Write
+   - Async: ✓ Enabled
+5. OK → OK
+
+On Docker host (this terminal):
+sudo umount /mnt/video
+sudo mount -t nfs -o rw,uid=1000,gid=1000,vers=3 [NAS-IP]:/volume1/video /mnt/video
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱️ TOTAL TIME: 15-20 minutes
+💾 DATA LOSS: ZERO - All files preserved
+🔒 RESULT: Full access restored
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IF MODE 1 FAILS:
+Try Mode 2: Same process but hold 10 seconds (3 beeps)
+This reinstalls DSM but keeps your data (takes 30-60 min)
+
+NEED HELP?
+- Run: ./scripts/synology-recovery-helper.sh
+- Docs: ./docs/SYNOLOGY_RECOVERY_PROCEDURE.md
+- Report: ./docs/FINAL_RECOVERY_REPORT.md

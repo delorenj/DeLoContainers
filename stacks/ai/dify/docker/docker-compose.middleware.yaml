@@ -2,7 +2,7 @@ services:
   # The postgres database.
   db:
     image: postgres:15-alpine
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./middleware.env
     environment:
@@ -20,7 +20,17 @@ services:
     ports:
       - "${EXPOSE_POSTGRES_PORT:-5432}:5432"
     healthcheck:
-      test: [ 'CMD', 'pg_isready', '-h', 'db', '-U', '${PGUSER:-postgres}', '-d', '${POSTGRES_DB:-dify}' ]
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-h",
+          "db",
+          "-U",
+          "${PGUSER:-postgres}",
+          "-d",
+          "${POSTGRES_DB:-dify}",
+        ]
       interval: 1s
       timeout: 3s
       retries: 30
@@ -28,7 +38,7 @@ services:
   # The redis cache.
   redis:
     image: redis:6-alpine
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./middleware.env
     environment:
@@ -41,12 +51,16 @@ services:
     ports:
       - "${EXPOSE_REDIS_PORT:-6379}:6379"
     healthcheck:
-      test: [ 'CMD-SHELL', 'redis-cli -a ${REDIS_PASSWORD:-difyai123456} ping | grep -q PONG' ]
+      test:
+        [
+          "CMD-SHELL",
+          "redis-cli -a ${REDIS_PASSWORD:-difyai123456} ping | grep -q PONG",
+        ]
 
   # The DifySandbox
   sandbox:
     image: langgenius/dify-sandbox:0.2.12
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./middleware.env
     environment:
@@ -65,14 +79,14 @@ services:
       - ./volumes/sandbox/dependencies:/dependencies
       - ./volumes/sandbox/conf:/conf
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8194/health" ]
+      test: ["CMD", "curl", "-f", "http://localhost:8194/health"]
     networks:
       - ssrf_proxy_network
 
   # plugin daemon
   plugin_daemon:
     image: langgenius/dify-plugin-daemon:0.2.0-local
-    restart: always
+    restart: unless-stopped
     env_file:
       - ./middleware.env
     environment:
@@ -137,11 +151,16 @@ services:
   # https://docs.dify.ai/learn-more/faq/install-faq#18-why-is-ssrf-proxy-needed%3F
   ssrf_proxy:
     image: ubuntu/squid:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./ssrf_proxy/squid.conf.template:/etc/squid/squid.conf.template
       - ./ssrf_proxy/docker-entrypoint.sh:/docker-entrypoint-mount.sh
-    entrypoint: [ "sh", "-c", "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh",
+      ]
     env_file:
       - ./middleware.env
     environment:
@@ -164,7 +183,7 @@ services:
     profiles:
       - ""
       - weaviate
-    restart: always
+    restart: unless-stopped
     volumes:
       # Mount the Weaviate data directory to the container.
       - ${WEAVIATE_HOST_VOLUME:-./volumes/weaviate}:/var/lib/weaviate

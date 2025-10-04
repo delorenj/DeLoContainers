@@ -27,38 +27,28 @@ services:
     environment:
       - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
 
-#  neo4j:
-#    image: neo4j:latest
-#    networks:
-#      - proxy
-#    volumes:
-#      - neo4j_data:/data
-#    environment:
-#      - NEO4J_AUTH=${defaultUsername}/${defaultPassword}
-#      - NEO4J_PLUGINS=["apoc"]
-#      - NEO4J_apoc_export_file_enabled=true
-#      - NEO4J_apoc_import_file_enabled=true
-#      - NEO4J_apoc_import_file_use__neo4j__config=true
-#    restart: unless-stopped
+  neo4j:
+    image: neo4j:latest
+    volumes:
+      - ./neo4j/logs:/logs
+      - ./neo4j/config:/config
+      - ./neo4j/data:/data
+      - ./neo4j/plugin:/plugins
+    environment:
+      - NEO4J_AUTH_FILE=/run/secrets/neo4j_auth_file
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    restart: unless-stopped
+    secrets:
+      - neo4j_auth_file
 
-  # PostgreSQL service removed - using native PostgreSQL installation
-  # Connection details:
-  # - Host: host.docker.internal (to access host machine from containers)
-  # - Port: ${POSTGRES_PORT:-5432} (from .env, defaults to 5432)
-  # - Database: ${POSTGRES_DB} (from .env)
-  # - Username: ${POSTGRES_USER} (from .env)
-  # - Password: ${POSTGRES_PASSWORD} (from .env)
-  #
-  # Note: Services needing PostgreSQL should use:
-  # extra_hosts:
-  #   - "host.docker.internal:host-gateway"
-  # And connect to: host.docker.internal:${POSTGRES_PORT:-5432}
+secrets:
+  neo4j_auth_file:
+    file: ./neo4j/.credentials
 
 volumes:
   qdrant_data:
-  # redis_data: removed - using external Redis
-#  neo4j_data:
-#    name: neo4j_data
 
 networks:
   proxy:

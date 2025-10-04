@@ -1,0 +1,38 @@
+services:
+  whisper-server:
+    image: debian:bookworm-slim
+    container_name: whisper-server
+    networks:
+      - proxy
+    volumes:
+      - /tmp/whisper.cpp/build/bin/whisper-server:/usr/local/bin/whisper-server:ro
+      - /home/delorenj/whisper-models:/models:ro
+      - /tmp/whisper.cpp/build/lib:/usr/local/lib:ro
+      - /tmp/whisper.cpp/build/ggml/src:/ggml-lib:ro
+    environment:
+      - LD_LIBRARY_PATH=/usr/local/lib:/ggml-lib
+    command:
+      - /bin/bash
+      - -c
+      - |
+        apt-get update && apt-get install -y curl libgomp1 && \
+        /usr/local/bin/whisper-server --host 0.0.0.0 --port 58080 -t 8 -nt -m /models/ggml-base.en.bin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whisper.entrypoints=websecure"
+      - "traefik.http.routers.whisper.rule=Host(`whisper.delo.sh`)"
+      - "traefik.http.routers.whisper.tls=true"
+      - "traefik.http.routers.whisper.tls.certresolver=letsencrypt"
+      - "traefik.http.services.whisper.loadbalancer.server.port=58080"
+      - "traefik.docker.network=proxy"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:58080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  proxy:
+    external: true

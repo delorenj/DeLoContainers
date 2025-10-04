@@ -1,0 +1,47 @@
+groups:
+- name: system_critical
+  rules:
+  - alert: SystemLoadCritical
+    expr: node_load1 > 100
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "CRITICAL: System load is {{ $value }}"
+      description: "Load average is dangerously high at {{ $value }}"
+
+  - alert: SystemLoadHigh
+    expr: node_load1 > 32
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High system load: {{ $value }}"
+      description: "Load average {{ $value }} exceeds CPU count"
+
+  - alert: ZombieProcesses
+    expr: node_procs_blocked > 50
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Too many zombie processes: {{ $value }}"
+      description: "System has {{ $value }} zombie processes"
+
+  - alert: MemoryUsageHigh
+    expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.9
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Memory usage critical: {{ $value | humanizePercentage }}"
+      description: "Memory usage is above 90%"
+
+  - alert: TooManyOpenFiles
+    expr: node_filefd_allocated / node_filefd_maximum > 0.8
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Too many open files"
+      description: "File descriptor usage is {{ $value | humanizePercentage }}"
