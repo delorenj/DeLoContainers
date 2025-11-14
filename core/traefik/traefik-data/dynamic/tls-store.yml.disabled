@@ -1,0 +1,9 @@
+tls:
+  stores:
+    default:
+      defaultGeneratedCert:
+        resolver: letsencrypt
+        domain:
+          main: "*.delo.sh"
+          sans:
+            - "delo.sh"
