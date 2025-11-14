@@ -1,10 +1,10 @@
 services:
   traefik:
-    image: traefik:v3.3
+    image: traefik:v3.6
     container_name: traefik
     ports:
       - "80:80"
-      - "8443:443"
+      - "443:443"
       - "8080:8080"
     networks:
       - proxy
@@ -23,6 +23,7 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/etc/traefik/acme.json
       - ./traefik-data/dynamic:/dynamic:ro
+      - ./traefik-data/certs:/certs:ro
       - ./traefik-data:/traefik-data
     labels:
       - "traefik.enable=true"
@@ -33,6 +34,7 @@ services:
       - "traefik.http.routers.traefik-secure.tls.certresolver=letsencrypt"
     command:
       - "--api.dashboard=true"
+      - "--api.insecure=true"
       - "--metrics.prometheus=true"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
       - "--log.level=DEBUG"
@@ -51,24 +53,6 @@ services:
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.docker.network=proxy"
 
-  assets-nginx:
-    image: nginx:alpine
-    container_name: assets-nginx
-    networks:
-      - proxy
-    volumes:
-      - ./assets:/usr/share/nginx/html:ro
-      - ./assets/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.assets.entrypoints=websecure"
-      - "traefik.http.routers.assets.rule=Host(`assets.delo.sh`)"
-      - "traefik.http.routers.assets.tls=true"
-      - "traefik.http.routers.assets.tls.certresolver=letsencrypt"
-      - "traefik.docker.network=proxy"
-    restart: unless-stopped
-
 networks:
   proxy:
     external: true
-

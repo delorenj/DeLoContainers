@@ -1,6 +1,7 @@
 api:
   dashboard: true
   debug: true
+  insecure: true
 
 entryPoints:
   web:
@@ -17,16 +18,13 @@ entryPoints:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: delorenj@delo.sh
+      email: jaradd@gmail.com
       storage: /etc/traefik/acme.json
       dnsChallenge:
-        provider: cloudflare
-        resolvers:
-          - "1.1.1.1:53"
-          - "8.8.8.8:53"
+        provider: letsencrypt
         delayBeforeCheck: 15s
-      # Use Let's Encrypt production server
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      # Use Let's Encrypt STAGING server for testing
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
 providers:
   docker:
@@ -39,13 +37,9 @@ providers:
   file:
     directory: "/dynamic"
 
-# Enable metrics for monitoring
-metrics:
-  prometheus: true
-
 # Configure logging
 log:
-  level: INFO
+  level: DEBUG
 
 # Access logs for debugging
 accessLog: {}

@@ -1,0 +1,26 @@
+services:
+  caddy:
+    build: .
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - proxy
+    env_file:
+      - .env
+    environment:
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_DNS_API_TOKEN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  proxy:
+    external: true

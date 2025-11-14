@@ -1,0 +1,8 @@
+{
+	email delorenj@delo.sh
+	acme_dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+}
+
+langflow.delo.sh {
+	reverse_proxy langflow:7860
+}
