@@ -1,0 +1,30 @@
+http:
+  routers:
+    qbittorrent-file:
+      rule: "Host(`get.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: qbittorrent-file
+      middlewares:
+        - qbittorrent-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    qbittorrent-file:
+      loadBalancer:
+        servers:
+          - url: "http://172.19.0.12:8091"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+
+  middlewares:
+    qbittorrent-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "get.delo.sh"
+          X-Forwarded-Port: "443"
+        sslRedirect: true
