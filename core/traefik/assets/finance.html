@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeLorenzo Family Financial Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        .header h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
+        .header .subtitle { color: #666; font-size: 1.2em; }
+        .alert-box {
+            background: #ff4444;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        .alert-box h2 { margin-bottom: 10px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .stat-card.positive { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .stat-card.negative { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+        .stat-card h3 { font-size: 0.9em; opacity: 0.9; margin-bottom: 10px; }
+        .stat-card .value { font-size: 2em; font-weight: bold; }
+        .chart-container { margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 15px; }
+        .chart-container h2 { color: #667eea; margin-bottom: 20px; text-align: center; }
+        .chart-wrapper { position: relative; height: 400px; margin-bottom: 20px; }
+        .priority-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .priority-section h3 { color: #856404; margin-bottom: 15px; }
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+        }
+        .payment-item .amount { font-weight: bold; color: #667eea; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 DeLorenzo Family Financial Dashboard</h1>
+            <p class="subtitle">October 2025 Analysis & Action Plan</p>
+        </div>
+        
+        <div class="alert-box">
+            <h2>🚨 URGENT ACTION REQUIRED</h2>
+            <p><strong>Amazon Visa:</strong> $810 past due + $71.26 over credit limit</p>
+            <p><strong>Citi Card:</strong> Payment due yesterday (11/16)</p>
+            <p><strong>Immediate payment needed:</strong> $3,805.74</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Credit Card Debt</h3>
+                <div class="value">$47,297</div>
+            </div>
+            <div class="stat-card positive">
+                <h3>Monthly Income</h3>
+                <div class="value">$12,500</div>
+            </div>
+            <div class="stat-card">
+                <h3>Monthly Expenses</h3>
+                <div class="value">$10,809</div>
+            </div>
+            <div class="stat-card positive">
+                <h3>Monthly Surplus</h3>
+                <div class="value">$1,691</div>
+            </div>
+            <div class="stat-card negative">
+                <h3>Monthly Interest Cost</h3>
+                <div class="value">$744</div>
+            </div>
+            <div class="stat-card negative">
+                <h3>Total Interest (Min Payments)</h3>
+                <div class="value">$23,592</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2>📊 Debt Distribution</h2>
+            <div class="chart-wrapper">
+                <canvas id="debtChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2>💸 Monthly Cash Flow</h2>
+            <div class="chart-wrapper">
+                <canvas id="cashflowChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2>📈 Debt Payoff Comparison</h2>
+            <div class="chart-wrapper">
+                <canvas id="payoffChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="priority-section">
+            <h3>🎯 TODAY'S PRIORITY PAYMENTS (November 17, 2025)</h3>
+            
+            <h4 style="color: #dc3545; margin-top: 15px;">TIER 1 - CRITICAL (Pay Immediately)</h4>
+            <div class="payment-item">
+                <span>Amazon Visa - Past Due Amount</span>
+                <span class="amount">$810.00</span>
+            </div>
+            <div class="payment-item">
+                <span>Amazon Visa - Additional to minimum</span>
+                <span class="amount">$832.00</span>
+            </div>
+            <div class="payment-item">
+                <span>Citi - Minimum Payment (OVERDUE)</span>
+                <span class="amount">$421.74</span>
+            </div>
+            <div class="payment-item" style="background: #dc3545; color: white;">
+                <strong>TIER 1 TOTAL</strong>
+                <strong>$2,063.74</strong>
+            </div>
+            
+            <h4 style="color: #ffc107; margin-top: 20px;">TIER 2 - ESSENTIAL (This Week)</h4>
+            <div class="payment-item">
+                <span>Rocket 2nd Mortgage</span>
+                <span class="amount">$740.00</span>
+            </div>
+            <div class="payment-item">
+                <span>Audi Payment</span>
+                <span class="amount">$949.00</span>
+            </div>
+            <div class="payment-item" style="background: #ffc107;">
+                <strong>TIER 2 TOTAL</strong>
+                <strong>$1,689.00</strong>
+            </div>
+            
+            <h4 style="color: #28a745; margin-top: 20px;">TIER 3 - IMPORTANT (When Possible)</h4>
+            <div class="payment-item">
+                <span>Gas/Electric</span>
+                <span class="amount">$53.00</span>
+            </div>
+            
+            <div class="payment-item" style="background: #667eea; color: white; margin-top: 20px; font-size: 1.2em;">
+                <strong>GRAND TOTAL NEEDED</strong>
+                <strong>$3,805.74</strong>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const debtCtx = document.getElementById('debtChart').getContext('2d');
+        new Chart(debtCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Amazon Visa', 'Citi Double Cash'],
+                datasets: [{
+                    data: [33071.26, 14225.93],
+                    backgroundColor: ['#ff6384', '#36a2eb'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 14 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                let value = context.parsed;
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': $' + value.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        const cashflowCtx = document.getElementById('cashflowChart').getContext('2d');
+        new Chart(cashflowCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Income', 'Expenses', 'Surplus', 'Interest Cost'],
+                datasets: [{
+                    label: 'Monthly Amount ($)',
+                    data: [12500, -10809, 1691, -744],
+                    backgroundColor: ['#38ef7d', '#ff6384', '#36a2eb', '#ff6384'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: function(value) { return '$' + Math.abs(value).toLocaleString(); } }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: function(context) { return '$' + Math.abs(context.parsed.y).toLocaleString(); } } }
+                }
+            }
+        });
+        
+        const payoffCtx = document.getElementById('payoffChart').getContext('2d');
+        new Chart(payoffCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Minimum Payments', 'Aggressive Paydown'],
+                datasets: [
+                    { label: 'Months to Pay Off', data: [58, 17], backgroundColor: '#ff6384', yAxisID: 'y' },
+                    { label: 'Total Interest Paid ($)', data: [23592, 10335], backgroundColor: '#36a2eb', yAxisID: 'y1' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Months' } },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'Total Interest ($)' },
+                        grid: { drawOnChartArea: false },
+                        ticks: { callback: function(value) { return '$' + value.toLocaleString(); } }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.parsed.y;
+                                if (label.includes('Interest')) { return label + ': $' + value.toLocaleString(); }
+                                return label + ': ' + value + ' months';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
