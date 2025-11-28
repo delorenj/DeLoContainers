@@ -1,0 +1,15 @@
+http:
+  routers:
+    heymarket:
+      rule: "Host(`heymarket.delo.sh`) || Host(`ha.delo.sh`)"
+      service: "blackhole"
+      tls:
+        certResolver: letsencrypt
+      entryPoints:
+        - websecure
+
+  services:
+    blackhole:
+      loadBalancer:
+        servers:
+          - url: "http://0.0.0.0:12345" # Unreachable, returns 502

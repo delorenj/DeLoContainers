@@ -33,12 +33,7 @@ services:
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=letsencrypt"
     command:
-      - "--api.dashboard=true"
-      - "--api.insecure=true"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      - "--log.level=DEBUG"
-      - "--accesslog=true"
+      - "--configFile=/traefik.yml"
     restart: unless-stopped
 
   whoami:

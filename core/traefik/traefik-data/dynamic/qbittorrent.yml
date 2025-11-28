@@ -14,7 +14,7 @@ http:
     qbittorrent-file:
       loadBalancer:
         servers:
-          - url: "http://172.19.0.12:8091"
+          - url: "http://gluetun:8091"
         healthCheck:
           path: "/"
           interval: "30s"

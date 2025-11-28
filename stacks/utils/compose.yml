@@ -8,24 +8,52 @@ services:
   audiojangler:
     extends:
       file: ./audiojangler/compose.yml
-      service: audiojangler
+      service: audioutil
+  flexisip:
+    extends:
+      file: ./flexisip/compose.yml
+      service: flexisip
+  flexisip-redis:
+    extends:
+      file: ./flexisip/compose.yml
+      service: flexisip-redis
+  flexisip-mariadb:
+    extends:
+      file: ./flexisip/compose.yml
+      service: flexisip-mariadb
   marker:
     extends:
       file: ./marker/compose.yml
-      service: marker
-  rustdesk:
+      service: marker-api
+  hbbs:
     extends:
       file: ./rustdesk/compose.yml
-      service: rustdesk
+      service: hbbs
+  hbbr:
+    extends:
+      file: ./rustdesk/compose.yml
+      service: hbbr
   scripts:
     extends:
       file: ./scripts/compose.yml
       service: scripts
-  syncthing:
-    extends:
-      file: ./syncthing/compose.yml
-      service: syncthing
+#   syncthing:
+#     extends:
+#       file: ./syncthing/compose.yml
+#       service: syncthing
   nats:
     extends:
       file: ./nats/compose.yml
       service: nats
+
+networks:
+  proxy:
+    external: true
+  nats-internal:
+    driver: bridge
+
+volumes:
+  flexisip_redis_data:
+  flexisip_db_data:
+  nats_data:
+  marker-api-data:
