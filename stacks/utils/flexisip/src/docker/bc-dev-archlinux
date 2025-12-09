@@ -1,0 +1,112 @@
+###############################################################################
+# Dockerfile used to make gitlab.linphone.org:4567/bc/public/flexisip/bc-dev-archlinux:20250702_patch_cppjwt_for_gcc15
+###############################################################################
+
+FROM archlinux:base
+
+LABEL org.opencontainers.image.authors="Belledonne Communications <flexisip@belledonne-communications.com>"
+
+
+# Configure locale
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+ENV SHELL=/bin/bash
+
+  # Update the system
+RUN pacman --noconfirm --noprogressbar --sync --refresh --sysupgrade \
+  # Install development tools
+ && pacman --noconfirm --noprogressbar --sync \
+        ccache \
+        clang \
+        cmake \
+        doxygen \
+        gcc \
+        git \
+        make \
+        nasm \
+        ninja \
+        python-pip \
+        python-pystache \
+        python-six \
+        sudo \
+        locate \
+        yasm \
+  # Install Flexisip dependencies
+        gsm \
+        hiredis \
+        jsoncpp \
+        libsrtp \
+        libxml2 \
+        mariadb \
+        mbedtls \
+        net-snmp \
+        openssl \
+        opus \
+        postgresql \
+        speex \
+        speexdsp \
+        sqlite \
+        xerces-c \
+      # Dependencies of the B2BUA (and video tests)
+        libvpx \
+      # Test dependencies
+        boost \
+        redis \
+  # Clean package cache
+ && pacman --noconfirm -Scc
+
+# Configure user bc
+RUN useradd -m -s /bin/bash bc && \
+    echo 'bc:cotcot' | chpasswd && \
+    echo 'bc ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER bc
+WORKDIR /home/bc
+ENTRYPOINT /bin/bash
+CMD "--login"
+
+RUN sudo pacman --noconfirm --noprogressbar --sync \
+    # Build-time dependencies of AUR packages
+      fakeroot \
+      debugedit \
+      patch \
+  # Install AUR packages
+ && aurinstall() { \
+    # https://wiki.archlinux.org/title/AUR_helpers
+      local AURL="https://aur.archlinux.org/cgit/aur.git/snapshot/${1}.tar.gz"; \
+      local WDIR="$(mktemp --directory)"; \
+      cd "${WDIR}"; \
+      curl --remote-name --fail --silent "${AURL}"; \
+      tar --extract --file "${1}.tar.gz"; \
+      cd "${WDIR}/${1}"; \
+      # TODO: Remove the patch when it's fixed upstream
+      # https://github.com/arun11299/cpp-jwt/issues/104
+      # https://wiki.archlinux.org/title/Patching_packages#Creating_patches
+      makepkg --noconfirm --syncdeps --nobuild; \
+         pushd src/cpp-jwt-1.5 \
+      && curl https://github.com/arun11299/cpp-jwt/commit/20086d7198a3636280ebb90b11b5a18495831c8a.patch \
+       | git apply - \
+      && popd; \
+      makepkg --noconfirm --noextract --install --clean; \
+      rm -rf "${WDIR}"; \
+    } \
+  # OpenID Connect dependency
+ && aurinstall cpp-jwt \
+ && sudo pacman --noconfirm --remove --nosave --recursive \
+      fakeroot \
+      debugedit \
+      patch \
+  # Clean package cache
+ && sudo pacman --noconfirm -Scc
+
+# CVE-2022-24765, from git 2.35.2 onward
+RUN git config --global --add safe.directory *
+
+# Example build commands
+#
+# export CC=gcc
+# export CXX=g++
+# export BUILD_DIR_NAME="build.archlinux"
+# cmake -S . -B ./$BUILD_DIR_NAME -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$PWD/$BUILD_DIR_NAME/install" -DENABLE_UNIT_TESTS=ON -DENABLE_UNIT_TESTS_NGHTTP2ASIO=OFF
+# cmake --build . --target install

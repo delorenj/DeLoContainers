@@ -1,0 +1,173 @@
+#!/bin/bash
+
+### CONFIGURATION ###
+
+# You can set these in a launch.config.perso file that you put into
+# the root directory. See launch.config.perso.sample for an example.
+
+# location of the executables of interest
+FLEXISIP=${FLEXISIP:=/opt/belledonne-communications/bin/flexisip}
+SIPP=${SIPP:=sipp}
+
+# Number of users to simulate
+NB_USERS=${NB_USERS:=1000}
+
+# invite rate, number of invites to send every second
+INV_RATE=${INV_RATE:=50}
+
+# duration of the call
+CALL_LENGTH=${CALL_LENGTH:=60}
+
+# expire
+EXPIRE=${EXPIRE:=3600}
+
+
+### More advanced configuration ###
+
+IP=${IP:=127.0.0.1}
+DOMAIN=${DOMAIN:=localhost}
+FLEXISIP_PORT=${FLEXISIP_PORT:=50060}
+PROXY=${PROXY:=localhost}
+REGISTER_PORT=${REGISTER_PORT:=5070}
+USERS_PORT=${USERS_PORT:=5063}
+INVITER_PORT=${INVITER_PORT:=5064}
+SKIP_REGISTERS=${SKIP_REGISTERS:=0}
+SKIP_UAS=${SKIP_UAS:=0}
+
+UA="Linphone/Linphone-3.3.x_(sipp/unknown)"
+SDOMAIN="-set domain $DOMAIN"
+SEXPIRE="-set expire $EXPIRE"
+SUA="-set ua $UA"
+PWD="`pwd`"
+
+# Import configuration
+FOLDER=$1
+
+# Use auth or not?
+if [ -n "$2" ]
+then
+ echo -e "Using authentication"
+ AUTH_PREFIX="-auth"
+else
+ echo -e "NOT using authentication"
+fi
+AUTHENTICATION_VALUE="true"
+[ -z "$2" ] && AUTHENTICATION_VALUE="false"
+
+# If using auth, check which files we should use: if a test contains a "passwords" file, then use it, otherwise use the default.
+# Same thing for the CSV file. This allows for test-specific authentication
+PASSWORD_FILE="$PWD/passwords"
+[ -f "$FOLDER/passwords" ] && PASSWORD_FILE="$FOLDER/passwords"
+
+USERS_CSV="$PWD/users.csv"
+[ -f "$FOLDER/users.csv" ] && USERS_CSV="$FOLDER/users.csv"
+
+UAS_FILE="$PWD/uas.xml"
+[ -f "$FOLDER/uas.xml" ] && UAS_FILE="$FOLDER/uas.xml"
+
+
+if [ -z $FOLDER ] 
+then
+ echo "Usage ./launch folder, where folder is "
+ ls */launch.config | sed 's/\/.*$//'
+ exit
+fi
+
+# load test-specific configuration values
+[ ! -f $FOLDER/launch.config ] && echo "config file not found : "$FOLDER/launch.config"" && exit
+. $FOLDER/launch.config
+
+
+FLEX_OPTIONS="$FLEX_OPTIONS -p flexisip_pid -c $FOLDER/flexisip.conf -t sip:*:$FLEXISIP_PORT --hosts localhost=127.0.0.1 --set module::Authentication/datasource=\"$PASSWORD_FILE\""
+FLEX_OPTIONS="$FLEX_OPTIONS --set module::Authentication/enabled=$AUTHENTICATION_VALUE"
+
+SIPP_COMMONS="127.0.0.1:$FLEXISIP_PORT $SIPP_COMMONS -i $IP -trace_err -trace_msg"
+REG_OPTIONS="$REG_OPTIONS -p $REGISTER_PORT -m `echo "1+$NB_USERS"|bc` $SIPP_COMMONS -inf $USERS_CSV $SDOMAIN $SEXPIRE"
+REG_INVITER_OPTIONS="$REG_INVITER_OPTIONS -p $INVITER_PORT -m 1 $SIPP_COMMONS -nd $SDOMAIN $SEXPIRE $SUA"
+INV_OPTIONS="$INV_OPTIONS -m $NB_USERS -p $INVITER_PORT $SIPP_COMMONS $SDOMAIN $SUA "
+UAS_OPTIONS="$UAS_OPTIONS -bg -p $USERS_PORT $SIPP_COMMONS -mi $IP -mp 15000 -rtp_echo -trace_msg"
+
+echo "NB_USERS=$NB_USERS"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+
+# Accept core dumps
+ulimit -c unlimited
+
+# Open many file descriptors
+ulimit -n 65000
+
+if [[ "$SKIP_UAS" -eq "0" ]]; then
+
+	CMD_UAS="$SIPP -sf $UAS_FILE $UAS_OPTIONS"
+	echo -e "\nStart users listening:"
+	echo $CMD_UAS
+	$CMD_UAS 2>&1 > uas.log
+	sleep 2
+
+fi
+	
+CMD_FLEXISIP="$FLEXISIP $FLEX_OPTIONS"
+echo -e "Start flexisip:"
+echo $CMD_FLEXISIP
+$CMD_FLEXISIP &> flexisip.log &
+sleep 2
+ps aux | grep flexisip | grep -v grep
+if [ $? -ne 0 ]; then
+  echo "Error launching flexisip"
+  cat flexisip.log
+  exit -1
+fi
+
+
+if [[ "$SKIP_REGISTERS" -eq "0" ]]; then
+	CMD_REG_USERS="$SIPP $PROXY -sf register_users.xml $REG_OPTIONS -set ua noauth"
+	echo -e "Register users:"
+	echo $CMD_REG_USERS
+	$CMD_REG_USERS
+
+	CMD_REG_INVITER="$SIPP $PROXY -sf register_inviter$AUTH_PREFIX.xml $REG_INVITER_OPTIONS"
+	echo -e "Register inviter"
+	echo $CMD_REG_INVITER
+	$CMD_REG_INVITER
+else
+	echo "Skipping registration because tests asks for it"
+fi
+
+
+
+function take_mem_shot() {
+	if [ "$(uname)" == "Darwin" ]; then
+		top -l 1 -pid `cat flexisip_pid` > memory.log
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+		top -n 1 -p `cat flexisip_pid` > memory.log
+		echo "##### Proc #####" >> memory.log
+		cat /proc/`cat flexisip_pid`/status >> memory.log
+	fi
+}
+
+# Allow killing
+function onexit() {
+	echo -e "Killing everyone"
+	kill -9 `cat flexisip_pid` 2>/dev/null
+	killall sipp 2>/dev/null
+	rm -f flexisip_pid
+
+	LOGS=logs/"$FOLDER"_`date '+%s'`
+	LOGS_TO_SAVE=$FOLDER"/*.log *.log core"
+	mkdir -p $LOGS
+	mv $LOGS_TO_SAVE $LOGS
+
+	exit
+}
+set -o errtrace 
+trap onexit 1 2 3 15 ERR
+
+CMD_INVITE_USERS="$SIPP $PROXY -sf $FOLDER/invite$AUTH_PREFIX.xml $INV_OPTIONS"
+echo -e "Start inviting users :"
+echo $CMD_INVITE_USERS
+$CMD_INVITE_USERS
+RETVAL=$?
+
+take_mem_shot
+
+onexit

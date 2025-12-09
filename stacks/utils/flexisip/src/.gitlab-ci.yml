@@ -1,0 +1,74 @@
+#################################################
+# Base configuration
+#################################################
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 8
+
+  CCACHE_SIZE: 2G
+
+  # For build and test on Linux
+  DEFAULT_CMAKE_OPTIONS: '-DCMAKE_BUILD_TYPE=Debug'
+  # For build on MacOS
+  DEFAULT_MACOS_CMAKE_OPTIONS: '-DPython3_ROOT_DIR=/opt/bc/pip-packages/'
+  # For packaging, deb and rpm
+  DEFAULT_PACKAGING_CMAKE_OPTIONS: '-DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/opt/belledonne-communications -DSYSCONF_INSTALL_DIR=/etc -DFLEXISIP_SYSTEMD_INSTALL_DIR=/usr/lib/systemd/system'
+
+  # Docker image version
+  ARCHLINUX_IMAGE_VERSION: 20250702_patch_cppjwt_for_gcc15
+  ROCKY_8_IMAGE_VERSION: 20251020_redis6
+  ROCKY_9_IMAGE_VERSION: 20251017_redis7
+  DEBIAN_12_IMAGE_VERSION: 20240916_add_coverage
+  DEBIAN_13_IMAGE_VERSION: 20250930
+  MINIMAL_IMAGE_VERSION: 20240911_remove_protobuf
+  UBUNTU_22_04_IMAGE_VERSION: 20240911_remove_protobuf
+  UBUNTU_24_04_IMAGE_VERSION: 20240916_add_cpp-jwt
+
+#https://docs.gitlab.com/ee/ci/yaml/index.html#workflow
+workflow:
+  rules:
+    # Allow merge request pipelines
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE !~ /^Draft:.*/
+    # Allow scheduled pipelines
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+.todo_before_script:
+  before_script:
+    - |
+      if [ "$GIT_STRATEGY" != "none" ]; then
+        git submodule foreach --recursive git fetch --tags --force
+      fi
+    - |
+      if [ "$SDK_NIGHTLY" == "1" ]; then
+        git -C linphone-sdk/ checkout "$SDK_BRANCH" && git -C linphone-sdk/ submodule update --recursive
+      fi
+
+before_script:
+    - !reference [".todo_before_script", "before_script"]
+
+#################################################
+# Platforms to test
+#################################################
+
+include:
+  - '.gitlab-ci-files/rules.yml'
+  - '.gitlab-ci-files/scripts.yml'
+  - '.gitlab-ci-files/job-linux.yml'
+  - '.gitlab-ci-files/job-linux-archlinux.yml'
+  - '.gitlab-ci-files/job-linux-rocky8.yml'
+  - '.gitlab-ci-files/job-linux-rocky9.yml'
+  - '.gitlab-ci-files/job-linux-debian12.yml'
+  - '.gitlab-ci-files/job-linux-debian13.yml'
+  - '.gitlab-ci-files/job-linux-minimal.yml'
+  - '.gitlab-ci-files/job-linux-ubuntu-22-04.yml'
+  - '.gitlab-ci-files/job-linux-ubuntu-24-04.yml'
+  - '.gitlab-ci-files/job-macosx.yml'
+
+stages:
+  - build 🏗
+  - test 🧪
+  - coverage 📑
+  - package 📦
+  - check-package 📤
+  - deploy 🚀

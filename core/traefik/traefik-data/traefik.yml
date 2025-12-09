@@ -1,6 +1,19 @@
 api:
   dashboard: true
-  debug: true
+  insecure: true
+
+log:
+  level: DEBUG
+
+accessLog: true
+
+metrics:
+  prometheus:
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
 
 entryPoints:
   web:
@@ -10,42 +23,28 @@ entryPoints:
         entryPoint:
           to: websecure
           scheme: https
-
   websecure:
     address: ":443"
-
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: delorenj@delo.sh
-      storage: /etc/traefik/acme.json
-      dnsChallenge:
-        provider: cloudflare
-        resolvers:
-          - "1.1.1.1:53"
-          - "8.8.8.8:53"
-        delayBeforeCheck: 15s
-      # Use Let's Encrypt production server
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+    http:
+      tls: {}
 
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
     network: proxy
-    watch: true
-    useBindPortIP: false
-
   file:
-    directory: "/dynamic"
+    directory: /dynamic
+    watch: true
 
-# Enable metrics for monitoring
-metrics:
-  prometheus: true
-
-# Configure logging
-log:
-  level: INFO
-
-# Access logs for debugging
-accessLog: {}
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jaradd@gmail.com
+      storage: /etc/traefik/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 90
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"

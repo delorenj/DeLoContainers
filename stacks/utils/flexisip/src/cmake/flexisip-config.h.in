@@ -1,0 +1,75 @@
+/*
+	Flexisip, a flexible SIP proxy server with media capabilities.
+	Copyright (C) 2010-2024 Belledonne Communications SARL, All rights reserved.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as
+	published by the Free Software Foundation, either version 3 of the
+	License, or (at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Affero General Public License for more details.
+	
+	You should have received a copy of the GNU Affero General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#cmakedefine CONFIG_DIR "${CONFIG_DIR}"
+#cmakedefine INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
+
+#cmakedefine ENABLE_SNMP 1
+#cmakedefine ENABLE_LIBODB_MYSQL 1
+#cmakedefine ENABLE_TRANSCODER 1
+#cmakedefine ENABLE_PRESENCE 1
+#cmakedefine ENABLE_CONFERENCE 1
+#cmakedefine ENABLE_B2BUA 1
+#cmakedefine ENABLE_VOICEMAIL 1
+#cmakedefine ENABLE_ODBC 1
+#cmakedefine ENABLE_REDIS 1
+#cmakedefine ENABLE_SOCI 1
+#cmakedefine ENABLE_FLEXIAPI 1
+#cmakedefine ENABLE_MDNS 1
+#cmakedefine ENABLE_UNIT_TESTS 1
+#cmakedefine ENABLE_UNIT_TESTS_NGHTTP2ASIO 1
+
+#cmakedefine HAVE_DATEHANDLER 1
+#cmakedefine HAVE_ARC4RANDOM 1
+#cmakedefine HAVE_SYS_PRCTL_H 1
+
+/* Whether the liblinphone library has been linked. */
+#cmakedefine HAVE_LIBLINPHONE 1
+
+/* Whether the liblinphone++ library has been linked. */
+#cmakedefine HAVE_LIBLINPHONECXX 1
+
+#cmakedefine MEDIARELAY_SPECIFIC_FEATURES_ENABLED 1
+#cmakedefine MONOTONIC_CLOCK_REGISTRATIONS 1
+
+// Anything that exits successfully without fuss
+#cmakedefine DUMMY_EXEC "${DUMMY_EXEC}"
+
+#define SNMP_COMPANY_OID 10000
+
+/* oRTP ABI version */
+#define ORTP_ABI_VERSION 9
+
+/* oRTP rtp_session_set_reuseaddr availabled */
+#define ORTP_HAS_REUSEADDR 1
+
+/* Default lib directory */
+#define DEFAULT_LIB_DIR "@CMAKE_INSTALL_FULL_LOCALSTATEDIR@/lib/flexisip"
+
+/* Default log directory */
+#define DEFAULT_LOG_DIR "@CMAKE_INSTALL_FULL_LOCALSTATEDIR@/log/flexisip"
+
+/* Default b2bua data dir */
+#define DEFAULT_B2BUA_DATA_DIR "@CMAKE_INSTALL_FULL_LOCALSTATEDIR@/flexisip/b2b"
+
+/* Default directory for Flexisip's plugins */
+#define DEFAULT_PLUGINS_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/flexisip/plugins"
+
+#define BELR_GRAMMARS_DIR "${BELR_GRAMMARS_DIR}"
+
+#define FIREBASE_GET_ACCESS_TOKEN_SCRIPT_PATH "${CMAKE_INSTALL_FULL_DATADIR}/flexisip/firebase_v1_get_access_token.py"

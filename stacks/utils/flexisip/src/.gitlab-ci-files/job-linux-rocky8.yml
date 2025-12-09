@@ -1,0 +1,97 @@
+variables:
+  ROCKY8_CMAKE_OPTIONS: -DINTERNAL_LIBHIREDIS=ON -DINTERNAL_JSONCPP=ON -DENABLE_G729=ON -DENABLE_EKT_SERVER=ON
+  ROCKY8_CMAKE_OPTIONS_UNIT_TESTS: ${ROCKY8_CMAKE_OPTIONS} -DENABLE_UNIT_TESTS=ON -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+
+.rocky8-image-variables:
+  image:
+    name: gitlab.linphone.org:4567/bc/public/flexisip/bc-dev-rocky8:$ROCKY_8_IMAGE_VERSION
+  variables:
+    CMAKE_OPTIONS: ${ROCKY8_CMAKE_OPTIONS}
+
+#################################################
+# Makefile
+#################################################
+
+job-rocky8-makefile-gcc:
+  extends:
+    - .job-makefile-gcc
+    - .rocky8-image-variables
+
+
+job-rocky8-makefile-clang:
+  extends:
+    - .job-makefile-clang
+    - .rocky8-image-variables
+
+#################################################
+# Ninja
+#################################################
+
+job-rocky8-ninja-gcc:
+  extends:
+    - .job-ninja-gcc
+    - .rocky8-image-variables
+
+
+job-rocky8-ninja-clang:
+  extends:
+    - .job-ninja-clang
+    - .rocky8-image-variables
+    - .tester-artifacts
+  variables:
+    # -DCMAKE_PREFIX_PATH=/usr/local: Unit tests require libnghttp2_asio, which has been build and intalled into /usr/local
+    CMAKE_OPTIONS: ${ROCKY8_CMAKE_OPTIONS_UNIT_TESTS}
+
+#################################################
+# UNIT TESTS
+#################################################
+
+job-rocky8-unit-test:
+  extends:
+    - .unit-test
+    - .rocky8-image-variables
+  needs:
+    - job-rocky8-ninja-clang
+  variables:
+    LSAN_SUPPRESSIONS_FILE_PATH: "./sanitizer_ignore_rocky8.txt"
+
+#################################################
+# RPM
+#################################################
+
+job-rocky8-rpm:
+  extends:
+    - .job-linux-rpm
+    - .rocky8-image-variables
+  needs:
+    - job: job-rocky8-unit-test
+      optional: true
+      artifacts: false
+    - job: job-rocky8-ninja-clang
+      optional: true
+      artifacts: false
+
+# Test installation of the RPM package and check its feature list
+job-rocky8-rpm-check-features:
+  stage: check-package 📤
+  tags: [ "docker-flat" ]
+  extends:
+    - .rocky8-image-variables
+  rules:
+    - !reference [job-rocky8-rpm, rules]
+  needs:
+    - job: job-rocky8-rpm
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - !reference [job-rocky9-rpm-check-features, script]
+
+job-rocky8-rpm-deploy:
+  extends:
+    - .job-deploy
+    - .rocky8-image-variables
+  dependencies:
+    - job-rocky8-rpm
+  variables:
+    DISTRIB: rockylinux
+    RELEASE: 8

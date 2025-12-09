@@ -1,0 +1,40 @@
+/*
+    Flexisip, a flexible SIP proxy server with media capabilities.
+    Copyright (C) 2010-2024 Belledonne Communications SARL.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#pragma once
+
+// Path to redis-server executable
+#cmakedefine REDIS_SERVER_EXEC "${REDIS_SERVER_EXEC}"
+// Path to mysql server executable
+#cmakedefine MYSQL_SERVER_EXEC "${MYSQL_SERVER_EXEC}"
+// Path to mysql system tables setup commands
+#cmakedefine MYSQL_SYSTEM_TABLES_SETUP "${MYSQL_SYSTEM_TABLES_SETUP}"
+// Path to cat
+#cmakedefine CAT_EXEC "${CAT_EXEC}"
+
+// Default listen port of Redis server
+#define REDIS_SERVER_DEFAULT_PORT 6379
+
+// Location of flexisip resource directory
+#cmakedefine FLEXISIP_ROOT_DIR "${FLEXISIP_ROOT_DIR}"
+
+// Location of flexisip binary directory
+#cmakedefine FLEXISIP_BIN_DIR "${FLEXISIP_BIN_DIR}"
+
+// Location of tester resource directory
+#cmakedefine FLEXISIP_TESTER_DATA_SRCDIR "${FLEXISIP_TESTER_DATA_SRCDIR}"

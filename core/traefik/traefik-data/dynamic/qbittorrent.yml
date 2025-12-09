@@ -1,37 +1,17 @@
 http:
-  middlewares:
-    qbittorrent-headers:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-          X-Forwarded-Prefix: "/"
-        accessControlAllowOriginList:
-          - "*"
-        accessControlAllowMethods:
-          - "GET"
-          - "POST"
-          - "PUT"
-          - "DELETE"
-          - "OPTIONS"
-        accessControlAllowHeaders:
-          - "Content-Type"
-          - "Authorization"
-          - "X-API-Key"
-        accessControlMaxAge: 100
-
   routers:
-    qbittorrent:
+    qbittorrent-file:
       rule: "Host(`get.delo.sh`)"
       entryPoints:
         - websecure
-      service: qbittorrent
+      service: qbittorrent-file
       middlewares:
         - qbittorrent-headers
       tls:
         certResolver: letsencrypt
 
   services:
-    qbittorrent:
+    qbittorrent-file:
       loadBalancer:
         servers:
           - url: "http://gluetun:8091"
@@ -39,5 +19,12 @@ http:
           path: "/"
           interval: "30s"
           timeout: "10s"
-          headers:
-            Host: "get.delo.sh"
+
+  middlewares:
+    qbittorrent-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "get.delo.sh"
+          X-Forwarded-Port: "443"
+        sslRedirect: true

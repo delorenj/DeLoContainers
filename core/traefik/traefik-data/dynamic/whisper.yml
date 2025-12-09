@@ -45,7 +45,7 @@ http:
     whisper:
       loadBalancer:
         servers:
-          - url: "http://whisper-server:58080"
+          - url: "http://whisper-server:8000"
         healthCheck:
           path: "/"
           interval: "30s"

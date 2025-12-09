@@ -1,0 +1,15 @@
+http:
+  routers:
+    rabbitmq:
+      rule: "Host(`rabbit.delo.sh`)"
+      service: "rabbitmq"
+      entryPoints:
+        - "websecure"
+      tls:
+        certResolver: "letsencrypt"
+
+  services:
+    rabbitmq:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:15672" # LAN IP for native service

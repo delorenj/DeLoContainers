@@ -10,7 +10,10 @@ services:
     depends_on:
       - hbbr
     ports:
-      - 21116:21116
+      - 21115:21115      # NAT type test
+      - 21116:21116      # TCP hole punching
+      - 21116:21116/udp  # UDP heartbeat/ID server
+      - 21118:21118      # WebSocket
     restart: always
 
   hbbr:
@@ -22,7 +25,8 @@ services:
     networks:
       - proxy
     ports:
-      - 21117:21117
+      - 21117:21117      # TCP relay
+      - 21119:21119      # WebSocket relay
     restart: always
 
   watchtower:

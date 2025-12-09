@@ -1,0 +1,17 @@
+### Any build directory ###
+/build*
+
+### IDE or editor files ###
+*.kdev4
+*.settings
+*.kate*
+.DS_Store
+.vscode
+/CMakeLists.txt.user
+.idea/
+
+### TEST ###
+BCUnitAutomated-Results.xml
+
+### Direnv ###
+.direnv

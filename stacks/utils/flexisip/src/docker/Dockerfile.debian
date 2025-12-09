@@ -1,0 +1,55 @@
+FROM debian:10
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update sources to use archive.debian.org for Buster
+RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security buster/updates main" >> /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian buster-updates main" >> /etc/apt/sources.list
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    gnupg \
+    ca-certificates \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add Belledonne Communications repository
+RUN echo "deb http://linphone.org/snapshots/debian buster stable" > /etc/apt/sources.list.d/belledonne.list
+
+# Add GPG key
+RUN wget -O - https://linphone.org/snapshots/debian/keyring.gpg | apt-key add -
+
+# Install Flexisip and utils
+RUN apt-get update && apt-get install -y \
+    bc-flexisip \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add Flexisip bin to PATH
+ENV PATH="/opt/belledonne-communications/bin:${PATH}"
+
+# Setup directories and permissions
+RUN mkdir -p /etc/flexisip /var/opt/belledonne-communications/log/flexisip
+VOLUME /etc/flexisip
+VOLUME /var/opt/belledonne-communications/log/flexisip
+
+# Generate default config if not exists (handled by entrypoint usually, but for now just ensure dir exists)
+# We will use the entrypoint from the repo if compatible, or a simple one.
+# For now, let's copy the entrypoint from the repo if we can, or just use flexisip directly.
+# The repo has `docker/flexisip-entrypoint.sh`. Let's check it first.
+# Assuming we are in the context of `src` (or `flexisip` dir), we can copy it.
+# But wait, I'll check the entrypoint content first in the next step.
+# For now, I'll just set the CMD.
+
+# Copy entrypoint and backtrace script
+COPY docker/flexisip-entrypoint.sh /
+COPY docker/backtrace.gdb /
+RUN chmod a+x /flexisip-entrypoint.sh
+
+# Install wait script
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
+RUN chmod +x /wait
+
+ENTRYPOINT ["/flexisip-entrypoint.sh"]
+CMD ["-c", "/etc/flexisip/flexisip.conf"]

@@ -1,0 +1,59 @@
+<!ELEMENT Global (action)? >
+<!ATTLIST Global variables CDATA #IMPLIED >
+
+<!ELEMENT nop (action)+ >
+
+<!ELEMENT CallLengthRepartition EMPTY >
+<!ATTLIST CallLengthRepartition value CDATA #REQUIRED >
+
+<!ELEMENT ResponseTimeRepartition EMPTY >
+<!ATTLIST ResponseTimeRepartition value CDATA #REQUIRED >
+
+<!ELEMENT action ( ereg | assign | assignstr | add | exec)+ >
+
+
+<!ELEMENT exec EMPTY >
+<!ATTLIST exec play_pcap_audio CDATA #REQUIRED >
+
+<!ELEMENT ereg EMPTY >
+<!ATTLIST ereg assign_to CDATA #REQUIRED >
+<!ATTLIST ereg check_it (true|false) "false" >
+<!ATTLIST ereg header NMTOKEN #IMPLIED >
+<!ATTLIST ereg regexp CDATA #REQUIRED >
+<!ATTLIST ereg search_in (msg|hdr) "msg" >
+
+<!ELEMENT assignstr EMPTY >
+<!ATTLIST assignstr assign_to CDATA #REQUIRED >
+<!ATTLIST assignstr value CDATA #REQUIRED >
+
+<!ELEMENT add EMPTY >
+<!ATTLIST add assign_to CDATA #REQUIRED >
+<!ATTLIST add value CDATA #REQUIRED >
+
+<!ELEMENT assign EMPTY >
+<!ATTLIST assign assign_to CDATA #REQUIRED >
+<!ATTLIST assign value CDATA #REQUIRED >
+
+<!ELEMENT pause EMPTY >
+<!ATTLIST pause milliseconds NMTOKEN #IMPLIED >
+
+<!ELEMENT recv ( action? ) >
+<!ATTLIST recv crlf NMTOKEN #IMPLIED >
+<!ATTLIST recv optional (true|false) #IMPLIED >
+<!ATTLIST recv response NMTOKEN #IMPLIED >
+<!ATTLIST recv request NMTOKEN #IMPLIED >
+<!ATTLIST recv lost NMTOKEN #IMPLIED >
+<!ATTLIST recv rtd (true|false) #IMPLIED >
+<!ATTLIST recv rrs (true|false) #IMPLIED >
+<!ATTLIST recv start_rtd (true|false) #IMPLIED >
+<!ATTLIST recv timeout CDATA #IMPLIED >
+
+<!ELEMENT scenario ( Global | nop | CallLengthRepartition | ResponseTimeRepartition | pause | recv | send )* >
+<!ATTLIST scenario name CDATA #REQUIRED >
+
+<!ELEMENT send ( #PCDATA ) >
+<!ATTLIST send retrans NMTOKEN #IMPLIED >
+<!ATTLIST send lost NMTOKEN #IMPLIED >
+<!ATTLIST send rtd (true|false) #IMPLIED >
+<!ATTLIST send start_rtd (true|false) #IMPLIED >
+

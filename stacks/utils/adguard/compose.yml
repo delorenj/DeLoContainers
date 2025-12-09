@@ -11,8 +11,8 @@ services:
       # DNS on standard port 53 (systemd-resolved disabled)
       - "53:53/udp"
       - "53:53/tcp"
-      # Web interface on port 3000
-      - "3000:3000/tcp"
+      # Web interface on port 6767
+      - "6767:3000/tcp"
     networks:
       - proxy
     environment:
@@ -26,42 +26,22 @@ services:
       - "traefik.http.routers.adguard.rule=Host(`adguard.delo.sh`)"
       - "traefik.http.routers.adguard.tls=true"
       - "traefik.http.routers.adguard.tls.certresolver=letsencrypt"
-      - "traefik.http.services.adguard.loadbalancer.server.port=3000"
+      - "traefik.http.services.adguard.loadbalancer.server.port=6767"
       - "traefik.docker.network=proxy"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:6767/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-
-  adguard-redirect:
-    build:
-      context: ./redirect-service
-      dockerfile: Dockerfile
-    container_name: adguard-redirect
-    hostname: adguard-redirect
-    ports:
-      - "8888:80"
-    networks:
-      - proxy
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.adguard-blocked.entrypoints=websecure"
-      - "traefik.http.routers.adguard-blocked.rule=Host(`blocked.delo.sh`)"
-      - "traefik.http.routers.adguard-blocked.tls=true"
-      - "traefik.http.routers.adguard-blocked.tls.certresolver=letsencrypt"
-      - "traefik.http.services.adguard-blocked.loadbalancer.server.port=80"
-      - "traefik.docker.network=proxy"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
 networks:
   proxy:

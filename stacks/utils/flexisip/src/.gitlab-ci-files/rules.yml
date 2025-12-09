@@ -1,0 +1,83 @@
+# https://docs.gitlab.com/ee/ci/yaml/index.html#rules
+#
+# All `rules` should be gathered in this file.
+# 
+# Gitlab lets us merge job definitions through inheritance with the `extends` section.
+# However, if two jobs merged in this fashion define the same section (e.g. `rules`) the sections themselves will not be
+# merged: the last will override the first. In the case of arrays (like `scripts` or `rules`) this is a problem,
+# because we usually would like to merge them, but there is no mechanism to do so.
+# 
+# A workaround is to use YAML anchors (`&` and `*`) to reuse previously defined `rules` items, and ease refactoring.
+# However, YAML anchors only work within the same file (so not across Gitlab `include` boundaries).
+# Hence: this file.
+#
+# Every time you need a new set of `rules` for a job, you SHOULD define it here, reusing other `rules` items as
+# building blocks, then use `extends` to apply it to your job.
+# (This is to ease maintenance, as rules can then be changed quickly in one place.)
+#
+# You SHOULD NOT write `rules` outside this file. (This is to ease debugging, because, as explained above, `rules` can
+# override one another in an inheritance tree. This is not a strict rule however, and can be bypassed when justified.)
+#
+# This file MUST only contain hidden jobs (beginning with `.`) and these jobs MUST only contain a `rules` section
+
+# Jobs that always run with the default gitlab policy
+.rules-default:
+  rules:
+    - &manual-override
+      if: $MANUAL_OVERRIDE
+      when: manual
+      allow_failure: true
+    - &otherwise-run  # Default gitlab policy that we have to explicitely add back
+      when: on_success
+
+# Jobs that always run, except for DEPLOY_ONLY pipelines.
+.rules-dev:
+  rules:
+    - *manual-override
+    - &exclude-from-deploy
+      if: $DEPLOY_ONLY
+      when: never
+    - *otherwise-run
+
+# Jobs that only run in NIGHTLY pipelines
+.rules-nightly:
+  rules:
+    - *manual-override
+    - if: '$NIGHTLY == null'
+      when: never
+    - *exclude-from-deploy
+    - *otherwise-run
+
+# Jobs that run in NIGHTLY pipelines, are added in manual mode to all pipelines, except for DEPLOY_ONLY ones.
+.rules-manual:
+  rules:
+    - *exclude-from-deploy
+    - if: '$NIGHTLY != null'
+      when: on_success
+    - when: manual
+      allow_failure: true # This allows pipeline to continue without blocking on only manual jobs.
+
+# Jobs that run in NIGHTLY pipelines, are added in manual mode to all pipelines.
+.rules-manual-deploy:
+  rules:
+    - if: '$NIGHTLY != null'
+      when: on_success
+    - when: manual
+      allow_failure: true # This allows pipeline to continue without blocking on only manual jobs.
+
+# Jobs that run only for DEPLOY or DEPLOY_ONLY pipelines.
+.rules-deploy:
+  rules:
+    - *manual-override
+    - if: $DEPLOY
+      when: on_success
+    - if: $DEPLOY_ONLY
+      when: on_success
+    - when: never
+
+# Use this rule when you don't want a job to be run but still want to make it easily available by removing this rule.
+# e.g. when you are adding a new platform or upgrading an existing one, and you want to run thorough tests
+.rules-never-run:
+  rules:
+    - *manual-override
+    - when: never

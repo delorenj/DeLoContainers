@@ -1,0 +1,45 @@
+api:
+  dashboard: true
+  debug: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jaradd@gmail.com
+      storage: /etc/traefik/acme.json
+      dnsChallenge:
+        provider: letsencrypt
+        delayBeforeCheck: 15s
+      # Use Let's Encrypt STAGING server for testing
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: proxy
+    watch: true
+    useBindPortIP: false
+
+  file:
+    directory: "/dynamic"
+
+# Configure logging
+log:
+  level: DEBUG
+
+# Access logs for debugging
+accessLog: {}

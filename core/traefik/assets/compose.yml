@@ -1,0 +1,21 @@
+services:
+  finance:
+    image: nginx:latest
+    container_name: finance-delo-sh
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.finance.rule=Host(`finance.delo.sh`)"
+      - "traefik.http.routers.finance.entrypoints=websecure"
+      - "traefik.http.routers.finance.tls.certresolver=letsencrypt"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.services.finance.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true

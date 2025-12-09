@@ -1,0 +1,134 @@
+variables:
+  ROCKY9_CMAKE_OPTIONS: -DINTERNAL_LIBHIREDIS=ON -DENABLE_G729=ON -DENABLE_EKT_SERVER=ON
+  ROCKY9_CMAKE_OPTIONS_UNIT_TESTS: ${ROCKY9_CMAKE_OPTIONS} -DENABLE_UNIT_TESTS=ON -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+
+.rocky9-image-variables:
+  image:
+    name: gitlab.linphone.org:4567/bc/public/flexisip/bc-dev-rocky9:$ROCKY_9_IMAGE_VERSION
+  variables:
+    CMAKE_OPTIONS: ${ROCKY9_CMAKE_OPTIONS}
+
+#################################################
+# Makefile
+#################################################
+
+job-rocky9-makefile-gcc:
+  extends:
+    - .job-makefile-gcc
+    - .rocky9-image-variables
+
+
+job-rocky9-makefile-clang:
+  extends:
+    - .job-makefile-clang
+    - .rocky9-image-variables
+
+#################################################
+# Ninja
+#################################################
+
+job-rocky9-ninja-gcc:
+  extends:
+    - .job-ninja-gcc
+    - .rocky9-image-variables
+
+
+job-rocky9-ninja-clang:
+  extends:
+    - .job-ninja-clang
+    - .rocky9-image-variables
+    - .tester-artifacts
+  variables:
+    # -DCMAKE_PREFIX_PATH=/usr/local: Unit tests require libnghttp2_asio, which has been build and installed into /usr/local
+    CMAKE_OPTIONS: ${ROCKY9_CMAKE_OPTIONS_UNIT_TESTS}
+
+job-rocky9-ninja-clang-nosoci:
+  extends:
+    - job-rocky9-ninja-clang
+  variables:
+    CMAKE_OPTIONS: ${ROCKY9_CMAKE_OPTIONS_UNIT_TESTS} -DENABLE_SOCI=OFF
+
+#################################################
+# UNIT TESTS
+#################################################
+
+job-rocky9-unit-test:
+  extends:
+    - .unit-test
+    - .rocky9-image-variables
+  needs:
+    - job-rocky9-ninja-clang
+
+job-rocky9-unit-test-nosoci:
+  extends:
+    - job-rocky9-unit-test
+  needs:
+    - job-rocky9-ninja-clang-nosoci
+
+#################################################
+# XWiki reference documentation
+#################################################
+
+job-rocky9-xwiki-doc-deploy:
+  stage: deploy 🚀
+  tags: [ "docker-flat" ]
+  extends:
+    - .rules-deploy  # ⚠ See `rules.yml`
+    - .rocky9-image-variables
+  script:
+    - prefix=/opt/belledonne-communications
+    - builddir=wikiBuild
+    - sudo mkdir -p $prefix
+    - sudo chown bc:bc $prefix
+    - mkdir $builddir
+    - cmake -S . -B $builddir -G Ninja -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_PREFIX_PATH=$prefix $DEFAULT_CMAKE_OPTIONS $CMAKE_OPTIONS
+    - cmake --build $builddir
+    - /usr/bin/python3 ./doc/xw.py --flexisip-binary $builddir/bin/flexisip -H $XWIKI_HOSTNAME -u $XWIKI_USERNAME -p $XWIKI_PASSWORD
+
+#################################################
+# RPM
+#################################################
+
+job-rocky9-rpm:
+  extends:
+    - .job-linux-rpm
+    - .rocky9-image-variables
+  needs:
+    - job: job-rocky9-unit-test
+      optional: true
+      artifacts: false
+    - job: job-rocky9-unit-test-nosoci
+      optional: true
+      artifacts: false
+    - job: job-rocky9-ninja-clang
+      optional: true
+      artifacts: false
+    - job: job-rocky9-ninja-clang-nosoci
+      optional: true
+      artifacts: false
+
+# Test installation of the RPM package and check its feature list
+job-rocky9-rpm-check-features:
+  stage: check-package 📤
+  tags: [ "docker-flat" ]
+  extends:
+    - .rocky9-image-variables
+  rules:
+    - !reference [job-rocky9-rpm, rules]
+  needs:
+    - job: job-rocky9-rpm
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - sudo yum -y --nogpgcheck localinstall ./build/*.rpm
+    - !reference [.script-check-features, script]
+
+job-rocky9-rpm-deploy:
+  extends:
+    - .job-deploy
+    - .rocky9-image-variables
+  dependencies:
+    - job-rocky9-rpm
+  variables:
+    DISTRIB: rockylinux
+    RELEASE: 9

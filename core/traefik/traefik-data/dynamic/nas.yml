@@ -8,7 +8,7 @@ http:
 
   routers:
     nas:
-      rule: "Host(`nas.delo.sh`)"
+      rule: "Host(`emma.delo.sh`)"
       entryPoints:
         - websecure
       service: nas
