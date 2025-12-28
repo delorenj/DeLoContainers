@@ -1,0 +1,647 @@
+http:
+  pprof:
+    port: 6060
+    enabled: false
+  address: 0.0.0.0:6767
+  session_ttl: 720h
+users:
+  - name: admin
+    password: $2a$10$F5kuwCgMbSNOPZxzYyiJu.YeaXasdJRDfjURVyEKnrBh82.rAnZ/u
+  - name: delorenj
+    password: $2y$10$pV6JegRaABkfZs7PUBit8utvh2ulwWTiT8zTEvJLVCq5OvL9xkT5q
+auth_attempts: 5
+block_auth_min: 15
+http_proxy: ""
+language: ""
+theme: auto
+dns:
+  bind_hosts:
+    - 0.0.0.0
+  port: 53
+  anonymize_client_ip: false
+  ratelimit: 20
+  ratelimit_subnet_len_ipv4: 24
+  ratelimit_subnet_len_ipv6: 56
+  ratelimit_whitelist: []
+  refuse_any: true
+  upstream_dns:
+    - https://dns10.quad9.net/dns-query
+    - '[/ts.net/]100.100.100.100'
+  upstream_dns_file: ""
+  bootstrap_dns:
+    - 9.9.9.10
+    - 149.112.112.10
+    - 2620:fe::10
+    - 2620:fe::fe:10
+  fallback_dns: []
+  upstream_mode: load_balance
+  fastest_timeout: 1s
+  allowed_clients: []
+  disallowed_clients: []
+  blocked_hosts:
+    - version.bind
+    - id.server
+    - hostname.bind
+  trusted_proxies:
+    - 127.0.0.0/8
+    - ::1/128
+  cache_enabled: true
+  cache_size: 4194304
+  cache_ttl_min: 0
+  cache_ttl_max: 0
+  cache_optimistic: false
+  bogus_nxdomain: []
+  aaaa_disabled: false
+  enable_dnssec: false
+  edns_client_subnet:
+    custom_ip: ""
+    enabled: false
+    use_custom: false
+  max_goroutines: 300
+  handle_ddr: true
+  ipset: []
+  ipset_file: ""
+  bootstrap_prefer_ipv6: false
+  upstream_timeout: 10s
+  private_networks: []
+  use_private_ptr_resolvers: false
+  local_ptr_upstreams: []
+  use_dns64: false
+  dns64_prefixes: []
+  serve_http3: false
+  use_http3_upstreams: false
+  serve_plain_dns: true
+  hostsfile_enabled: true
+  pending_requests:
+    enabled: true
+tls:
+  enabled: false
+  server_name: adguard.delo.sh
+  force_https: true
+  port_https: 443
+  port_dns_over_tls: 853
+  port_dns_over_quic: 853
+  port_dnscrypt: 0
+  dnscrypt_config_file: ""
+  allow_unencrypted_doh: false
+  certificate_chain: ""
+  private_key: ""
+  certificate_path: ""
+  private_key_path: ""
+  strict_sni_check: false
+querylog:
+  dir_path: ""
+  ignored: []
+  interval: 2160h
+  size_memory: 1000
+  enabled: true
+  file_enabled: true
+statistics:
+  dir_path: ""
+  ignored: []
+  interval: 24h
+  enabled: true
+filters:
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
+    name: AdGuard DNS filter
+    id: 1
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt
+    name: AdAway Default Blocklist
+    id: 2
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt
+    name: Malicious URL Blocklist (URLHaus)
+    id: 1756184399
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_10.txt
+    name: Scam Blocklist by DurableNapkin
+    id: 1756184400
+  - enabled: true
+    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_50.txt
+    name: uBlock₀ filters – Badware risks
+    id: 1756184401
+whitelist_filters: []
+user_rules:
+  - '! Always allow delo.sh and ALL subdomains - NEVER BLOCK'
+  - '@@||delo.sh^$important'
+  - '@@||*.delo.sh^$important'
+  - '@@||lk.delo.sh^$important'
+  - '@@||lk-whip.delo.sh^$important'
+  - '@@||lk-turn.delo.sh^$important'
+  - '@@||traefik.delo.sh^$important'
+  - '@@||assets.delo.sh^$important'
+  - '@@/.*\.delo\.sh.*/$important'
+  - '! Big Chungus'
+  - '@@||*^$client=127.0.0.1'
+  - '@@||*^$client=192.168.1.12'
+  - '@@||*^$client=192.168.1.50'
+  - '@@||*^$client=73.195.114.125'
+  - '! Mommy''s iPhone'
+  - '@@||*^$client="Mommy''s iPhone"'
+  - '@@||*^$client=192.168.1.10'
+  - '@@||*^$client=100.117.190.125'
+  - '! Mommymac'
+  - '@@||*^$client=192.168.1.32'
+  - '@@||*^$client=100.81.162.91'
+  - '! Glasstra'
+  - '@@||*^$client=192.168.1.38'
+  - '! Daddy''s Phone'
+  - '@@||*^$client="phonesex"'
+  - '||capcut.com^$client=100.71.79.127'
+  - '||capcutapi.com^$client=100.71.79.127'
+  - '||capcut.net^$client=100.71.79.127'
+  - /.*capcut.*/$client=100.71.79.127
+dhcp:
+  enabled: false
+  interface_name: ""
+  local_domain_name: lan
+  dhcpv4:
+    gateway_ip: ""
+    subnet_mask: ""
+    range_start: ""
+    range_end: ""
+    lease_duration: 86400
+    icmp_timeout_msec: 1000
+    options: []
+  dhcpv6:
+    range_start: ""
+    lease_duration: 86400
+    ra_slaac_only: false
+    ra_allow_slaac: false
+filtering:
+  blocking_ipv4: 192.168.1.12
+  blocking_ipv6: '::'
+  blocked_services:
+    schedule:
+      time_zone: America/New_York
+    ids:
+      - 4chan
+      - 500px
+      - 9gag
+      - aliexpress
+      - amazon_streaming
+      - amino
+      - betano
+      - betfair
+      - betway
+      - bigo_live
+      - bilibili
+      - blaze
+      - bluesky
+      - box
+      - canais_globo
+      - claro
+      - cloudflare
+      - clubhouse
+      - coolapk
+      - crunchyroll
+      - dailymotion
+      - deepseek
+      - deezer
+      - directvgo
+      - discord
+      - douban
+      - dropbox
+      - ebay
+      - espn
+      - fifa
+      - flickr
+      - globoplay
+      - gog
+      - hulu
+      - imgur
+      - instagram
+      - iqiyi
+      - kakaotalk
+      - kik
+      - kook
+      - lazada
+      - leagueoflegends
+      - line
+      - lionsgateplus
+      - looke
+      - mail_ru
+      - mastodon
+      - mercado_libre
+      - nebula
+      - odysee
+      - ok
+      - olvid
+      - onlyfans
+      - pinterest
+      - plenty_of_fish
+      - pluto_tv
+      - privacy
+      - qq
+      - rakuten_viki
+      - reddit
+      - shein
+      - shopee
+      - signal
+      - skype
+      - slack
+      - snapchat
+      - telegram
+      - temu
+      - tidal
+      - tiktok
+      - tinder
+      - tumblr
+      - twitch
+      - twitter
+      - viber
+      - vimeo
+      - vk
+      - voot
+      - wargaming
+      - wechat
+      - weibo
+      - whatsapp
+      - wizz
+      - xiaohongshu
+      - yy
+      - zhihu
+      - activision_blizzard
+      - battle_net
+      - blizzard_entertainment
+      - electronic_arts
+      - epic_games
+      - minecraft
+      - nintendo
+      - nvidia
+      - spotify_video
+      - steam
+      - ubisoft
+      - valorant
+      - roblox
+  protection_disabled_until: null
+  safe_search:
+    enabled: true
+    bing: true
+    duckduckgo: true
+    ecosia: true
+    google: true
+    pixabay: true
+    yandex: true
+    youtube: true
+  blocking_mode: nxdomain
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  rewrites:
+    - domain: '*.roblox.com'
+      answer: 192.168.1.12
+    - domain: delo.sh
+      answer: 73.195.114.125
+    - domain: '*.delo.sh'
+      answer: 73.195.114.125
+    - domain: lk.delo.sh
+      answer: 73.195.114.125
+    - domain: lk-whip.delo.sh
+      answer: 73.195.114.125
+    - domain: lk-turn.delo.sh
+      answer: 73.195.114.125
+  safe_fs_patterns:
+    - /opt/adguardhome/work/userfilters/*
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  filters_update_interval: 24
+  blocked_response_ttl: 10
+  filtering_enabled: true
+  parental_enabled: true
+  safebrowsing_enabled: true
+  protection_enabled: false
+clients:
+  runtime_sources:
+    whois: true
+    arp: true
+    rdns: true
+    dhcp: true
+    hosts: true
+  persistent:
+    - safe_search:
+        enabled: true
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Bedroom TV
+      ids:
+        - 192.168.1.14
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 01993155-e488-7353-a303-49ee3fa0084e
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Big Chungus
+      ids:
+        - 100.66.29.76
+        - 172.19.0.1
+        - 192.168.1.12
+        - big-chungus
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198e69e-17bd-7a75-b249-8c18ccbdcfd1
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Glasstra
+      ids:
+        - 192.168.1.38
+        - glasstra
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198e86a-7460-7b49-9dfd-7c91df94b5cc
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: true
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids:
+          - aliexpress
+      name: Google Homes
+      ids:
+        - 192.168.1.4
+        - 192.168.1.15
+        - 192.168.1.31
+        - googlehome
+      tags:
+        - device_other
+      upstreams: []
+      uid: 0198ee4d-b73b-7291-ba45-f0ffcfc55915
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Mommy's iPhone
+      ids:
+        - 100.117.190.125
+        - 192.168.1.10
+        - mommys-iphone
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198e8fa-acb9-7bc2-a6cb-046844010ed5
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Mommymac
+      ids:
+        - 100.81.162.91
+        - 192.168.1.7
+        - mommymac
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198e8fc-78bf-7b33-a161-b51432d62919
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Router
+      ids:
+        - 192.168.1.1
+      tags:
+        - device_other
+      upstreams: []
+      uid: 0198e939-873f-7e1d-9d78-4d1e2944e242
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: phonesex
+      ids:
+        - 100.106.82.98
+        - 192.168.1.5
+        - phonesex
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198e922-db6d-7b12-a6d5-07e853d34afb
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: true
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: sexpad
+      ids:
+        - 100.97.109.37
+        - sexpad
+      tags:
+        - user_admin
+      upstreams: []
+      uid: 0198ecde-b3d1-75bb-b643-3f0604734abc
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: false
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: true
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: xbox
+      ids:
+        - 192.168.1.19
+      tags:
+        - device_other
+      upstreams: []
+      uid: 01991c3e-c13e-707b-8886-d8087cb33cde
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: false
+      ignore_querylog: false
+      ignore_statistics: false
+log:
+  enabled: true
+  file: ""
+  max_backups: 0
+  max_size: 100
+  max_age: 3
+  compress: false
+  local_time: false
+  verbose: false
+os:
+  group: ""
+  user: ""
+  rlimit_nofile: 0
+schema_version: 30
+  - enabled: true
+    url: file:///opt/adguardhome/filters/roblox-block.txt
+    name: Roblox Block List
+    id: 9999

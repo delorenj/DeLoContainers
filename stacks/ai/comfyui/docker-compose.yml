@@ -1,0 +1,42 @@
+services:
+  comfyui:
+    build:
+      context: /home/delorenj/code/ComfyUI
+      dockerfile: /home/delorenj/docker/trunk-main/stacks/ai/comfyui/Dockerfile
+    image: delorenj/comfyui:latest
+    container_name: comfyui
+    restart: unless-stopped
+    networks:
+      - proxy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      # Persistent model storage
+      - /home/delorenj/code/ComfyUI/models:/app/models
+      # Output directory
+      - /home/delorenj/code/ComfyUI/output:/app/output
+      # Input directory
+      - /home/delorenj/code/ComfyUI/input:/app/input
+      # Custom nodes (if you install any)
+      - /home/delorenj/code/ComfyUI/custom_nodes:/app/custom_nodes
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.comfyui.rule=Host(`comfy.delo.sh`)"
+      - "traefik.http.routers.comfyui.entrypoints=websecure"
+      - "traefik.http.routers.comfyui.tls.certresolver=letsencrypt"
+      - "traefik.http.services.comfyui.loadbalancer.server.port=8188"
+      # WebSocket support for real-time updates
+      - "traefik.http.routers.comfyui.middlewares=comfyui-headers"
+      - "traefik.http.middlewares.comfyui-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+
+networks:
+  proxy:
+    external: true

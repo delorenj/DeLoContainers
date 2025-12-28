@@ -2,10 +2,6 @@ services:
   letta:
     image: letta/letta:latest
     container_name: letta
-    ports:
-      - "8283:8283"
-    expose:
-      - "8283"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.letta.rule=Host(`letta.delo.sh`)"
@@ -15,11 +11,8 @@ services:
       - "traefik.docker.network=proxy"
     environment:
       - OPENAI_API_KEY=${OPENROUTER_API_KEY}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_BASE="https://openrouter.ai/api/v1"
       - DATABASE_URL=${POSTGRES_URL}/letta
-      - GROQ_API_KEY=${GROQ_API_KEY}
-      - XAI_API_KEY=${XAI_API_KEY}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - DELONET_API_KEY=${DELONET_API_KEY}
     networks:
@@ -28,5 +21,4 @@ services:
 
 networks:
   proxy:
-    name: proxy
     external: true
