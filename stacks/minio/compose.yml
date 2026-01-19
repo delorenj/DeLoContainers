@@ -1,0 +1,38 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: delodrive
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${DEFAULT_USERNAME:-delorenj}
+      MINIO_ROOT_PASSWORD: ${DEFAULT_PASSWORD:-Ittr5eesol}
+    volumes:
+      - /home/delorenj/DeLoDrive:/data
+    networks:
+      - proxy
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      
+      # Console Router (Web UI) - Higher priority
+      - "traefik.http.routers.minio-console.rule=Host(`drive.delo.sh`)"
+      - "traefik.http.routers.minio-console.entrypoints=websecure"
+      - "traefik.http.routers.minio-console.tls=true"
+      - "traefik.http.routers.minio-console.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.minio-console.service=minio-console"
+      - "traefik.http.services.minio-console.loadbalancer.server.port=9001"
+      - "traefik.http.routers.minio-console.priority=100"
+      
+      # API Router (S3 API) - Lower priority, catches API calls
+      - "traefik.http.routers.minio-api.rule=Host(`drive.delo.sh`) && (PathPrefix(`/minio`) || HeadersRegexp(`User-Agent`, `.*MinIO.*|.*aws.*|.*s3.*`))"
+      - "traefik.http.routers.minio-api.entrypoints=websecure"
+      - "traefik.http.routers.minio-api.tls=true"
+      - "traefik.http.routers.minio-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.minio-api.service=minio-api"
+      - "traefik.http.services.minio-api.loadbalancer.server.port=9000"
+      - "traefik.http.routers.minio-api.priority=50"
+
+networks:
+  proxy:
+    external: true

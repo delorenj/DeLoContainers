@@ -1,0 +1,22 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# PostgreSQL TCP Routing via Traefik
+# 
+# Usage: psql -h pg.delo.sh -p 5432 -U delorenj -d 33god
+# 
+# NOTE: This is a simple TCP passthrough. For TLS, configure SSL on the
+# Postgres server itself (pg_hba.conf + server certs).
+# ═══════════════════════════════════════════════════════════════════════════
+
+tcp:
+  routers:
+    postgres:
+      rule: "HostSNI(`*`)"  # Accept all - single backend anyway
+      service: "postgres"
+      entryPoints:
+        - "postgres"
+
+  services:
+    postgres:
+      loadBalancer:
+        servers:
+          - address: "192.168.1.12:5432"

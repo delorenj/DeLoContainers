@@ -6,6 +6,14 @@ http:
           - "admin:$2y$05$g3/JYH3py0aTjaQ0dObvE.6H0WvI8p77jVjJMb4U0.xa1rfsAZcB6"
 
   routers:
+    traefik-dashboard-api:
+      rule: "Host(`traefik.delo.sh`) && PathPrefix(`/api`)"
+      service: api@internal
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      priority: 100
     traefik-dashboard:
       rule: "Host(`traefik.delo.sh`)"
       service: api@internal
@@ -15,3 +23,4 @@ http:
         - auth
       tls:
         certResolver: letsencrypt
+      priority: 1

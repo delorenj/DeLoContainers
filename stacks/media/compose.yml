@@ -86,12 +86,34 @@ services:
         condition: service_healthy
         restart: true
     labels:
+      - traefik.enable=false
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/New_York
+      - JELLYFIN_PublishedServerUrl=https://movies.delo.sh
+    volumes:
+      - ./jellyfin/config:/config
+      - ./jellyfin/cache:/cache
+      - /mnt/TheChung/:/media:ro
+    ports:
+      - 8096:8096
+      - 7359:7359/udp
+    networks:
+      - proxy
+    labels:
       - traefik.enable=true
-      - traefik.http.routers.qbittorrent.entrypoints=websecure
-      - traefik.http.routers.qbittorrent.rule=Host(`get.delo.sh`)
-      - traefik.http.routers.qbittorrent.tls=true
-      - traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt
-      - traefik.http.services.qbittorrent.loadbalancer.server.port=8091
+      - traefik.http.routers.jellyfin.entrypoints=websecure
+      - traefik.http.routers.jellyfin.rule=Host(`movies.delo.sh`)
+      - traefik.http.routers.jellyfin.service=jellyfin
+      - traefik.http.routers.jellyfin.tls=true
+      - traefik.http.routers.jellyfin.tls.certresolver=letsencrypt
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
       - traefik.docker.network=proxy
 
 networks:

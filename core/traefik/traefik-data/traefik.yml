@@ -27,6 +27,8 @@ entryPoints:
     address: ":443"
     http:
       tls: {}
+  postgres:
+    address: ":5432"
 
 providers:
   docker:
