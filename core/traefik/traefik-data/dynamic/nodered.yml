@@ -1,0 +1,57 @@
+http:
+  middlewares:
+    nodered-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "nodered.delo.sh"
+          X-Forwarded-Port: "443"
+          X-Forwarded-For: "{remote_addr}"
+          X-Real-IP: "{remote_addr}"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex, nofollow"
+        sslRedirect: true
+        sslHost: "nodered.delo.sh"
+        stsSeconds: 315360000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        accessControlAllowOriginList:
+          - "*"
+        accessControlAllowMethods:
+          - "GET"
+          - "POST"
+          - "PUT"
+          - "DELETE"
+          - "OPTIONS"
+          - "PATCH"
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+          - "X-API-Key"
+          - "X-Requested-With"
+        accessControlMaxAge: 100
+
+  routers:
+    nodered:
+      rule: "Host(`nodered.delo.sh`)"
+      entryPoints:
+        - websecure
+      service: nodered
+      middlewares:
+        - nodered-headers
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    nodered:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:1880"
+        healthCheck:
+          path: "/"
+          interval: "30s"
+          timeout: "10s"
+          headers:
+            Host: "nodered.delo.sh"

@@ -1,0 +1,9 @@
+http:
+  serversTransports:
+    minio-transport:
+      serverName: "drive.delo.sh"
+      insecureSkipVerify: false
+      forwardingTimeouts:
+        dialTimeout: "90s"
+        responseHeaderTimeout: "90s"
+        idleConnTimeout: "90s"
