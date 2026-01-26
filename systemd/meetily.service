@@ -1,0 +1,16 @@
+[Unit]
+Description=Meetily stack (Docker Compose)
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/delorenj/docker/trunk-main/stacks/ai/meetily
+ExecStart=/usr/bin/docker compose -f /home/delorenj/docker/trunk-main/stacks/ai/meetily/docker-compose.yml up -d --remove-orphans
+ExecStop=/usr/bin/docker compose -f /home/delorenj/docker/trunk-main/stacks/ai/meetily/docker-compose.yml down
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

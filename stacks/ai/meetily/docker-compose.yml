@@ -1,0 +1,165 @@
+services:
+  whisper-server:
+    build:
+      context: /home/delorenj/code/meeting-minutes/backend
+      dockerfile: /home/delorenj/code/meeting-minutes/backend/${WHISPER_DOCKERFILE:-Dockerfile.server-cpu}
+      args:
+        CUDA_VERSION: ${CUDA_VERSION:-12.3.1}
+        UBUNTU_VERSION: ${UBUNTU_VERSION:-22.04}
+    image: meetily/whisper-server:${WHISPER_IMAGE_TAG:-cpu}
+    container_name: meetily-whisper-prod
+    restart: unless-stopped
+    networks:
+      - meetily
+      - proxy
+    environment:
+      - WHISPER_HOST=0.0.0.0
+      - WHISPER_PORT=8178
+      - WHISPER_MODEL=${WHISPER_MODEL:-models/ggml-base.en.bin}
+      - WHISPER_THREADS=${WHISPER_THREADS:-0}
+      - WHISPER_USE_GPU=${WHISPER_USE_GPU:-true}
+      - WHISPER_LANGUAGE=${WHISPER_LANGUAGE:-en}
+      - WHISPER_TRANSLATE=${WHISPER_TRANSLATE:-false}
+      - WHISPER_DIARIZE=${WHISPER_DIARIZE:-false}
+      - WHISPER_PRINT_PROGRESS=${WHISPER_PRINT_PROGRESS:-true}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - VK_ICD_FILENAMES=/host-vulkan/icd.d/nvidia_icd.json
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "video"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: ["gpu"]
+    volumes:
+      - meetily_whisper_models:/app/models
+      - meetily_whisper_uploads:/app/uploads
+      - ${MEETILY_LOCAL_MODELS_DIR:-/home/delorenj/code/meeting-minutes/backend/models}:/app/local_models:ro
+      - ${MEETILY_CONFIG_DIR:-/home/delorenj/code/meeting-minutes/backend/config}:/app/config:ro
+      - /usr/share/vulkan/icd.d:/host-vulkan/icd.d:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8178/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.meetily-whisper.rule=Host(`${MEETILY_DOMAIN:-meetily.delo.sh}`) && PathPrefix(`/stream`)"
+      - "traefik.http.routers.meetily-whisper.entrypoints=websecure"
+      - "traefik.http.routers.meetily-whisper.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.meetily-whisper.priority=100"
+      - "traefik.http.routers.meetily-whisper.middlewares=meetily-whisper-strip"
+      - "traefik.http.middlewares.meetily-whisper-strip.stripprefix.prefixes=/stream"
+      - "traefik.http.services.meetily-whisper.loadbalancer.server.port=8178"
+      - "traefik.docker.network=proxy"
+
+  meetily-backend:
+    build:
+      context: /home/delorenj/code/meeting-minutes/backend
+      dockerfile: /home/delorenj/code/meeting-minutes/backend/Dockerfile.app
+    image: meetily/backend:latest
+    container_name: meetily-backend-prod
+    restart: unless-stopped
+    networks:
+      - meetily
+      - proxy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+      - DATABASE_PATH=/app/data/meeting_minutes.db
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - meetily_app_data:/app/data
+      - meetily_app_logs:/app/logs
+      - ${MEETILY_ENV_FILE:-/home/delorenj/code/meeting-minutes/backend/app/.env}:/app/.env:ro
+    depends_on:
+      whisper-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5167/get-meetings"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.meetily.rule=Host(`${MEETILY_DOMAIN:-meetily.delo.sh}`)"
+      - "traefik.http.routers.meetily.entrypoints=websecure"
+      - "traefik.http.routers.meetily.tls.certresolver=letsencrypt"
+      - "traefik.http.services.meetily.loadbalancer.server.port=5167"
+      - "traefik.docker.network=proxy"
+
+  model-downloader:
+    image: alpine/curl:latest
+    container_name: meetily-model-downloader
+    volumes:
+      - meetily_whisper_models:/models
+    environment:
+      - MODEL_NAME=${MODEL_NAME:-base.en}
+    command: |
+      sh -c "
+        echo '🔍 Checking for model: ggml-${MODEL_NAME}.bin'
+        if [ ! -f /models/ggml-${MODEL_NAME}.bin ] || [ ! -s /models/ggml-${MODEL_NAME}.bin ]; then
+          echo '📦 Downloading model: ${MODEL_NAME}...'
+          echo '📋 This may take a few minutes depending on model size and connection speed'
+          curl -L -f --progress-bar \
+            --connect-timeout 30 \
+            --max-time 3600 \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-connrefused \
+            -o /models/ggml-${MODEL_NAME}.bin.tmp \
+            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-${MODEL_NAME}.bin
+          if [ -s /models/ggml-${MODEL_NAME}.bin.tmp ]; then
+            mv /models/ggml-${MODEL_NAME}.bin.tmp /models/ggml-${MODEL_NAME}.bin
+            echo '✅ Model downloaded successfully: ${MODEL_NAME}'
+            ls -lh /models/ggml-${MODEL_NAME}.bin
+          else
+            echo '❌ Download failed or file is empty'
+            rm -f /models/ggml-${MODEL_NAME}.bin.tmp
+            exit 1
+          fi
+        else
+          echo '✅ Model already exists: ${MODEL_NAME}'
+          ls -lh /models/ggml-${MODEL_NAME}.bin
+        fi
+        echo '🎉 Model preparation complete'
+      "
+    healthcheck:
+      test: ["CMD", "test", "-f", "/models/ggml-${MODEL_NAME:-base.en}.bin"]
+      interval: 10s
+      timeout: 5s
+      retries: 1
+    profiles:
+      - download
+
+volumes:
+  meetily_whisper_models: {}
+  meetily_whisper_uploads: {}
+  meetily_app_data: {}
+  meetily_app_logs: {}
+
+networks:
+  proxy:
+    external: true
+  meetily:
+    name: meetily_network
+    driver: bridge
